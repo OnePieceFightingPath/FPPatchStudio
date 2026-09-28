@@ -9,8 +9,6 @@ function loadDashboardStats() {
   const patchCount  = allPatchNotes.length;
   const bannerCount = allBanners.length;
   const activeBanners = allBanners.filter(b => b.isActive).length;
-  const evtBannerCount = allEvtBanners.length;
-  const activeEvtBanners = allEvtBanners.filter(b => b.isActive).length;
   const noticeCount = (typeof allNotices !== 'undefined') ? allNotices.length : 0;
   const pinnedNotices = (typeof allNotices !== 'undefined') ? allNotices.filter(n => n.pinned).length : 0;
 
@@ -28,10 +26,6 @@ function loadDashboardStats() {
   document.getElementById('statPvpCount').textContent    = pvpCount;
   document.getElementById('statPatchCount').textContent  = patchCount;
   document.getElementById('statBannerCount').textContent = bannerCount;
-  if (document.getElementById('statEvtBannerCount')) {
-    document.getElementById('statEvtBannerCount').textContent = evtBannerCount;
-    document.getElementById('statEvtBannerSub').textContent = `활성 ${activeEvtBanners} / 비활성 ${evtBannerCount - activeEvtBanners}`;
-  }
   if (document.getElementById('statNoticeCount')) {
     document.getElementById('statNoticeCount').textContent = noticeCount;
     document.getElementById('statNoticeSub').textContent = `고정 ${pinnedNotices}개`;
@@ -1079,21 +1073,16 @@ document.querySelectorAll('.perm-tab').forEach(btn => {
 // ── 섹션 진입 ──
 async function loadPermissionsSection() {
   if (!hasPermAccess()) return;
-  _permActiveTab = 'users';
-
-  // 관리자 권한 탭은 총괄 관리자에게만 표시
-  const adminTabBtn = document.querySelector('.perm-tab[data-permtab="admins"]');
-  if (adminTabBtn) adminTabBtn.style.display = isSuperAdmin() ? '' : 'none';
-
-  document.querySelectorAll('.perm-tab').forEach(b => b.classList.toggle('active', b.dataset.permtab === 'users'));
-  document.getElementById('permPanelUsers').style.display  = '';
-  document.getElementById('permPanelAdmins').style.display = 'none';
-  await loadPermUsers();
+  _permActiveTab = 'admins';
+  document.querySelectorAll('.perm-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('permPanelUsers').style.display  = 'none';
+  document.getElementById('permPanelAdmins').style.display = '';
+  await loadPermAdmins();
 }
 
 // ── 사용자 목록 로드 ──
 async function loadPermUsers() {
-  if (!hasPermAccess()) return;
+  if (!hasMemberAccess()) return;
   document.getElementById('permUserTableBody').innerHTML =
     '<tr><td colspan="5" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
   try {

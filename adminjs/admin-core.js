@@ -79,6 +79,9 @@ let _myCanManageUsers = false;
 function hasPermAccess() {
   return isSuperAdmin() || _myCanPermission;
 }
+function hasMemberAccess() {
+  return isSuperAdmin() || _myCanManageUsers || _myCanPermission;
+}
 
 // ===== GRANULAR SECTION PERMISSIONS =====
 const SECTION_CONFIG = [
@@ -121,7 +124,7 @@ function _enforcePermUI() {
   // 사이드바 섹션 버튼 보기/숨기기
   document.querySelectorAll('.sidebar-item[data-section]').forEach(btn => {
     const sk = btn.dataset.section;
-    if (['profile', 'permissions', 'backup', 'dashboard'].includes(sk)) return;
+    if (['profile', 'permissions', 'members', 'backup', 'dashboard', 'userpage'].includes(sk)) return;
     btn.style.display = canViewSection(sk) ? '' : 'none';
   });
   // 추가 버튼
@@ -131,7 +134,6 @@ function _enforcePermUI() {
     { id: 'btnAddPvp',         key: 'pvpPatch' },
     { id: 'btnAddPatchNote',   key: 'patchNotes' },
     { id: 'btnAddBanner',      key: 'banners' },
-    { id: 'btnAddEvtBanner',   key: 'events' },
     { id: 'btnAddEvtPage',     key: 'events' },
   ];
   addBtns.forEach(({ id, key }) => {
@@ -145,7 +147,6 @@ function _enforcePermUI() {
     { pub: 'btnPublishPvp',          rev: 'btnRevertPvp',          key: 'pvpPatch' },
     { pub: 'btnPublishPatchNotes',   rev: 'btnRevertPatchNotes',   key: 'patchNotes' },
     { pub: 'btnPublishBanners',      rev: 'btnRevertBanners',      key: 'banners' },
-    { pub: 'btnPublishEvtBanners',   rev: 'btnRevertEvtBanners',   key: 'events' },
     { pub: 'btnPublishEvtPages',     rev: 'btnRevertEvtPages',     key: 'events' },
   ];
   pubBtns.forEach(({ pub, rev, key }) => {
@@ -298,13 +299,17 @@ function _hideLoginOverlay(user) {
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('adminAuthArea').style.display = 'flex';
 
-  // 총괄 관리자 or canPermission 있는 관리자만 권한관리 버튼 노출
+  // 총괄 관리자 or 관련 권한이 있는 관리자에게 운영 메뉴 노출
+  const memberBtn = document.getElementById('sidebarMembersBtn');
   const permBtn = document.getElementById('sidebarPermissionsBtn');
+  if (memberBtn && user.email === SUPER_ADMIN_EMAIL) memberBtn.style.display = '';
   if (permBtn) {
     if (user.email === SUPER_ADMIN_EMAIL) {
       permBtn.style.display = '';
+      if (memberBtn) memberBtn.style.display = '';
     } else {
       permBtn.style.display = 'none';
+      if (memberBtn) memberBtn.style.display = 'none';
       db.collection('adminPermissions').doc(user.email).get().then(snap => {
         if (snap.exists) {
           const d = snap.data();
@@ -313,6 +318,7 @@ function _hideLoginOverlay(user) {
           _myPerms = { canManageContent: d.canManageContent, sectionPerms: d.sectionPerms || null };
         }
         if (permBtn) permBtn.style.display = _myCanPermission ? '' : 'none';
+        if (memberBtn) memberBtn.style.display = hasMemberAccess() ? '' : 'none';
         _enforcePermUI();
       }).catch(() => {});
     }
@@ -456,14 +462,19 @@ document.querySelectorAll('.sidebar-item').forEach((btn) => {
 const SECTION_NAMES = {
   dashboard:    '홈',
   characters:   '캐릭터 관리',
-  supportchars: '현질 서폿 캐릭터 관리',
+  supportchars: '현질 서폿 캐릭터',
   pvppatch:     'PvP 패치 관리',
   patchnote:    '패치노트 관리',
-  banners:      '배너 관리',
+  banners:      '메인 배너 관리',
+  events:       '이벤트 관리',
   notices:      '공지사항 관리',
   backup:       '백업 / 복원',
   profile:      '내 정보',
-  permissions:  '권한관리',
+  members:      '멤버 관리',
+  permissions:  '권한 관리',
+  boards:       '게시판 관리',
+  support:      '고객센터 관리',
+  userpage:     '사용자 페이지',
 };
 
 let _openTabs   = ['dashboard'];
@@ -657,7 +668,11 @@ function closeGnbTab(section) {
 function switchSection(sectionKey) {
   // 권한관리 섹션은 총괄 관리자 or canPermission 부여받은 관리자만 접근 가능
   if (sectionKey === 'permissions' && !hasPermAccess()) {
-    showToast('권한관리 섹션 접근 권한이 없습니다.', 'error');
+    showToast('권한 관리 섹션 접근 권한이 없습니다.', 'error');
+    return;
+  }
+  if (sectionKey === 'members' && !hasMemberAccess()) {
+    showToast('멤버 관리 섹션 접근 권한이 없습니다.', 'error');
     return;
   }
   // 콘텐츠 섹션별 보기 권한 체크
@@ -668,8 +683,9 @@ function switchSection(sectionKey) {
   if (!_openTabs.includes(sectionKey)) _openTabs.push(sectionKey);
   activateGnbTab(sectionKey);
   if (sectionKey === 'profile') loadProfileSection();
+  if (sectionKey === 'members') loadPermUsers();
   if (sectionKey === 'permissions') loadPermissionsSection();
-  if (sectionKey === 'events') { loadEvtBanners(); loadEvtPages(); }
+  if (sectionKey === 'events') loadEvtPages();
   if (sectionKey === 'notices') loadNotices();
 }
 
@@ -821,7 +837,7 @@ let filteredSupportCharList = [];
 
 async function loadAllData() {
   await loadAdminNicknameMap();
-  await Promise.all([loadCharacters(), loadPvpPatches(), loadPatchNotes(), loadBanners(), loadSupportChars(), loadEvtBanners(), loadEvtPages(), loadNotices()]);
+  await Promise.all([loadCharacters(), loadPvpPatches(), loadPatchNotes(), loadBanners(), loadSupportChars(), loadEvtPages(), loadNotices()]);
   loadDashboardStats();
 }
 

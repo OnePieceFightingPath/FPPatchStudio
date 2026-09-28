@@ -74,25 +74,31 @@
       </button>
     </div>
     <nav class="sidebar-nav">
-      <div class="sidebar-section-label">Account</div>
+      <div class="sidebar-section-label">운영</div>
       <button class="sidebar-item" data-section="profile">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
         </svg>
         내 정보
       </button>
+      <button class="sidebar-item" data-section="members" id="sidebarMembersBtn" style="display:none">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        멤버 관리
+      </button>
       <button class="sidebar-item" data-section="permissions" id="sidebarPermissionsBtn" style="display:none">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
         </svg>
-        권한관리
+        권한 관리
       </button>
-      <div class="sidebar-section-label" style="margin-top:12px">콘텐츠 관리</div>
+      <div class="sidebar-section-label" style="margin-top:12px">페이지</div>
       <button class="sidebar-item" data-section="banners">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
         </svg>
-        배너 관리
+        메인 배너 관리
       </button>
       <button class="sidebar-item" data-section="characters">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,7 +110,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        현질 서폿 캐릭터 관리
+        현질 서폿 캐릭터
       </button>
       <button class="sidebar-item" data-section="patchnote">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -125,19 +131,38 @@
         </svg>
         이벤트 관리
       </button>
-      <div class="sidebar-section-label" style="margin-top:12px">공지사항 관리</div>
+      <button class="sidebar-item" data-section="boards">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/>
+        </svg>
+        게시판 관리
+      </button>
+      <div class="sidebar-section-label" style="margin-top:12px">서비스</div>
       <button class="sidebar-item" data-section="notices">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
         </svg>
         공지사항 관리
       </button>
-      <div class="sidebar-section-label" style="margin-top:12px">System</div>
+      <button class="sidebar-item" data-section="support">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m7-2a8 8 0 11-16 0 8 8 0 0016 0z"/>
+        </svg>
+        고객센터 관리
+      </button>
+      <div class="sidebar-section-label" style="margin-top:12px">시스템</div>
       <button class="sidebar-item" data-section="backup">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
         </svg>
         백업 / 복원
+      </button>
+      <div class="sidebar-section-label" style="margin-top:12px">바로가기</div>
+      <button class="sidebar-item" data-section="userpage">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+        사용자 페이지
       </button>
     </nav>
   </aside>
@@ -220,11 +245,10 @@
             <div class="collection-map-item"><span class="col-name">pvpPatch</span><span class="col-fields">charId, type, patches[], visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
             <div class="collection-map-item"><span class="col-name">patchNotes</span><span class="col-fields">date, title, excerpt, content, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
             <div class="collection-map-item"><span class="col-name">banners</span><span class="col-fields">imageUrl, title, link, order, isActive, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-            <div class="collection-map-item"><span class="col-name">eventBanners</span><span class="col-fields">imageUrl, title, link, order, isActive, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
             <div class="collection-map-item"><span class="col-name">notices</span><span class="col-fields">title, excerpt, content, pinned, visible, updatedBy, createdAt, updatedAt</span></div>
             <div class="collection-map-item"><span class="col-name">users</span><span class="col-fields">nickname, profileImage</span></div>
             <div class="collection-map-item"><span class="col-name">adminMeta</span><span class="col-fields">nicknames (doc)</span></div>
-            <div class="collection-map-item"><span class="col-name">publishMeta</span><span class="col-fields">characters, supportCharacters, pvpPatch, patchNotes, banners, eventBanners (docs)</span></div>
+            <div class="collection-map-item"><span class="col-name">publishMeta</span><span class="col-fields">characters, supportCharacters, pvpPatch, patchNotes, banners (docs)</span></div>
           </div>
         </div>
       </div>
@@ -303,18 +327,6 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-banner">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">이벤트 배너</div>
-            <div class="stat-card-value" id="statEvtBannerCount"><div class="stat-spinner"></div></div>
-            <div class="stat-card-sub" id="statEvtBannerSub">—</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('events')">관리 →</button>
-        </div>
-
-        <div class="stat-card">
           <div class="stat-card-icon stat-icon-patch">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
           </div>
@@ -353,10 +365,8 @@
           <div class="collection-map-item"><span class="col-name">pvpPatch</span><span class="col-fields">charId, type, patches[], visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
           <div class="collection-map-item"><span class="col-name">patchNotes</span><span class="col-fields">date, title, excerpt, content, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
           <div class="collection-map-item"><span class="col-name">banners</span><span class="col-fields">imageUrl, title, link, order, isActive, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-          <div class="collection-map-item"><span class="col-name">eventBanners</span><span class="col-fields">imageUrl, title, link, order, isActive, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
           <div class="collection-map-item"><span class="col-name">users</span><span class="col-fields">nickname, profileImage</span></div>
           <div class="collection-map-item"><span class="col-name">adminMeta</span><span class="col-fields">nicknames (doc)</span></div>
-          <div class="collection-map-item"><span class="col-name">publishMeta</span><span class="col-fields">characters, supportCharacters, pvpPatch, patchNotes, banners, eventBanners (docs)</span></div>
         </div>
       </div>
 
@@ -711,33 +721,24 @@
       </div>
     </section>
 
-    <!-- ===== EVENTS SECTION ===== -->
+    <!-- ===== EVENT PAGE SECTION ===== -->
     <section class="admin-section" id="section-events">
       <div class="section-header">
         <div>
           <h2 class="section-title">이벤트 관리</h2>
-          <p class="section-desc">이벤트 배너 및 이벤트 페이지를 관리합니다. 이벤트 배너는 Firestore <code>eventBanners</code> 컬렉션(홈 배너와 별도), 이벤트 페이지는 <code>events</code> 컬렉션과 동기화됩니다.</p>
+          <p class="section-desc">이벤트 페이지를 작성하고 관리합니다. Firestore <code>events</code> 컬렉션과 동기화됩니다.</p>
         </div>
       </div>
-      <div class="evt-tabs-row">
-        <div class="evt-tabs">
-          <button class="evt-tab active" data-evttab="evtBanner">이벤트 배너</button>
-          <button class="evt-tab" data-evttab="evtPage">이벤트 페이지</button>
-        </div>
-        <div class="evt-tabs-actions">
-          <button class="btn-primary" id="btnAddEvtBanner">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            배너 추가
-          </button>
-          <button class="btn-primary" id="btnAddEvtPage" style="display:none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            이벤트 추가
-          </button>
-        </div>
+      <div class="section-btn-row">
+        <button class="btn-primary" id="btnAddEvtPage">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          이벤트 추가
+        </button>
       </div>
 
       <!-- 이벤트 배너 패널 -->
-      <div id="evtPanelBanner">
+      <!-- EVENT BANNER UI REMOVED
+      <div id="evtPanelBanner" style="display:none" aria-hidden="true">
         <div class="admin-toolbar">
           <span class="toolbar-count" id="evtBannerCountLabel">로딩 중...</span>
           <button class="btn-order-manage" id="btnEvtBannerOrder" onclick="openEvtBannerOrderModal()">
@@ -767,8 +768,11 @@
         <div class="table-paginator" id="evtBannerPaginator"></div>
       </div>
 
+      </div>
+      -->
+
       <!-- 이벤트 페이지 패널 -->
-      <div id="evtPanelPage" style="display:none">
+      <div id="evtPanelPage">
         <div class="admin-toolbar">
           <span class="toolbar-count" id="evtPageCountLabel">로딩 중...</span>
           <div class="search-wrap">
@@ -787,19 +791,7 @@
         <div class="table-paginator" id="evtPagePaginator"></div>
       </div>
 
-      <div class="publish-bar" id="evtBannerPublishBar">
-        <div class="publish-bar-content">
-          <p class="publish-bar-hint">저장 버튼 선택 시 Live 페이지에 노출 됩니다.<br>마지막 저장 버전으로 되돌리기 선택 시 등록 / 수정 / 삭제 하기 전 상태로 돌아갑니다.</p>
-          <div class="publish-bar-bottom">
-            <div class="publish-last-info" id="publishInfoEvtBanners" style="display:none"></div>
-            <div class="publish-bar-actions">
-              <button class="btn-revert" id="btnRevertEvtBanners" onclick="revertEvtBanners()">마지막 저장 버전으로 되돌리기</button>
-              <button class="btn-publish" id="btnPublishEvtBanners" onclick="publishEvtBanners()">저장</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="publish-bar" id="evtPagePublishBar" style="display:none">
+      <div class="publish-bar" id="evtPagePublishBar">
         <div class="publish-bar-content">
           <p class="publish-bar-hint">저장 버튼 선택 시 Live 페이지에 노출 됩니다.<br>마지막 저장 버전으로 되돌리기 선택 시 등록 / 수정 / 삭제 하기 전 상태로 돌아갑니다.</p>
           <div class="publish-bar-bottom">
@@ -879,6 +871,52 @@
       </div>
     </section>
 
+    <!-- ===== BOARD MANAGEMENT SECTION ===== -->
+    <section class="admin-section" id="section-boards">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">게시판 관리</h2>
+          <p class="section-desc">서비스 게시판의 운영 상태와 게시판별 설정을 관리합니다.</p>
+        </div>
+      </div>
+      <div class="backup-block">
+        <div class="backup-block-header">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m7-2a8 8 0 11-16 0 8 8 0 0016 0z"/></svg>
+          <div>
+            <div class="backup-block-title">게시판 운영</div>
+            <div class="backup-block-desc">게시판 기능과 데이터 연결을 위한 관리 화면입니다.</div>
+          </div>
+        </div>
+        <div class="dashboard-admin-card">
+          <div class="dash-homepage-title">게시판 관리 기능 준비 중</div>
+          <div class="dash-homepage-desc">게시판 컬렉션과 게시판별 공개 범위가 설정되면 이 화면에서 게시판을 추가·수정·비활성화할 수 있습니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CUSTOMER SUPPORT SECTION ===== -->
+    <section class="admin-section" id="section-support">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">고객센터 관리</h2>
+          <p class="section-desc">문의 접수와 고객센터 콘텐츠를 운영합니다.</p>
+        </div>
+      </div>
+      <div class="backup-block">
+        <div class="backup-block-header">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m7-2a8 8 0 11-16 0 8 8 0 0016 0z"/></svg>
+          <div>
+            <div class="backup-block-title">고객센터 운영</div>
+            <div class="backup-block-desc">문의 및 FAQ 관리 기능을 연결할 수 있는 운영 화면입니다.</div>
+          </div>
+        </div>
+        <div class="dashboard-admin-card">
+          <div class="dash-homepage-title">고객센터 관리 기능 준비 중</div>
+          <div class="dash-homepage-desc">고객 문의 데이터가 연결되면 접수·처리 상태와 답변을 이 화면에서 관리할 수 있습니다.</div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== BACKUP / RESTORE SECTION ===== -->
     <section class="admin-section" id="section-backup">
       <div class="section-header">
@@ -901,14 +939,6 @@
             <div class="backup-export-card-label">배너</div>
             <div class="backup-export-card-hint">banners 컬렉션</div>
             <button class="btn-primary" onclick="exportCollection('banners')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              다운로드
-            </button>
-          </div>
-          <div class="backup-export-card">
-            <div class="backup-export-card-label">이벤트 배너</div>
-            <div class="backup-export-card-hint">eventBanners 컬렉션</div>
-            <button class="btn-primary" onclick="exportCollection('eventBanners')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
               다운로드
             </button>
@@ -964,7 +994,6 @@
           <div class="backup-import-row">
             <select id="importTargetCollection" class="admin-select">
               <option value="banners">banners (배너)</option>
-              <option value="eventBanners">eventBanners (이벤트 배너)</option>
               <option value="characters">characters (캐릭터)</option>
               <option value="supportCharacters">supportCharacters (서폿 캐릭터)</option>
               <option value="patchNotes">patchNotes (패치노트)</option>
@@ -1007,6 +1036,31 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
           규칙 복사
         </button>
+      </div>
+    </section>
+
+    <!-- ===== USER PAGE SHORTCUT SECTION ===== -->
+    <section class="admin-section" id="section-userpage">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">사용자 페이지</h2>
+          <p class="section-desc">실제 사용자 화면을 확인합니다.</p>
+        </div>
+      </div>
+      <div class="dash-homepage-card">
+        <div class="dash-homepage-logo">
+          <img src="img/logo-dark.png" alt="Logo" class="logo-img" />
+        </div>
+        <div class="dash-homepage-info">
+          <div class="dash-homepage-title">Fighting Path Patch 사용자 페이지</div>
+          <div class="dash-homepage-desc">패치노트, PvP 밸런스, 캐릭터 정보를 사용자 화면에서 확인할 수 있습니다.</div>
+        </div>
+        <a href="index.html" target="_blank" class="dash-homepage-btn">
+          사용자 페이지 열기
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </a>
       </div>
     </section>
 
@@ -1102,23 +1156,57 @@
       </div>
     </section>
 
+    <!-- ===== MEMBER MANAGEMENT SECTION ===== -->
+    <section class="admin-section" id="section-members">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">멤버 관리</h2>
+          <p class="section-desc">서비스 사용자 목록과 글쓰기 권한을 관리합니다.</p>
+        </div>
+      </div>
+      <div class="admin-toolbar" style="margin-bottom:12px">
+        <span class="toolbar-count" id="permUserCountLabel">로딩 중...</span>
+        <div class="search-wrap">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <input type="search" id="permUserSearch" class="admin-search" placeholder="닉네임 또는 이메일 검색...">
+        </div>
+        <button class="btn-toolbar-icon" title="새로고침" id="btnRefreshPermUsers">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        </button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>프로필</th><th>닉네임</th><th>UID</th><th>글쓰기 권한</th><th class="col-actions">작업</th></tr>
+          </thead>
+          <tbody id="permUserTableBody">
+            <tr><td colspan="5" class="table-loading"><div class="spinner"></div><span>데이터 로딩 중...</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-paginator" id="permUserPaginator"></div>
+    </section>
+
     <!-- ===== PERMISSIONS SECTION ===== -->
     <section class="admin-section" id="section-permissions">
       <div class="section-header">
         <div>
-          <h2 class="section-title">권한관리</h2>
-          <p class="section-desc">사용자 및 관리자 계정의 권한을 관리합니다.</p>
+          <h2 class="section-title">권한 관리</h2>
+          <p class="section-desc">관리자 계정별 접근 범위와 기능 권한을 관리합니다.</p>
         </div>
       </div>
 
       <!-- 탭 -->
-      <div class="perm-tabs">
+      <div class="perm-tabs" style="display:none">
         <button class="perm-tab active" data-permtab="users">사용자 권한</button>
         <button class="perm-tab" data-permtab="admins">관리자 권한</button>
       </div>
 
-      <!-- ── 사용자 권한 탭 ── -->
-      <div class="perm-panel" id="permPanelUsers">
+      <!-- 사용자 권한 화면은 멤버 관리로 분리되었습니다.
+      USER PERMISSION PANEL (MOVED TO MEMBERS)
+      <div class="perm-panel" id="permPanelUsers" style="display:none">
         <div class="admin-toolbar" style="margin-bottom:12px">
           <span class="toolbar-count" id="permUserCountLabel">로딩 중...</span>
           <div class="search-wrap">
@@ -1150,13 +1238,13 @@
         <div class="table-paginator" id="permUserPaginator"></div>
       </div>
 
+      -->
       <!-- ── 관리자 권한 탭 ── -->
-      <div class="perm-panel" id="permPanelAdmins" style="display:none">
+      <div class="perm-panel" id="permPanelAdmins">
         <p class="section-desc" style="margin-bottom:12px;color:var(--text-muted)">
           아래 관리자 목록에서 각 권한을 부여하거나 해제할 수 있습니다.<br>
-          <strong>사용자 권한 관리</strong> : 사용자 글쓰기 권한 차단/해제 가능<br>
           <strong>콘텐츠 관리 편집</strong> : 콘텐츠 관리 섹션(캐릭터·배너·패치노트 등) 수정 및 편집 가능<br>
-          <strong>권한관리 탭 접근</strong> : 해당 관리자에게 권한관리 탭을 노출 (총괄 관리자만 설정 가능)<br>
+          <strong>권한 관리 접근</strong> : 해당 관리자에게 권한 관리 메뉴를 노출 (총괄 관리자만 설정 가능)<br>
           <strong>세부 권한 설정</strong> : 섹션별(배너/캐릭터/서포트캐릭터/패치노트/PvP패치) 보기·추가·수정·삭제·저장 권한을 세부 설정
         </p>
         <div class="admin-toolbar" style="margin-bottom:12px">
@@ -1691,7 +1779,8 @@
 </div>
 
 <!-- ===== EVENT BANNER FORM MODAL ===== -->
-<div class="modal-overlay" id="evtBnrFormOverlay">
+<!-- EVENT BANNER FORM REMOVED
+<div class="modal-overlay" id="evtBnrFormOverlay" style="display:none" aria-hidden="true">
   <div class="modal-panel">
     <div class="modal-panel-header">
       <h2 id="evtBnrFormTitle">이벤트 배너 추가</h2>
@@ -1788,6 +1877,7 @@
     </div>
   </div>
 </div>
+-->
 
 <!-- ===== EVENT PAGE FORM MODAL ===== -->
 <div class="modal-overlay" id="evtPgFormOverlay">
@@ -1905,7 +1995,8 @@
 </div>
 
 <!-- ===== EVENT BANNER ORDER MODAL ===== -->
-<div class="modal-overlay" id="evtBannerOrderOverlay">
+<!-- EVENT BANNER ORDER UI REMOVED
+<div class="modal-overlay" id="evtBannerOrderOverlay" style="display:none" aria-hidden="true">
   <div class="modal-panel modal-panel-order">
     <div class="modal-panel-header">
       <h2>이벤트 배너 순서 관리</h2>
@@ -1936,6 +2027,7 @@
     </div>
   </div>
 </div>
+-->
 
 <!-- ===== DELETE CONFIRM MODAL ===== -->
 <div class="modal-overlay" id="deleteOverlay">

@@ -34,7 +34,6 @@ const _publishMetaMap = {
   pvpPatch:          'publishInfoPvp',
   patchNotes:        'publishInfoPatch',
   banners:           'publishInfoBanners',
-  eventBanners:      'publishInfoEvtBanners',
   supportCharacters: 'publishInfoSupportChars',
 };
 
@@ -229,6 +228,11 @@ let oEvtEditors = [];
 let _evtPgThumbUrl = '';
 let _evtActiveTab = 'evtBanner';
 
+/*
+ * 이벤트 배너 기능은 운영 정책에 따라 제거되었습니다.
+ * 이벤트 페이지 기능만 아래에서 유지합니다.
+ */
+/*
 // ── 탭 전환 ──
 document.querySelectorAll('.evt-tab').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -737,6 +741,8 @@ document.getElementById('evtBannerOrderSave')?.addEventListener('click', async (
     saveBtn.disabled = false;
   }
 });
+
+*/
 
 // ============================================================
 // 이벤트 페이지 (events 컬렉션)
