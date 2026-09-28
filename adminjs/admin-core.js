@@ -166,12 +166,15 @@ function updateGNBProfile(nickname, imageUrl) {
   const nameEl   = document.getElementById('adminUserName');
   const avatarEl = document.getElementById('adminUserAvatar');
   if (!nameEl || !avatarEl) return;
+  const fallbackEl = document.getElementById('sidebarProfileAvatarFallback');
   nameEl.textContent = nickname || currentUser?.displayName || currentUser?.email || '';
   if (imageUrl) {
     avatarEl.src          = imageUrl;
     avatarEl.style.display = 'block';
+    if (fallbackEl) fallbackEl.style.display = 'none';
   } else {
     avatarEl.style.display = 'none';
+    if (fallbackEl) fallbackEl.style.display = 'inline-flex';
   }
 }
 
@@ -425,9 +428,11 @@ if (document.readyState === 'loading') {
 
   function openProfileDropdown() {
     authArea?.classList.add('open');
+    profileBtn?.setAttribute('aria-expanded', 'true');
   }
   function closeProfileDropdown() {
     authArea?.classList.remove('open');
+    profileBtn?.setAttribute('aria-expanded', 'false');
   }
   window.closeProfileDropdown = closeProfileDropdown;
 
@@ -438,6 +443,19 @@ if (document.readyState === 'loading') {
     } else {
       openProfileDropdown();
     }
+  });
+  profileBtn?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      profileBtn.click();
+    }
+  });
+
+  document.getElementById('sidebarProfileSettings')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeProfileDropdown();
+    switchSection('profile');
+    loadProfileSection();
   });
 
   btnMyProfile?.addEventListener('click', () => {
@@ -452,6 +470,66 @@ if (document.readyState === 'loading') {
 })();
 
 // ===== SECTION SWITCH =====
+function initSidebarSections() {
+  const nav = document.querySelector('.sidebar-nav');
+  if (!nav || nav.dataset.grouped === 'true') return;
+
+  const sectionButtons = [...nav.querySelectorAll(':scope > .sidebar-section-item')];
+  sectionButtons.forEach((sectionButton) => {
+    const group = document.createElement('div');
+    group.className = 'sidebar-group';
+    if (sectionButton.classList.contains('sidebar-shortcut-item')) {
+      group.classList.add('sidebar-shortcut-group');
+    }
+    group.dataset.sidebarGroup = sectionButton.textContent.trim();
+    if (sectionButton.getAttribute('aria-expanded') === 'true') group.classList.add('open');
+
+    nav.insertBefore(group, sectionButton);
+    group.appendChild(sectionButton);
+
+    const list = document.createElement('div');
+    list.className = 'sidebar-section-list';
+    group.appendChild(list);
+
+    let node = group.nextSibling;
+    while (node && !(node.nodeType === 1 && node.classList.contains('sidebar-section-item'))) {
+      const nextNode = node.nextSibling;
+      if (node.nodeType === 1 && node.classList.contains('sidebar-item')) {
+        list.appendChild(node);
+      } else if (node.nodeType === 3 && !node.textContent.trim()) {
+        node.remove();
+      }
+      node = nextNode;
+    }
+
+    sectionButton.addEventListener('click', () => {
+      const shouldOpen = !group.classList.contains('open');
+      document.querySelectorAll('.sidebar-group').forEach(otherGroup => {
+        if (otherGroup !== group) {
+          otherGroup.classList.remove('open');
+          otherGroup.querySelector('.sidebar-section-item')?.setAttribute('aria-expanded', 'false');
+        }
+      });
+      group.classList.toggle('open', shouldOpen);
+      sectionButton.setAttribute('aria-expanded', String(shouldOpen));
+    });
+  });
+
+  nav.dataset.grouped = 'true';
+}
+
+function syncSidebarSections(sectionKey) {
+  const activeItem = document.querySelector(`.sidebar-item[data-section="${sectionKey}"]`);
+  const activeGroup = activeItem?.closest('.sidebar-group');
+  if (!activeGroup) return;
+  document.querySelectorAll('.sidebar-group').forEach(group => {
+    const isActive = group === activeGroup;
+    group.classList.toggle('open', isActive);
+    group.querySelector('.sidebar-section-item')?.setAttribute('aria-expanded', String(isActive));
+  });
+}
+
+initSidebarSections();
 document.querySelectorAll('.sidebar-item').forEach((btn) => {
   btn.addEventListener('click', () => {
     switchSection(btn.dataset.section);
@@ -638,6 +716,7 @@ function renderGnbTabs() {
 
 function activateGnbTab(section, pushHistory = true) {
   _activeTab = section;
+  syncSidebarSections(section);
   document.querySelectorAll('.sidebar-item').forEach(b => {
     b.classList.toggle('active', b.dataset.section === section);
   });
