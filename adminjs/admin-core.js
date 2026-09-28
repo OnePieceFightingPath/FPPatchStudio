@@ -462,7 +462,7 @@ document.querySelectorAll('.sidebar-item').forEach((btn) => {
 const SECTION_NAMES = {
   dashboard:    '홈',
   characters:   '캐릭터 관리',
-  supportchars: '현질 서폿 캐릭터',
+  supportchars: '현질 캐릭터 관리',
   pvppatch:     'PvP 패치 관리',
   patchnote:    '패치노트 관리',
   banners:      '메인 배너 관리',
