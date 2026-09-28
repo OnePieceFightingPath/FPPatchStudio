@@ -3972,7 +3972,27 @@ body {
   min-height: 40px;
   padding: 10px 0;
 }
-
+.sidebar-shortcut-group .sidebar-section-item {
+  justify-content: flex-start;
+  color: #a5b4fc;
+  font-size: 12px;
+  font-weight: 400;
+}
+.sidebar-shortcut-group .sidebar-section-item:hover,
+.sidebar-shortcut-group.open > .sidebar-section-item {
+  color: #a5b4fc;
+  background: transparent;
+}
+.sidebar-shortcut-group .sidebar-section-chevron {
+  display: none;
+}
+.sidebar-shortcut-group .sidebar-item {
+  color: #e0e7ff;
+  font-weight: 400;
+}
+.sidebar-shortcut-group .sidebar-item svg {
+  display: none;
+}
 .sidebar-profile {
   position: relative;
   width: 299px;
