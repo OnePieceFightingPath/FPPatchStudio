@@ -3866,8 +3866,9 @@ body {
   max-height: 0;
   overflow: hidden;
   padding: 0 0 0 48px;
-  opacity: 0;
-  transition: max-height 0.28s ease, padding 0.28s ease, opacity 0.18s ease;
+  opacity: 1;
+  will-change: max-height;
+  transition: max-height 0.3s ease, padding 0.3s ease;
 }
 .sidebar-group.open > .sidebar-section-list {
   height: auto;
@@ -3948,17 +3949,15 @@ body {
   min-height: 0;
   padding-top: 0;
   padding-bottom: 0;
-  opacity: 0;
   pointer-events: none;
-  transition: height 0.28s ease, min-height 0.28s ease, padding 0.28s ease, opacity 0.16s ease;
+  transition: height 0.3s ease, min-height 0.3s ease, padding 0.3s ease;
 }
 .sidebar-group.open > .sidebar-section-list > .sidebar-item {
   height: 37px;
   min-height: 37px;
   padding: 8px 8px;
-  opacity: 1;
   pointer-events: auto;
-  transition: height 0.28s ease, min-height 0.28s ease, padding 0.28s ease, opacity 0.16s ease;
+  transition: height 0.3s ease, min-height 0.3s ease, padding 0.3s ease;
 }
 .sidebar-shortcut-group:not(.open) > .sidebar-section-list {
   height: auto;
