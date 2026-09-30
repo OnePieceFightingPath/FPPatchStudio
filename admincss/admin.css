@@ -4119,3 +4119,69 @@ body {
   .admin-main { margin-left: 0; }
   .publish-bar { left: 0 !important; }
 }
+
+/* ===== 메인 배너 관리 전용 레이아웃 ===== */
+#section-banners .section-btn-row {
+  justify-content: space-between;
+  align-items: center;
+}
+#section-banners .section-btn-row .toolbar-count {
+  height: 37px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+}
+#section-banners .admin-toolbar {
+  flex-wrap: nowrap;
+}
+#section-banners .btn-order-manage,
+#section-banners #bannerStatusFilter,
+#section-banners .btn-toolbar-icon,
+#section-banners #bannerPerPage {
+  height: 37px;
+  box-sizing: border-box;
+}
+#section-banners .btn-order-manage {
+  padding: 0 14px;
+}
+#section-banners #bannerStatusFilter {
+  width: 100px;
+  min-width: 100px;
+  padding: 0 8px;
+}
+#section-banners .admin-toolbar > .btn-toolbar-icon {
+  width: 37px;
+  min-width: 37px;
+  margin-left: auto;
+}
+#section-banners .admin-toolbar > .search-wrap {
+  width: 200px;
+  min-width: 200px;
+  flex: 0 0 200px;
+}
+#section-banners .admin-toolbar > .search-wrap .admin-search {
+  height: 37px;
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+#section-banners #bannerPerPage {
+  width: 74px;
+  min-width: 74px;
+  padding: 0 8px;
+}
+
+@media (max-width: 600px) {
+  #section-banners .admin-toolbar {
+    flex-wrap: wrap;
+  }
+  #section-banners .admin-toolbar > .btn-toolbar-icon {
+    margin-left: 0;
+  }
+  #section-banners .admin-toolbar > .search-wrap {
+    order: 0;
+    width: 200px;
+    min-width: 0;
+    flex: 1 1 200px;
+  }
+}

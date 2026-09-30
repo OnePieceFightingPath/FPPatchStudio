@@ -672,11 +672,11 @@
     <section class="admin-section" id="section-banners">
       <div class="section-header">
         <div>
-          <h2 class="section-title">배너 관리</h2>
-          <p class="section-desc">메인 홈 배너의 이미지, 링크, 노출 순서를 관리합니다. Firestore <code>banners</code> 컬렉션과 동기화됩니다. <code>isActive = true</code>인 배너만 메인 화면에 표시되며, <code>order</code> 값 기준으로 정렬됩니다.</p>
+          <h2 class="section-title">메인 배너 관리</h2>
         </div>
       </div>
       <div class="section-btn-row">
+        <span class="toolbar-count" id="bannerCountLabel">로딩 중...</span>
         <button class="btn-primary" id="btnAddBanner">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -685,7 +685,6 @@
         </button>
       </div>
       <div class="admin-toolbar">
-        <span class="toolbar-count" id="bannerCountLabel">로딩 중...</span>
         <button class="btn-order-manage" id="btnBannerOrder" onclick="openBannerOrderModal()">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
@@ -697,13 +696,13 @@
           <option value="active">활성</option>
           <option value="inactive">비활성</option>
         </select>
+        <button class="btn-toolbar-icon" title="새로고침" onclick="loadBanners()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
         <div class="search-wrap">
           <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
           <input type="search" id="bannerSearch" class="admin-search" placeholder="제목 검색...">
         </div>
-        <button class="btn-toolbar-icon" title="새로고침" onclick="loadBanners()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
         <select class="admin-select per-page-select" id="bannerPerPage"><option value="10" selected>10개</option><option value="20">20개</option><option value="30">30개</option><option value="40">40개</option><option value="50">50개</option></select>
       </div>
       <div class="admin-table-wrap">
