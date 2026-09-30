@@ -537,6 +537,7 @@ function syncSidebarSections(sectionKey) {
 initSidebarSections();
 document.querySelectorAll('.sidebar-item').forEach((btn) => {
   btn.addEventListener('click', () => {
+    if (btn.dataset.external === 'true') return;
     switchSection(btn.dataset.section);
   });
 });
