@@ -1304,7 +1304,7 @@ select.form-input { cursor: pointer; }
   .admin-main { padding: 16px 18px 120px; }
   .section-header { flex-wrap: wrap; gap: 10px; }
   .section-btn-row { margin-bottom: 12px; }
-  .dashboard-stat-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dashboard-stat-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
   .dashboard-info-row { grid-template-columns: 1fr; }
   .backup-export-grid { grid-template-columns: 1fr 1fr; }
   .admin-table { font-size: 12px; }
@@ -1365,7 +1365,7 @@ select.form-input { cursor: pointer; }
   .sidebar-item svg { width: 17px; height: 17px; }
 
   /* ── 대시보드 ── */
-  .dashboard-stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .dashboard-stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
   .stat-card { padding: 12px 10px; gap: 8px; }
   .stat-card-icon { width: 32px; height: 32px; border-radius: 8px; }
   .stat-card-icon svg { width: 16px; height: 16px; }
@@ -2525,7 +2525,7 @@ body.dragging-banner * { cursor: grabbing !important; }
 
   /* ── 대시보드 스탯 그리드: 4열 → 2×2 ── */
   .dashboard-stat-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     margin-bottom: 14px;
   }
@@ -3524,7 +3524,7 @@ body {
 .backup-block-desc,
 .dash-homepage-desc { color: #64748b; }
 .dashboard-stat-grid {
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 28px;
 }
@@ -3757,7 +3757,7 @@ body {
   .admin-main { padding-top: var(--gnb-height) !important; }
   .section-title { font-size: 20px; }
   .dashboard-info-row { gap: 12px; }
-  .dashboard-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .stat-card { padding: 14px; }
   .publish-bar { left: 0 !important; }
 }
