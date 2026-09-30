@@ -523,6 +523,11 @@ function syncSidebarSections(sectionKey) {
   const activeGroup = activeItem?.closest('.sidebar-group');
   if (!activeGroup) return;
   document.querySelectorAll('.sidebar-group').forEach(group => {
+    // 바로가기는 다른 메뉴로 이동해도 항상 노출한다.
+    if (group.classList.contains('sidebar-shortcut-group')) {
+      group.classList.add('open');
+      return;
+    }
     const isActive = group === activeGroup;
     group.classList.toggle('open', isActive);
     group.querySelector('.sidebar-section-item')?.setAttribute('aria-expanded', String(isActive));
