@@ -4185,11 +4185,3 @@ body {
     flex: 1 1 200px;
   }
 }
-
-/* ===== 테이블 헤더 고정 ===== */
-.admin-table thead th {
-  position: sticky;
-  top: var(--gnb-height);
-  z-index: 20;
-  background: var(--bg-secondary);
-}
