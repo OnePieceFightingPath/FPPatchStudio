@@ -3977,7 +3977,7 @@ body {
 .sidebar-shortcut-group.open > .sidebar-section-list > .sidebar-item {
   height: 40px;
   min-height: 40px;
-  padding: 10px 0;
+  padding: 8px 8px;
 }
 .sidebar-shortcut-group .sidebar-section-item {
   justify-content: flex-start;
