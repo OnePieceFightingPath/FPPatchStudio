@@ -944,7 +944,48 @@ function showTableError(tbody, html) {
   setTableBodyHtml(tbody, html);
 }
 
+const _allTableFilterControlIds = [
+  'adminGradeFilter', 'adminAttributeFilter', 'adminBattleTypeFilter', 'adminCharSearch',
+  'scGradeFilter', 'scAttributeFilter', 'scBattleTypeFilter', 'scCharSearch',
+  'pvpTypeFilter', 'pvpSearch', 'patchNoteSearch',
+  'bannerStatusFilter', 'bannerSearch', 'evtBannerStatusFilter', 'evtBannerSearch',
+  'evtPageSearch', 'noticeSearch', 'permUserSearch',
+];
+
+function resetTableFilterControls(controlIds = _allTableFilterControlIds) {
+  controlIds.forEach(id => {
+    const control = document.getElementById(id);
+    if (!control) return;
+
+    if (control.tagName === 'SELECT') {
+      const defaultOption = [...control.options].find(option => option.value === 'all') || control.options[0];
+      if (defaultOption) control.value = defaultOption.value;
+    } else if ('value' in control) {
+      control.value = '';
+    }
+  });
+}
+
+async function refreshTableWithReset(controlIds, refreshFn, tbodyId) {
+  resetTableFilterControls(controlIds);
+  if (tbodyId) resetTableSelection(tbodyId);
+  if (typeof refreshFn === 'function') await refreshFn();
+}
+
 const _selectedRowsByTable = new Map();
+
+function resetTableSelection(tbodyId) {
+  _selectedRowsByTable.get(tbodyId)?.clear();
+  const tbody = document.getElementById(tbodyId);
+  tbody?.querySelectorAll('.table-row-select').forEach(checkbox => {
+    checkbox.checked = false;
+  });
+  syncTableSelectionHeader(tbodyId);
+}
+
+function resetAllTableSelections() {
+  [..._selectedRowsByTable.keys()].forEach(resetTableSelection);
+}
 
 function applyTableSelection(tbodyId, rowKeys = []) {
   const tbody = document.getElementById(tbodyId);

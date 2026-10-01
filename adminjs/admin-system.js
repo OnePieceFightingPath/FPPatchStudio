@@ -59,6 +59,8 @@ document.getElementById('btnRefreshDashboard')?.addEventListener('click', async 
   const btn = document.getElementById('btnRefreshDashboard');
   btn.disabled = true;
   btn.textContent = '새로고침 중...';
+  resetTableFilterControls();
+  resetAllTableSelections();
   try {
     await loadAllData();
     showToast('대시보드를 새로고침했습니다.', 'success');
@@ -1282,8 +1284,10 @@ document.getElementById('permUserSearch')?.addEventListener('input', () => {
   renderPermUserTable();
 });
 
-// 새로고침
-document.getElementById('btnRefreshPermUsers')?.addEventListener('click', loadPermUsers);
+// 새로고침 시 검색어와 선택 상태를 초기화
+document.getElementById('btnRefreshPermUsers')?.addEventListener('click', () =>
+  refreshTableWithReset(['permUserSearch'], loadPermUsers, 'permUserTableBody')
+);
 
 // ── 관리자 권한 탭 ──
 let _permAdminList = [];
@@ -1378,6 +1382,8 @@ async function saveAdminPermRow(email) {
   }
 }
 
-document.getElementById('btnRefreshPermAdmins')?.addEventListener('click', loadPermAdmins);
+document.getElementById('btnRefreshPermAdmins')?.addEventListener('click', () =>
+  refreshTableWithReset([], loadPermAdmins, 'permAdminTableBody')
+);
 
 
