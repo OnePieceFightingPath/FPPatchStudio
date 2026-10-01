@@ -41,6 +41,7 @@ function renderSupportCharTable(list) {
 
   if (!list.length) {
     setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">서포트 캐릭터가 없습니다</td></tr>');
+    applyTableSelection('scTableBody', []);
     renderPaginator('scPaginator', 0, scPageSize, scCurrentPage, () => {});
     return;
   }
@@ -78,6 +79,7 @@ function renderSupportCharTable(list) {
     </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('scTableBody', shown.map(c => c._docId));
 
   renderPaginator('scPaginator', list.length, scPageSize, scCurrentPage, (page) => {
     scCurrentPage = page;

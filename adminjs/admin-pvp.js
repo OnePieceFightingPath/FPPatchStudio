@@ -53,6 +53,7 @@ function renderPvpTable(list) {
 
   if (!list.length) {
     setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">PvP 패치가 없습니다</td></tr>');
+    applyTableSelection('pvpTableBody', []);
     renderPaginator('pvpPaginator', 0, pvpPageSize, pvpCurrentPage, () => {});
     return;
   }
@@ -109,6 +110,7 @@ function renderPvpTable(list) {
       </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('pvpTableBody', shown.map(p => p._docId));
 
   renderPaginator('pvpPaginator', list.length, pvpPageSize, pvpCurrentPage, (page) => {
     pvpCurrentPage = page;

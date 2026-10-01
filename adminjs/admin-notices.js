@@ -46,6 +46,7 @@ function renderNoticeTable(list) {
 
   if (!list.length) {
     setTableBodyHtml(tbody, '<tr><td colspan="6" class="table-empty">공지사항이 없습니다</td></tr>');
+    applyTableSelection('noticeTableBody', []);
     renderPaginator('noticePaginator', 0, noticePageSize, noticeCurrentPage, () => {});
     return;
   }
@@ -80,6 +81,7 @@ function renderNoticeTable(list) {
     </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('noticeTableBody', shown.map(n => n._docId));
 
   renderPaginator('noticePaginator', list.length, noticePageSize, noticeCurrentPage, (page) => {
     noticeCurrentPage = page;

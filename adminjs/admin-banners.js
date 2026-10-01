@@ -47,6 +47,7 @@ function renderBannerTable(list) {
 
   if (!list.length) {
     setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">등록된 배너가 없습니다</td></tr>');
+    applyTableSelection('bannerTableBody', []);
     renderPaginator('bannerPaginator', 0, bannerPageSize, bannerCurrentPage, () => {});
     return;
   }
@@ -96,6 +97,7 @@ function renderBannerTable(list) {
     </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('bannerTableBody', shown.map(b => b._docId));
 
   renderPaginator('bannerPaginator', list.length, bannerPageSize, bannerCurrentPage, (page) => {
     bannerCurrentPage = page;

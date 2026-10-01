@@ -38,6 +38,7 @@ function renderCharTable(list) {
 
   if (!list.length) {
     setTableBodyHtml(tbody, '<tr><td colspan="9" class="table-empty">캐릭터가 없습니다</td></tr>');
+    applyTableSelection('charTableBody', []);
     renderPaginator('charPaginator', 0, charPageSize, charCurrentPage, () => {});
     return;
   }
@@ -80,6 +81,7 @@ function renderCharTable(list) {
     </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('charTableBody', shown.map(c => c._docId));
 
   renderPaginator('charPaginator', list.length, charPageSize, charCurrentPage, (page) => {
     charCurrentPage = page;

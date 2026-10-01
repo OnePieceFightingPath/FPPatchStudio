@@ -1115,6 +1115,7 @@ function renderPermUserTable() {
 
   if (!paged.length) {
     setTableBodyHtml(tbody, '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">사용자가 없습니다.</td></tr>');
+    applyTableSelection('permUserTableBody', []);
     document.getElementById('permUserPaginator').innerHTML = '';
     return;
   }
@@ -1150,6 +1151,7 @@ function renderPermUserTable() {
       </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('permUserTableBody', paged.map(u => u.uid));
 
   renderPaginator('permUserPaginator', filtered.length, PERM_USER_PAGE_SIZE, _permUserPage, (p) => {
     _permUserPage = p;
@@ -1351,6 +1353,7 @@ function renderPermAdminTable() {
       </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('permAdminTableBody', _permAdminList.map(admin => admin.email));
 }
 
 async function updateAdminPerm(email, field, value) {

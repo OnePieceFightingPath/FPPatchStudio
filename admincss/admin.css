@@ -4192,3 +4192,18 @@ body {
 .sidebar-shortcut-group { border-top: 1px solid rgba(199, 210, 254, 0.18); }
 .btn-toolbar-icon:hover,
 .btn-toolbar-icon:active { transform: none; }
+.admin-table .table-select-cell {
+  width: 40px;
+  min-width: 40px;
+  padding: 8px !important;
+  text-align: center !important;
+}
+.admin-table .table-select-cell input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--accent);
+  vertical-align: middle;
+  cursor: pointer;
+}
+.admin-table .table-select-all:disabled { cursor: default; }

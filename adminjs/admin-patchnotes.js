@@ -37,6 +37,7 @@ function renderPatchNoteTable(list) {
 
   if (!list.length) {
     setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">패치노트가 없습니다</td></tr>');
+    applyTableSelection('patchNoteTableBody', []);
     renderPaginator('patchPaginator', 0, patchPageSize, patchCurrentPage, () => {});
     return;
   }
@@ -70,6 +71,7 @@ function renderPatchNoteTable(list) {
     </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('patchNoteTableBody', shown.map(p => p._docId));
 
   renderPaginator('patchPaginator', list.length, patchPageSize, patchCurrentPage, (page) => {
     patchCurrentPage = page;

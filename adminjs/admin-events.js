@@ -792,6 +792,7 @@ function renderEvtPageTable(list) {
 
   if (!list.length) {
     setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">등록된 이벤트 페이지가 없습니다</td></tr>');
+    applyTableSelection('evtPageTableBody', []);
     renderPaginator('evtPagePaginator', 0, evtPagePageSize, evtPageCurrentPage, () => {});
     return;
   }
@@ -823,6 +824,7 @@ function renderEvtPageTable(list) {
     </tr>`;
   }).join('');
   setTableBodyHtml(tbody, rowsHtml);
+  applyTableSelection('evtPageTableBody', shown.map(p => p._docId));
 
   renderPaginator('evtPagePaginator', list.length, evtPagePageSize, evtPageCurrentPage, (page) => {
     evtPageCurrentPage = page;
