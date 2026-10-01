@@ -12,8 +12,7 @@ async function loadPatchNotes() {
     allPatchNotes = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
     patchCurrentPage = 1;
     const _effPatch = _applyPendingOps(allPatchNotes, _pendingPatch);
-    filteredPatchList = _effPatch;
-    renderPatchNoteTable(_effPatch);
+    filterPatchNotes();
     updateBarFromDocs(_effPatch, 'publishInfoPatch');
   } catch (err) {
     showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
@@ -79,11 +78,14 @@ function renderPatchNoteTable(list) {
   });
 }
 
-document.getElementById('patchNoteSearch')?.addEventListener('input', () => {
+document.getElementById('patchNoteSearch')?.addEventListener('input', filterPatchNotes);
+
+function filterPatchNotes() {
   const q = document.getElementById('patchNoteSearch').value.toLowerCase();
+  const effective = _applyPendingOps(allPatchNotes, _pendingPatch);
   patchCurrentPage = 1;
-  renderPatchNoteTable(q ? allPatchNotes.filter(p => (p.title||'').toLowerCase().includes(q)) : allPatchNotes);
-});
+  renderPatchNoteTable(q ? effective.filter(p => (p.title||'').toLowerCase().includes(q)) : effective);
+}
 
 
 // ── Summernote 초기화 (패치노트) ────────────────────────────────────

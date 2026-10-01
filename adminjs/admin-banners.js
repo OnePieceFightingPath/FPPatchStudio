@@ -12,8 +12,7 @@ async function loadBanners() {
     allBanners = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
     bannerCurrentPage = 1;
     const _effBanners = _applyPendingOps(allBanners, _pendingBanners);
-    filteredBannerList = _effBanners;
-    renderBannerTable(_effBanners);
+    filterBannerTable();
     updateBarFromDocs(_effBanners, 'publishInfoBanners');
   } catch (err) {
     try {
@@ -21,8 +20,7 @@ async function loadBanners() {
       allBanners = snap2.docs.map(d => ({ _docId: d.id, ...d.data() })).sort((a,b) => (a.order||0)-(b.order||0));
       bannerCurrentPage = 1;
       const _effBanners2 = _applyPendingOps(allBanners, _pendingBanners);
-      filteredBannerList = _effBanners2;
-      renderBannerTable(_effBanners2);
+      filterBannerTable();
       updateBarFromDocs(_effBanners2, 'publishInfoBanners');
     } catch (err2) {
       showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err2.message)}</td></tr>`);

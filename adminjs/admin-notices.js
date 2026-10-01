@@ -18,8 +18,7 @@ async function loadNotices() {
     allNotices = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
     noticeCurrentPage = 1;
     const eff = _applyPendingOps(allNotices, _pendingNotices);
-    filteredNoticeList = eff;
-    renderNoticeTable(eff);
+    filterNotices();
     updateBarFromDocs(eff, 'publishInfoNotices');
   } catch (err) {
     showTableError(tbody, `<tr><td colspan="6" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
@@ -89,12 +88,14 @@ function renderNoticeTable(list) {
   });
 }
 
-document.getElementById('noticeSearch')?.addEventListener('input', () => {
+document.getElementById('noticeSearch')?.addEventListener('input', filterNotices);
+
+function filterNotices() {
   const q = document.getElementById('noticeSearch').value.toLowerCase();
   noticeCurrentPage = 1;
   const eff = _applyPendingOps(allNotices, _pendingNotices);
   renderNoticeTable(q ? eff.filter(n => (n.title || '').toLowerCase().includes(q)) : eff);
-});
+}
 
 // ── Summernote 초기화 (공지사항) ────────────────────────────────────
 function initNoticeEditor() {

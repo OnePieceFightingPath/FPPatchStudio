@@ -757,8 +757,7 @@ async function loadEvtPages() {
     allEvtPages = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
     evtPageCurrentPage = 1;
     const eff = _applyPendingOps(allEvtPages, _pendingEvtPages);
-    filteredEvtPageList = eff;
-    renderEvtPageTable(eff);
+    filterEvtPages();
     updateBarFromDocs(eff, 'publishInfoEvtPages');
   } catch (err) {
     try {
@@ -766,8 +765,7 @@ async function loadEvtPages() {
       allEvtPages = snap2.docs.map(d => ({ _docId: d.id, ...d.data() })).sort((a,b)=>(b.date||'')>(a.date||'')?1:-1);
       evtPageCurrentPage = 1;
       const eff2 = _applyPendingOps(allEvtPages, _pendingEvtPages);
-      filteredEvtPageList = eff2;
-      renderEvtPageTable(eff2);
+      filterEvtPages();
       updateBarFromDocs(eff2, 'publishInfoEvtPages');
     } catch (err2) {
       showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err2.message)}</td></tr>`);
@@ -832,11 +830,14 @@ function renderEvtPageTable(list) {
   });
 }
 
-document.getElementById('evtPageSearch')?.addEventListener('input', () => {
+document.getElementById('evtPageSearch')?.addEventListener('input', filterEvtPages);
+
+function filterEvtPages() {
   const q = (document.getElementById('evtPageSearch')?.value || '').toLowerCase();
   evtPageCurrentPage = 1;
-  renderEvtPageTable(q ? allEvtPages.filter(p => (p.title||'').toLowerCase().includes(q)) : _applyPendingOps(allEvtPages, _pendingEvtPages));
-});
+  const effective = _applyPendingOps(allEvtPages, _pendingEvtPages);
+  renderEvtPageTable(q ? effective.filter(p => (p.title||'').toLowerCase().includes(q)) : effective);
+}
 document.getElementById('evtPagePerPage')?.addEventListener('change', e => {
   evtPagePageSize = parseInt(e.target.value) || 10;
   evtPageCurrentPage = 1;

@@ -12,8 +12,7 @@ async function loadCharacters() {
     allCharacters = snap.docs.map(d => ({ _docId: d.id, ...d.data() })).sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
     charCurrentPage = 1;
     const _effC = _applyPendingOps(allCharacters, _pendingChars);
-    filteredCharList = _effC;
-    renderCharTable(_effC);
+    filterCharTable();
     updatePvpCharSelect();
     updateBarFromDocs(_effC, 'publishInfoChars');
   } catch (err) {

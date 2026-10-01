@@ -15,8 +15,7 @@ async function loadSupportChars() {
     allSupportChars = snap.docs.map(d => ({ _docId: d.id, ...d.data() })).sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
     scCurrentPage = 1;
     const _effSC = _applyPendingOps(allSupportChars, _pendingSC);
-    filteredSupportCharList = _effSC;
-    renderSupportCharTable(_effSC);
+    filterSupportCharTable();
     updateBarFromDocs(_effSC, 'publishInfoSupportChars');
   } catch (err) {
     showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);

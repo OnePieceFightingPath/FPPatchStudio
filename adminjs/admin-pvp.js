@@ -20,8 +20,7 @@ async function loadPvpPatches() {
     allPvpPatches = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
     pvpCurrentPage = 1;
     const _effPvp = _applyPendingOps(allPvpPatches, _pendingPvp);
-    filteredPvpList = _effPvp;
-    renderPvpTable(_effPvp);
+    filterPvpTable();
     updateBarFromDocs(_effPvp, 'publishInfoPvp');
   } catch (err) {
     showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
@@ -332,7 +331,7 @@ document.getElementById('pvpTypeFilter')?.addEventListener('change', filterPvpTa
 function filterPvpTable() {
   const q    = document.getElementById('pvpSearch').value.toLowerCase();
   const type = document.getElementById('pvpTypeFilter').value;
-  let list = allPvpPatches;
+  let list = _applyPendingOps(allPvpPatches, _pendingPvp);
   if (type !== 'all') {
     list = list.filter(p => {
       const src = (p.hasDraft && p.draftData) ? { ...p, ...p.draftData } : p;
