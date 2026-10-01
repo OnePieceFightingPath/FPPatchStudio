@@ -9,7 +9,7 @@ let _scEditBlob = null;
 async function loadSupportChars() {
   const tbody = document.getElementById('scTableBody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="7" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  showTableLoading(tbody, 7);
   try {
     const snap = await db.collection('supportCharacters').get();
     allSupportChars = snap.docs.map(d => ({ _docId: d.id, ...d.data() })).sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
@@ -19,7 +19,7 @@ async function loadSupportChars() {
     renderSupportCharTable(_effSC);
     updateBarFromDocs(_effSC, 'publishInfoSupportChars');
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`;
+    showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
     showToast('서포트 캐릭터 로드 실패', 'error');
   }
 }
@@ -40,12 +40,12 @@ function renderSupportCharTable(list) {
   const shown = list.slice(start, start + scPageSize);
 
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">서포트 캐릭터가 없습니다</td></tr>';
+    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">서포트 캐릭터가 없습니다</td></tr>');
     renderPaginator('scPaginator', 0, scPageSize, scCurrentPage, () => {});
     return;
   }
 
-  tbody.innerHTML = shown.map(c => {
+  const rowsHtml = shown.map(c => {
     const d = (c.hasDraft && c.draftData) ? { ...c, ...c.draftData } : c;
     const isVisible = c.visible !== false;
     const hasDraft = !!c.hasDraft;
@@ -77,6 +77,7 @@ function renderSupportCharTable(list) {
       </td>
     </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 
   renderPaginator('scPaginator', list.length, scPageSize, scCurrentPage, (page) => {
     scCurrentPage = page;

@@ -6,7 +6,7 @@ let charEditDocId = null;
 
 async function loadCharacters() {
   const tbody = document.getElementById('charTableBody');
-  tbody.innerHTML = '<tr><td colspan="9" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  showTableLoading(tbody, 9);
   try {
     const snap = await db.collection('characters').get();
     allCharacters = snap.docs.map(d => ({ _docId: d.id, ...d.data() })).sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
@@ -17,7 +17,7 @@ async function loadCharacters() {
     updatePvpCharSelect();
     updateBarFromDocs(_effC, 'publishInfoChars');
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="9" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`;
+    showTableError(tbody, `<tr><td colspan="9" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
     showToast('캐릭터 로드 실패', 'error');
   }
 }
@@ -37,12 +37,12 @@ function renderCharTable(list) {
   const shown = list.slice(start, start + charPageSize);
 
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="9" class="table-empty">캐릭터가 없습니다</td></tr>';
+    setTableBodyHtml(tbody, '<tr><td colspan="9" class="table-empty">캐릭터가 없습니다</td></tr>');
     renderPaginator('charPaginator', 0, charPageSize, charCurrentPage, () => {});
     return;
   }
 
-  tbody.innerHTML = shown.map(c => {
+  const rowsHtml = shown.map(c => {
     const d = (c.hasDraft && c.draftData) ? { ...c, ...c.draftData } : c;
     const attr = getAttributeFromChar(d);
     const attrClass = attr === '力' ? 'force' : attr === '技' ? 'ki' : attr === '心' ? 'sim' : '';
@@ -79,6 +79,7 @@ function renderCharTable(list) {
       </td>
     </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 
   renderPaginator('charPaginator', list.length, charPageSize, charCurrentPage, (page) => {
     charCurrentPage = page;

@@ -1088,16 +1088,15 @@ async function loadPermissionsSection() {
 // ── 사용자 목록 로드 ──
 async function loadPermUsers() {
   if (!hasMemberAccess()) return;
-  document.getElementById('permUserTableBody').innerHTML =
-    '<tr><td colspan="5" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  const tbody = document.getElementById('permUserTableBody');
+  showTableLoading(tbody, 5);
   try {
     const snap = await db.collection('users').get();
     _permAllUsers = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
     _permUserPage = 1;
     renderPermUserTable();
   } catch (e) {
-    document.getElementById('permUserTableBody').innerHTML =
-      `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--danger)">로드 실패: ${escHtml(e.message)}</td></tr>`;
+    showTableError(tbody, `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--danger)">로드 실패: ${escHtml(e.message)}</td></tr>`);
   }
 }
 
@@ -1115,12 +1114,12 @@ function renderPermUserTable() {
   const tbody  = document.getElementById('permUserTableBody');
 
   if (!paged.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">사용자가 없습니다.</td></tr>';
+    setTableBodyHtml(tbody, '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">사용자가 없습니다.</td></tr>');
     document.getElementById('permUserPaginator').innerHTML = '';
     return;
   }
 
-  tbody.innerHTML = paged.map(u => {
+  const rowsHtml = paged.map(u => {
     // email 필드가 아직 없는 기존 유저 대비: uid 일치 + isSuperAdmin() 이중 체크
     const isSA       = u.email === SUPER_ADMIN_EMAIL || (u.uid === currentUser?.uid && isSuperAdmin());
     const canWrite   = u.canWrite !== false;
@@ -1150,6 +1149,7 @@ function renderPermUserTable() {
         </td>
       </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 
   renderPaginator('permUserPaginator', filtered.length, PERM_USER_PAGE_SIZE, _permUserPage, (p) => {
     _permUserPage = p;
@@ -1288,8 +1288,8 @@ let _permAdminList = [];
 
 async function loadPermAdmins() {
   if (!isSuperAdmin()) return;
-  document.getElementById('permAdminTableBody').innerHTML =
-    '<tr><td colspan="5" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  const tbody = document.getElementById('permAdminTableBody');
+  showTableLoading(tbody, 5);
   try {
     // adminMeta/nicknames 에서 닉네임 맵 가져오기
     const nickSnap = await db.collection('adminMeta').doc('nicknames').get();
@@ -1313,14 +1313,13 @@ async function loadPermAdmins() {
     document.getElementById('permAdminCountLabel').textContent = `총 ${_permAdminList.length}명`;
     renderPermAdminTable();
   } catch (e) {
-    document.getElementById('permAdminTableBody').innerHTML =
-      `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--danger)">로드 실패: ${escHtml(e.message)}</td></tr>`;
+    showTableError(tbody, `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--danger)">로드 실패: ${escHtml(e.message)}</td></tr>`);
   }
 }
 
 function renderPermAdminTable() {
   const tbody = document.getElementById('permAdminTableBody');
-  tbody.innerHTML = _permAdminList.map((admin, idx) => {
+  const rowsHtml = _permAdminList.map((admin, idx) => {
     const superBadge = admin.isSuperAdmin ? ' <span class="perm-badge perm-badge-super">총괄</span>' : '';
     const disabled   = admin.isSuperAdmin ? ' disabled title="총괄 관리자는 변경 불가"' : '';
     return `
@@ -1351,6 +1350,7 @@ function renderPermAdminTable() {
         </td>
       </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 }
 
 async function updateAdminPerm(email, field, value) {

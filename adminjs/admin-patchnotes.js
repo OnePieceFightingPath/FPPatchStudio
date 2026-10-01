@@ -6,7 +6,7 @@ let pnEditDocId = null;
 
 async function loadPatchNotes() {
   const tbody = document.getElementById('patchNoteTableBody');
-  tbody.innerHTML = '<tr><td colspan="7" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  showTableLoading(tbody, 7);
   try {
     const snap = await db.collection('patchNotes').orderBy('date', 'desc').get();
     allPatchNotes = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
@@ -16,7 +16,7 @@ async function loadPatchNotes() {
     renderPatchNoteTable(_effPatch);
     updateBarFromDocs(_effPatch, 'publishInfoPatch');
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`;
+    showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
     showToast('패치노트 로드 실패', 'error');
   }
 }
@@ -36,12 +36,12 @@ function renderPatchNoteTable(list) {
   const shown = list.slice(start, start + patchPageSize);
 
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">패치노트가 없습니다</td></tr>';
+    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">패치노트가 없습니다</td></tr>');
     renderPaginator('patchPaginator', 0, patchPageSize, patchCurrentPage, () => {});
     return;
   }
 
-  tbody.innerHTML = shown.map(p => {
+  const rowsHtml = shown.map(p => {
     const d = (p.hasDraft && p.draftData) ? { ...p, ...p.draftData } : p;
     const isVisible = p.visible !== false;
     const hasDraft = !!p.hasDraft;
@@ -69,6 +69,7 @@ function renderPatchNoteTable(list) {
       </td>
     </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 
   renderPaginator('patchPaginator', list.length, patchPageSize, patchCurrentPage, (page) => {
     patchCurrentPage = page;

@@ -926,6 +926,24 @@ async function loadAllData() {
   loadDashboardStats();
 }
 
+function setTableBodyHtml(tbody, html) {
+  if (!tbody || tbody.innerHTML === html) return;
+  tbody.innerHTML = html;
+}
+
+function showTableLoading(tbody, colSpan) {
+  if (!tbody || (tbody.children.length && !tbody.querySelector('.table-loading'))) return;
+  setTableBodyHtml(
+    tbody,
+    `<tr><td colspan="${colSpan}" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>`
+  );
+}
+
+function showTableError(tbody, html) {
+  if (!tbody || (tbody.children.length && !tbody.querySelector('.table-loading'))) return;
+  setTableBodyHtml(tbody, html);
+}
+
 // ===== 페이지네이터 렌더링 유틸 =====
 function renderPaginator(containerId, totalItems, pageSize, currentPage, onPageChange) {
   const container = document.getElementById(containerId);

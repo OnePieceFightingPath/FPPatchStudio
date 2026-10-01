@@ -6,7 +6,7 @@ let bannerEditDocId = null;
 
 async function loadBanners() {
   const tbody = document.getElementById('bannerTableBody');
-  tbody.innerHTML = '<tr><td colspan="7" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  showTableLoading(tbody, 7);
   try {
     const snap = await db.collection('banners').orderBy('order').get();
     allBanners = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
@@ -25,7 +25,7 @@ async function loadBanners() {
       renderBannerTable(_effBanners2);
       updateBarFromDocs(_effBanners2, 'publishInfoBanners');
     } catch (err2) {
-      tbody.innerHTML = `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err2.message)}</td></tr>`;
+      showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err2.message)}</td></tr>`);
       showToast('배너 로드 실패', 'error');
     }
   }
@@ -46,12 +46,12 @@ function renderBannerTable(list) {
   const shown = list.slice(start, start + bannerPageSize);
 
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">등록된 배너가 없습니다</td></tr>';
+    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">등록된 배너가 없습니다</td></tr>');
     renderPaginator('bannerPaginator', 0, bannerPageSize, bannerCurrentPage, () => {});
     return;
   }
 
-  tbody.innerHTML = shown.map(b => {
+  const rowsHtml = shown.map(b => {
     const d = (b.hasDraft && b.draftData) ? { ...b, ...b.draftData } : b;
     const isVisible = b.visible !== false && d.isActive !== false;
     const hasDraft = !!b.hasDraft;
@@ -95,6 +95,7 @@ function renderBannerTable(list) {
       </td>
     </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 
   renderPaginator('bannerPaginator', list.length, bannerPageSize, bannerCurrentPage, (page) => {
     bannerCurrentPage = page;

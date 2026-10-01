@@ -12,7 +12,7 @@ let filteredNoticeList = [];
 async function loadNotices() {
   const tbody = document.getElementById('noticeTableBody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="6" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  showTableLoading(tbody, 6);
   try {
     const snap = await db.collection('notices').orderBy('createdAt', 'desc').get();
     allNotices = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
@@ -22,7 +22,7 @@ async function loadNotices() {
     renderNoticeTable(eff);
     updateBarFromDocs(eff, 'publishInfoNotices');
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`;
+    showTableError(tbody, `<tr><td colspan="6" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
     showToast('공지사항 로드 실패', 'error');
   }
 }
@@ -45,12 +45,12 @@ function renderNoticeTable(list) {
   const shown = list.slice(start, start + noticePageSize);
 
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">공지사항이 없습니다</td></tr>';
+    setTableBodyHtml(tbody, '<tr><td colspan="6" class="table-empty">공지사항이 없습니다</td></tr>');
     renderPaginator('noticePaginator', 0, noticePageSize, noticeCurrentPage, () => {});
     return;
   }
 
-  tbody.innerHTML = shown.map(n => {
+  const rowsHtml = shown.map(n => {
     const d = (n.hasDraft && n.draftData) ? { ...n, ...n.draftData } : n;
     const isVisible = n.visible !== false;
     const isPinned  = !!d.pinned;
@@ -79,6 +79,7 @@ function renderNoticeTable(list) {
       </td>
     </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 
   renderPaginator('noticePaginator', list.length, noticePageSize, noticeCurrentPage, (page) => {
     noticeCurrentPage = page;

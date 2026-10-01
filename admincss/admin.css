@@ -4190,3 +4190,5 @@ body {
 .admin-section.active { padding: 20px 20px 132px; }
 .publish-bar { box-shadow: none; }
 .sidebar-shortcut-group { border-top: 1px solid rgba(199, 210, 254, 0.18); }
+.btn-toolbar-icon:hover,
+.btn-toolbar-icon:active { transform: none; }

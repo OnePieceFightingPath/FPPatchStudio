@@ -14,7 +14,7 @@ function normalizePvpPatches(src) {
 
 async function loadPvpPatches() {
   const tbody = document.getElementById('pvpTableBody');
-  tbody.innerHTML = '<tr><td colspan="7" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  showTableLoading(tbody, 7);
   try {
     const snap = await db.collection('pvpPatch').get();
     allPvpPatches = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
@@ -24,7 +24,7 @@ async function loadPvpPatches() {
     renderPvpTable(_effPvp);
     updateBarFromDocs(_effPvp, 'publishInfoPvp');
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`;
+    showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
     showToast('PvP 패치 로드 실패', 'error');
   }
 }
@@ -52,7 +52,7 @@ function renderPvpTable(list) {
   const shown = list.slice(start, start + pvpPageSize);
 
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">PvP 패치가 없습니다</td></tr>';
+    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">PvP 패치가 없습니다</td></tr>');
     renderPaginator('pvpPaginator', 0, pvpPageSize, pvpCurrentPage, () => {});
     return;
   }
@@ -60,7 +60,7 @@ function renderPvpTable(list) {
   const typeLabel = { buff: '▲ 버프', nerf: '▼ 너프', fix: '✦ 기능 수정' };
   const typeClass  = { buff: 'buff', nerf: 'nerf', fix: 'fix' };
 
-  tbody.innerHTML = shown.map(p => {
+  const rowsHtml = shown.map(p => {
     const d = (p.hasDraft && p.draftData) ? { ...p, ...p.draftData } : p;
     const char = d.charId != null ? allCharacters.find(c => c.id === d.charId) : null;
     const supportChar = (d.charId == null && d.supportCharId != null)
@@ -108,6 +108,7 @@ function renderPvpTable(list) {
         </td>
       </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 
   renderPaginator('pvpPaginator', list.length, pvpPageSize, pvpCurrentPage, (page) => {
     pvpCurrentPage = page;

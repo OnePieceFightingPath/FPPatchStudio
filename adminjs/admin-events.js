@@ -751,7 +751,7 @@ document.getElementById('evtBannerOrderSave')?.addEventListener('click', async (
 async function loadEvtPages() {
   const tbody = document.getElementById('evtPageTableBody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="7" class="table-loading"><div class="spinner"></div><span>로딩 중...</span></td></tr>';
+  showTableLoading(tbody, 7);
   try {
     const snap = await db.collection('events').orderBy('date', 'desc').get();
     allEvtPages = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
@@ -770,7 +770,7 @@ async function loadEvtPages() {
       renderEvtPageTable(eff2);
       updateBarFromDocs(eff2, 'publishInfoEvtPages');
     } catch (err2) {
-      tbody.innerHTML = `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err2.message)}</td></tr>`;
+      showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err2.message)}</td></tr>`);
       showToast('이벤트 페이지 로드 실패', 'error');
     }
   }
@@ -791,12 +791,12 @@ function renderEvtPageTable(list) {
   const shown = list.slice(start, start + evtPagePageSize);
 
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">등록된 이벤트 페이지가 없습니다</td></tr>';
+    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">등록된 이벤트 페이지가 없습니다</td></tr>');
     renderPaginator('evtPagePaginator', 0, evtPagePageSize, evtPageCurrentPage, () => {});
     return;
   }
 
-  tbody.innerHTML = shown.map(p => {
+  const rowsHtml = shown.map(p => {
     const d = (p.hasDraft && p.draftData) ? { ...p, ...p.draftData } : p;
     const isVisible = p.visible !== false;
     const hasDraft = !!p.hasDraft;
@@ -822,6 +822,7 @@ function renderEvtPageTable(list) {
       </td>
     </tr>`;
   }).join('');
+  setTableBodyHtml(tbody, rowsHtml);
 
   renderPaginator('evtPagePaginator', list.length, evtPagePageSize, evtPageCurrentPage, (page) => {
     evtPageCurrentPage = page;
