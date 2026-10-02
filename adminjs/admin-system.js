@@ -283,9 +283,9 @@ function loadDashboardStats() {
     ]);
   }
   renderStatCardMetrics('statCharSub', [
-    { label: '힘', value: attrCount['力'], tone: 'primary' },
-    { label: '기술', value: attrCount['技'], tone: 'primary' },
-    { label: '마음', value: attrCount['心'], tone: 'primary' },
+    { label: '力', value: attrCount['力'], tone: 'primary' },
+    { label: '技', value: attrCount['技'], tone: 'primary' },
+    { label: '心', value: attrCount['心'], tone: 'primary' },
   ]);
   renderStatCardMetrics('statScSub', [
     { label: '활성화', value: activeSupportChars, tone: 'success' },
