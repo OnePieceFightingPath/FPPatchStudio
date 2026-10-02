@@ -934,6 +934,22 @@ function setTableBodyHtml(tbody, html) {
   tbody.innerHTML = html;
 }
 
+function tableEmptyStateRow(colSpan) {
+  const span = Math.max(1, Math.floor(Number(colSpan) || 1));
+  return `<tr class="table-empty-row">
+    <td colspan="${span}" class="table-empty-cell">
+      <div class="table-empty-state" role="status" aria-live="polite">
+        <svg class="table-empty-state-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3.5 8.25 5.75 3.5h12.5l2.25 4.75v11.5h-17V8.25Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M3.75 8.5h5l1.5 3h3.5l1.5-3h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <strong class="table-empty-state-title">데이터가 없습니다</strong>
+        <span class="table-empty-state-description">등록된 항목이 없습니다.</span>
+      </div>
+    </td>
+  </tr>`;
+}
+
 function showTableLoading(tbody, colSpan) {
   if (!tbody || (tbody.children.length && !tbody.querySelector('.table-loading'))) return;
   setTableBodyHtml(

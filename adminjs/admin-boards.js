@@ -126,7 +126,7 @@ function boardAdminLabel(post) {
 
 async function loadBoards() {
   const tbody = document.getElementById('boardTableBody');
-  showTableLoading(tbody, 8);
+  showTableLoading(tbody, 7);
 
   try {
     const [snap] = await Promise.all([
@@ -138,7 +138,7 @@ async function loadBoards() {
     populateBoardCategoryControls();
     filterBoardTable();
   } catch (err) {
-    showTableError(tbody, `<tr><td colspan="8" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
+    showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
     showToast('게시판 글 로드 실패', 'error');
   }
 }
@@ -178,7 +178,7 @@ function renderBoardTable(list) {
   const shown = list.slice(start, start + boardPageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">게시글이 없습니다</td></tr>');
+    setTableBodyHtml(tbody, tableEmptyStateRow(7));
     applyTableSelection('boardTableBody', []);
     renderPaginator('boardPaginator', 0, boardPageSize, boardCurrentPage, () => {});
     return;

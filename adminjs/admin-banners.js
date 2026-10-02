@@ -44,7 +44,7 @@ function renderBannerTable(list) {
   const shown = list.slice(start, start + bannerPageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">등록된 배너가 없습니다</td></tr>');
+    setTableBodyHtml(tbody, tableEmptyStateRow(7));
     applyTableSelection('bannerTableBody', []);
     renderPaginator('bannerPaginator', 0, bannerPageSize, bannerCurrentPage, () => {});
     return;

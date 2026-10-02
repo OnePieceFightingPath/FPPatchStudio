@@ -3455,7 +3455,7 @@ body {
   background: #fff;
 }
 .admin-table tr:hover td.table-empty-cell { background: #fff; }
-.notice-empty-state {
+.table-empty-state {
   min-height: 148px;
   display: flex;
   flex-direction: column;
@@ -3465,19 +3465,19 @@ body {
   padding: 24px 16px;
   text-align: center;
 }
-.notice-empty-state-icon {
+.table-empty-state-icon {
   width: 34px;
   height: 34px;
   margin-bottom: 2px;
   color: #64748b;
 }
-.notice-empty-state-title {
+.table-empty-state-title {
   color: #475569;
   font-size: 13px;
   font-weight: 700;
   line-height: 1.4;
 }
-.notice-empty-state-description {
+.table-empty-state-description {
   color: #94a3b8;
   font-size: 11px;
   line-height: 1.4;

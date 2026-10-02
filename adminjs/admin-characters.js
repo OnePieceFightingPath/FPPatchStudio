@@ -36,7 +36,7 @@ function renderCharTable(list) {
   const shown = list.slice(start, start + charPageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="9" class="table-empty">캐릭터가 없습니다</td></tr>');
+    setTableBodyHtml(tbody, tableEmptyStateRow(9));
     applyTableSelection('charTableBody', []);
     renderPaginator('charPaginator', 0, charPageSize, charCurrentPage, () => {});
     return;

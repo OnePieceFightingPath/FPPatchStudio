@@ -51,7 +51,7 @@ function renderPvpTable(list) {
   const shown = list.slice(start, start + pvpPageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">PvP 패치가 없습니다</td></tr>');
+    setTableBodyHtml(tbody, tableEmptyStateRow(7));
     applyTableSelection('pvpTableBody', []);
     renderPaginator('pvpPaginator', 0, pvpPageSize, pvpCurrentPage, () => {});
     return;

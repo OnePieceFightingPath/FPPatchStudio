@@ -35,7 +35,7 @@ function renderPatchNoteTable(list) {
   const shown = list.slice(start, start + patchPageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">패치노트가 없습니다</td></tr>');
+    setTableBodyHtml(tbody, tableEmptyStateRow(7));
     applyTableSelection('patchNoteTableBody', []);
     renderPaginator('patchPaginator', 0, patchPageSize, patchCurrentPage, () => {});
     return;

@@ -1116,7 +1116,7 @@ function renderPermUserTable() {
   const tbody  = document.getElementById('permUserTableBody');
 
   if (!paged.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted)">사용자가 없습니다.</td></tr>');
+    setTableBodyHtml(tbody, tableEmptyStateRow(5));
     applyTableSelection('permUserTableBody', []);
     document.getElementById('permUserPaginator').innerHTML = '';
     return;
@@ -1295,7 +1295,7 @@ let _permAdminList = [];
 async function loadPermAdmins() {
   if (!isSuperAdmin()) return;
   const tbody = document.getElementById('permAdminTableBody');
-  showTableLoading(tbody, 5);
+  showTableLoading(tbody, 6);
   try {
     // adminMeta/nicknames 에서 닉네임 맵 가져오기
     const nickSnap = await db.collection('adminMeta').doc('nicknames').get();
@@ -1319,12 +1319,17 @@ async function loadPermAdmins() {
     document.getElementById('permAdminCountLabel').textContent = `총 ${_permAdminList.length}명`;
     renderPermAdminTable();
   } catch (e) {
-    showTableError(tbody, `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--danger)">로드 실패: ${escHtml(e.message)}</td></tr>`);
+    showTableError(tbody, `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--danger)">로드 실패: ${escHtml(e.message)}</td></tr>`);
   }
 }
 
 function renderPermAdminTable() {
   const tbody = document.getElementById('permAdminTableBody');
+  if (!_permAdminList.length) {
+    setTableBodyHtml(tbody, tableEmptyStateRow(6));
+    applyTableSelection('permAdminTableBody', []);
+    return;
+  }
   const rowsHtml = _permAdminList.map((admin, idx) => {
     const superBadge = admin.isSuperAdmin ? ' <span class="perm-badge perm-badge-super">총괄</span>' : '';
     const disabled   = admin.isSuperAdmin ? ' disabled title="총괄 관리자는 변경 불가"' : '';

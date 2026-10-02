@@ -88,18 +88,7 @@ function renderNoticeTable(list) {
   const shown = list.slice(start, start + noticePageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, `<tr>
-      <td colspan="7" class="table-empty-cell">
-        <div class="notice-empty-state">
-          <svg class="notice-empty-state-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3.5 8.25 5.75 3.5h12.5l2.25 4.75v11.5h-17V8.25Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-            <path d="M3.75 8.5h5l1.5 3h3.5l1.5-3h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <strong class="notice-empty-state-title">데이터가 없습니다</strong>
-          <span class="notice-empty-state-description">등록된 항목이 없습니다.</span>
-        </div>
-      </td>
-    </tr>`);
+    setTableBodyHtml(tbody, tableEmptyStateRow(7));
     applyTableSelection('noticeTableBody', []);
     renderPaginator('noticePaginator', 0, noticePageSize, noticeCurrentPage, () => {});
     return;

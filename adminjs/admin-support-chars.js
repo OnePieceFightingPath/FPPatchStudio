@@ -39,7 +39,7 @@ function renderSupportCharTable(list) {
   const shown = list.slice(start, start + scPageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">서포트 캐릭터가 없습니다</td></tr>');
+    setTableBodyHtml(tbody, tableEmptyStateRow(7));
     applyTableSelection('scTableBody', []);
     renderPaginator('scPaginator', 0, scPageSize, scCurrentPage, () => {});
     return;

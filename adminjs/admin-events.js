@@ -295,7 +295,7 @@ function renderEvtBannerTable(list) {
   const shown = list.slice(start, start + evtBannerPageSize);
 
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">등록된 이벤트 배너가 없습니다</td></tr>';
+    setTableBodyHtml(tbody, tableEmptyStateRow(7));
     renderPaginator('evtBannerPaginator', 0, evtBannerPageSize, evtBannerCurrentPage, () => {});
     return;
   }
@@ -789,7 +789,7 @@ function renderEvtPageTable(list) {
   const shown = list.slice(start, start + evtPagePageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">등록된 이벤트 페이지가 없습니다</td></tr>');
+    setTableBodyHtml(tbody, tableEmptyStateRow(7));
     applyTableSelection('evtPageTableBody', []);
     renderPaginator('evtPagePaginator', 0, evtPagePageSize, evtPageCurrentPage, () => {});
     return;
