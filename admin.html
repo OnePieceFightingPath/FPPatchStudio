@@ -219,18 +219,27 @@
           <hr class="dash-divider">
           <div class="dash-last-login" id="dashLastLogin">마지막 로그인은 — 입니다.</div>
         </div>
-        <div class="dashboard-collection-map">
-          <div class="dashboard-admin-label">Firestore 컬렉션 구조</div>
-          <div class="collection-map-list">
-            <div class="collection-map-item"><span class="col-name">characters</span><span class="col-fields">id, name, type, attr, img, grade, skills[], supportSkills[], recentPatches[], tips[], visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-            <div class="collection-map-item"><span class="col-name">supportCharacters</span><span class="col-fields">id, name, grade, img, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-            <div class="collection-map-item"><span class="col-name">pvpPatch</span><span class="col-fields">charId, type, patches[], visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-            <div class="collection-map-item"><span class="col-name">patchNotes</span><span class="col-fields">date, title, excerpt, content, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-            <div class="collection-map-item"><span class="col-name">banners</span><span class="col-fields">imageUrl, title, link, order, isActive, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-            <div class="collection-map-item"><span class="col-name">notices</span><span class="col-fields">title, excerpt, content, pinned, visible, updatedBy, createdAt, updatedAt</span></div>
-            <div class="collection-map-item"><span class="col-name">users</span><span class="col-fields">nickname, profileImage</span></div>
-            <div class="collection-map-item"><span class="col-name">adminMeta</span><span class="col-fields">nicknames (doc)</span></div>
-            <div class="collection-map-item"><span class="col-name">publishMeta</span><span class="col-fields">characters, supportCharacters, pvpPatch, patchNotes, banners (docs)</span></div>
+        <div class="dashboard-visitor-card" aria-labelledby="dashboardVisitorTitle">
+          <div class="dashboard-visitor-summary">
+            <div class="dashboard-visitor-heading">
+              <span class="dashboard-visitor-dot" aria-hidden="true"></span>
+              <h3 id="dashboardVisitorTitle">방문자 전체</h3>
+            </div>
+            <strong class="dashboard-visitor-total" id="dashboardVisitorTotal" aria-live="polite">—</strong>
+            <div class="dashboard-visitor-updated" id="dashboardVisitorUpdated">방문자 데이터 확인 중...</div>
+          </div>
+          <div class="dashboard-visitor-chart-wrap">
+            <svg class="dashboard-visitor-chart" id="dashboardVisitorChart" viewBox="0 0 1000 320" role="img" aria-label="최근 15일 방문자 통계 그래프">
+              <g id="dashboardVisitorGrid" aria-hidden="true"></g>
+              <g id="dashboardVisitorYAxis" aria-hidden="true"></g>
+              <path id="dashboardVisitorLine" class="dashboard-visitor-line" d="" aria-hidden="true"></path>
+              <circle id="dashboardVisitorLastPoint" class="dashboard-visitor-last-point" cx="0" cy="0" r="5.5" aria-hidden="true"></circle>
+              <g id="dashboardVisitorXAxis" aria-hidden="true"></g>
+            </svg>
+            <div class="dashboard-visitor-empty" id="dashboardVisitorEmpty" role="status">
+              <strong>방문자 데이터가 아직 없습니다</strong>
+              <span>Firestore의 <code>visitorStats</code> 컬렉션에 날짜별 <code>date</code>와 <code>count</code>를 저장하면 표시됩니다.</span>
+            </div>
           </div>
         </div>
       </div>
@@ -363,20 +372,6 @@
             </div>
           </div>
           <div class="stat-card-sub" id="statSupportSub">—</div>
-        </div>
-      </div>
-
-      <!-- 모바일 전용: Firebase 컬렉션 맵 -->
-      <div class="dashboard-collection-map dashboard-collection-map--mobile">
-        <div class="dashboard-admin-label">Firestore 컬렉션 구조</div>
-        <div class="collection-map-list">
-          <div class="collection-map-item"><span class="col-name">characters</span><span class="col-fields">id, name, type, attr, img, grade, skills[], supportSkills[], recentPatches[], tips[], visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-          <div class="collection-map-item"><span class="col-name">supportCharacters</span><span class="col-fields">id, name, grade, img, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-          <div class="collection-map-item"><span class="col-name">pvpPatch</span><span class="col-fields">charId, type, patches[], visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-          <div class="collection-map-item"><span class="col-name">patchNotes</span><span class="col-fields">date, title, excerpt, content, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-          <div class="collection-map-item"><span class="col-name">banners</span><span class="col-fields">imageUrl, title, link, order, isActive, visible, hasDraft, updatedBy, createdAt, updatedAt</span></div>
-          <div class="collection-map-item"><span class="col-name">users</span><span class="col-fields">nickname, profileImage</span></div>
-          <div class="collection-map-item"><span class="col-name">adminMeta</span><span class="col-fields">nicknames (doc)</span></div>
         </div>
       </div>
 

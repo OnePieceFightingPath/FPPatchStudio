@@ -84,7 +84,163 @@ function initDashboardCardNavigation() {
 
 initDashboardCardNavigation();
 
+const DASHBOARD_VISITOR_DAYS = 15;
+const DASHBOARD_VISITOR_SVG_NS = 'http://www.w3.org/2000/svg';
+
+function dashboardVisitorDayKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function dashboardVisitorDateKey(value, fallback) {
+  let dateValue = value || fallback;
+  if (dateValue && typeof dateValue.toDate === 'function') dateValue = dateValue.toDate();
+  if (dateValue instanceof Date && !Number.isNaN(dateValue.getTime())) {
+    return dashboardVisitorDayKey(dateValue);
+  }
+  if (typeof dateValue === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateValue)) return dateValue;
+  if (dateValue !== undefined && dateValue !== null) {
+    const parsed = new Date(dateValue);
+    if (!Number.isNaN(parsed.getTime())) return dashboardVisitorDayKey(parsed);
+  }
+  return null;
+}
+
+function dashboardVisitorSvgElement(name, attributes = {}) {
+  const element = document.createElementNS(DASHBOARD_VISITOR_SVG_NS, name);
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
+  return element;
+}
+
+function renderDashboardVisitorChart(dailyCounts, hasData) {
+  const grid = document.getElementById('dashboardVisitorGrid');
+  const yAxis = document.getElementById('dashboardVisitorYAxis');
+  const xAxis = document.getElementById('dashboardVisitorXAxis');
+  const line = document.getElementById('dashboardVisitorLine');
+  const lastPoint = document.getElementById('dashboardVisitorLastPoint');
+  const emptyState = document.getElementById('dashboardVisitorEmpty');
+  const chart = document.getElementById('dashboardVisitorChart');
+  if (!grid || !yAxis || !xAxis || !line || !lastPoint || !emptyState || !chart) return;
+
+  const plot = { left: 54, right: 990, top: 20, bottom: 252 };
+  const maxValue = Math.max(4, Math.ceil(Math.max(0, ...dailyCounts.map(point => point.count)) / 4) * 4);
+  const yFor = value => plot.bottom - (value / maxValue) * (plot.bottom - plot.top);
+  const xFor = index => plot.left + (index / Math.max(1, dailyCounts.length - 1)) * (plot.right - plot.left);
+  const numberFormat = new Intl.NumberFormat('ko-KR');
+
+  grid.replaceChildren();
+  yAxis.replaceChildren();
+  xAxis.replaceChildren();
+
+  [maxValue, maxValue / 2, 0].forEach(value => {
+    const y = yFor(value);
+    grid.appendChild(dashboardVisitorSvgElement('line', {
+      x1: plot.left, y1: y, x2: plot.right, y2: y, class: 'dashboard-visitor-grid-line',
+    }));
+    const label = dashboardVisitorSvgElement('text', {
+      x: plot.left - 12, y: y + 4, class: 'dashboard-visitor-axis-label', 'text-anchor': 'end',
+    });
+    label.textContent = numberFormat.format(Math.round(value));
+    yAxis.appendChild(label);
+  });
+
+  const points = dailyCounts.map((item, index) => ({ x: xFor(index), y: yFor(item.count) }));
+  if (hasData && points.length) {
+    let path = `M ${points[0].x} ${points[0].y}`;
+    for (let index = 1; index < points.length; index++) {
+      const previous = points[index - 1];
+      const current = points[index];
+      const middleX = (previous.x + current.x) / 2;
+      path += ` C ${middleX} ${previous.y}, ${middleX} ${current.y}, ${current.x} ${current.y}`;
+    }
+    line.setAttribute('d', path);
+    line.style.display = '';
+    lastPoint.setAttribute('cx', points[points.length - 1].x);
+    lastPoint.setAttribute('cy', points[points.length - 1].y);
+    lastPoint.style.display = '';
+  } else {
+    line.setAttribute('d', '');
+    line.style.display = 'none';
+    lastPoint.style.display = 'none';
+  }
+
+  dailyCounts.forEach((item, index) => {
+    if (index % 2 !== 0 && index !== dailyCounts.length - 1) return;
+    const [, month, day] = item.date.split('-');
+    const label = dashboardVisitorSvgElement('text', {
+      x: xFor(index), y: 294, class: 'dashboard-visitor-axis-label', 'text-anchor': 'middle',
+    });
+    label.textContent = `${Number(month)}/${Number(day)}`;
+    xAxis.appendChild(label);
+  });
+
+  emptyState.hidden = hasData;
+  chart.setAttribute(
+    'aria-label',
+    hasData ? '최근 15일 방문자 통계 그래프' : '방문자 데이터가 없어 그래프를 표시할 수 없습니다.',
+  );
+}
+
+async function loadDashboardVisitors() {
+  const totalElement = document.getElementById('dashboardVisitorTotal');
+  const updatedElement = document.getElementById('dashboardVisitorUpdated');
+  if (!totalElement || !updatedElement || typeof db === 'undefined') return;
+
+  try {
+    const snapshot = await db.collection('visitorStats').get();
+    const countsByDate = new Map();
+    let total = 0;
+
+    snapshot.forEach(doc => {
+      const data = doc.data() || {};
+      const date = dashboardVisitorDateKey(data.date || data.day, doc.id);
+      const rawCount = data.count ?? data.visitors ?? data.totalVisitors;
+      const count = Number(rawCount);
+      if (!date || !Number.isFinite(count) || count < 0) return;
+      countsByDate.set(date, (countsByDate.get(date) || 0) + count);
+      total += count;
+    });
+
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const firstDay = new Date(todayStart);
+    firstDay.setDate(firstDay.getDate() - (DASHBOARD_VISITOR_DAYS - 1));
+    const dailyCounts = Array.from({ length: DASHBOARD_VISITOR_DAYS }, (_, index) => {
+      const date = new Date(firstDay);
+      date.setDate(firstDay.getDate() + index);
+      const key = dashboardVisitorDayKey(date);
+      return { date: key, count: countsByDate.get(key) || 0 };
+    });
+    const hasData = countsByDate.size > 0;
+    totalElement.textContent = hasData ? new Intl.NumberFormat('ko-KR').format(total) : '—';
+
+    if (hasData) {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Seoul',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }).formatToParts(new Date());
+      const time = Object.fromEntries(parts.map(part => [part.type, part.value]));
+      updatedElement.textContent = `${time.year}.${time.month}.${time.day} ${time.hour}:${time.minute} 기준`;
+    } else {
+      updatedElement.textContent = 'Firestore visitorStats 데이터 없음';
+    }
+
+    renderDashboardVisitorChart(dailyCounts, hasData);
+  } catch (error) {
+    console.error('방문자 통계를 불러오지 못했습니다.', error);
+    totalElement.textContent = '—';
+    updatedElement.textContent = '통계를 불러오지 못했습니다. Firestore 읽기 권한을 확인해주세요.';
+    renderDashboardVisitorChart([], false);
+  }
+}
+
 function loadDashboardStats() {
+  loadDashboardVisitors();
+
   const charCount   = allCharacters.length;
   const scCount     = allSupportChars.length;
   const pvpCount    = allPvpPatches.length;
