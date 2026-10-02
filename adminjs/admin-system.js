@@ -2,6 +2,88 @@
 // DASHBOARD
 // ============================================================
 
+const STAT_CARD_STATUS_TONES = new Set(['success', 'danger', 'warning', 'primary']);
+
+function renderStatCardMetrics(id, metrics) {
+  const container = document.getElementById(id);
+  if (!container) return;
+
+  const fragment = document.createDocumentFragment();
+  metrics.forEach((metric, index) => {
+    if (index > 0) {
+      const divider = document.createElement('span');
+      divider.className = 'stat-card-status-divider';
+      divider.setAttribute('aria-hidden', 'true');
+      divider.textContent = '|';
+      fragment.appendChild(divider);
+    }
+
+    const item = document.createElement('span');
+    item.className = 'stat-card-status-item';
+
+    const label = document.createElement('span');
+    label.className = 'stat-card-status-label';
+    label.textContent = metric.label;
+
+    const value = document.createElement('strong');
+    const tone = STAT_CARD_STATUS_TONES.has(metric.tone) ? metric.tone : 'primary';
+    value.className = `stat-card-status-value stat-card-status-${tone}`;
+    value.textContent = String(metric.value);
+
+    item.append(label, document.createTextNode(' : '), value);
+    fragment.appendChild(item);
+  });
+
+  container.replaceChildren(fragment);
+}
+
+function initDashboardCardNavigation() {
+  const dashboardGrid = document.querySelector('.dashboard-stat-grid');
+  if (!dashboardGrid) return;
+
+  const sectionsByLabel = {
+    '메인 배너 관리': 'banners',
+    '캐릭터 관리': 'characters',
+    '현질 캐릭터 관리': 'supportchars',
+    'PvP 패치 관리': 'pvppatch',
+    '패치노트 관리': 'patchnote',
+    '게시판 관리': 'boards',
+    '이벤트 관리': 'events',
+    '공지사항 관리': 'notices',
+    '고객센터 관리': 'support',
+  };
+
+  dashboardGrid.querySelectorAll('.stat-card').forEach(card => {
+    const label = card.querySelector('.stat-card-label')?.textContent.trim();
+    const section = sectionsByLabel[label];
+    if (!section) return;
+
+    card.dataset.section = section;
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `${label}로 이동`);
+  });
+
+  const getCardFromEvent = event => {
+    if (!(event.target instanceof Element)) return null;
+    return event.target.closest('.stat-card[data-section]');
+  };
+
+  dashboardGrid.addEventListener('click', event => {
+    const card = getCardFromEvent(event);
+    if (card) switchSection(card.dataset.section);
+  });
+
+  dashboardGrid.addEventListener('keydown', event => {
+    const card = getCardFromEvent(event);
+    if (!card || (event.key !== 'Enter' && event.key !== ' ')) return;
+    event.preventDefault();
+    switchSection(card.dataset.section);
+  });
+}
+
+initDashboardCardNavigation();
+
 function loadDashboardStats() {
   const charCount   = allCharacters.length;
   const scCount     = allSupportChars.length;
@@ -21,6 +103,10 @@ function loadDashboardStats() {
 
   const pvpBuff = allPvpPatches.filter(p => normalizePvpPatches(p).some(i => i.type === 'buff')).length;
   const pvpNerf = allPvpPatches.filter(p => normalizePvpPatches(p).some(i => i.type === 'nerf')).length;
+  const activeSupportChars = allSupportChars.filter(character => character.visible !== false).length;
+  const inactiveSupportChars = scCount - activeSupportChars;
+  const publishedPatchNotes = allPatchNotes.filter(note => note.visible !== false).length;
+  const hiddenPatchNotes = patchCount - publishedPatchNotes;
 
   document.getElementById('statCharCount').textContent   = charCount;
   document.getElementById('statScCount').textContent     = scCount;
@@ -29,17 +115,44 @@ function loadDashboardStats() {
   document.getElementById('statBannerCount').textContent = bannerCount;
   if (document.getElementById('statNoticeCount')) {
     document.getElementById('statNoticeCount').textContent = noticeCount;
-    document.getElementById('statNoticeSub').textContent = `고정 ${pinnedNotices}개`;
+    renderStatCardMetrics('statNoticeSub', [
+      { label: '고정', value: pinnedNotices, tone: 'warning' },
+      { label: '등록', value: noticeCount, tone: 'primary' },
+    ]);
   }
   if (document.getElementById('statEventCount')) {
     document.getElementById('statEventCount').textContent = eventCount;
-    document.getElementById('statEventSub').textContent = `등록 ${eventCount}개`;
+    renderStatCardMetrics('statEventSub', [
+      { label: '등록', value: eventCount, tone: 'primary' },
+    ]);
   }
-  document.getElementById('statCharSub').textContent = `力 ${attrCount['力']}  技 ${attrCount['技']}  心 ${attrCount['心']}`;
-  document.getElementById('statScSub').textContent     = `등급별 총 ${scCount}명`;
-  document.getElementById('statPvpSub').textContent    = `버프 ${pvpBuff}  너프 ${pvpNerf}`;
-  document.getElementById('statPatchSub').textContent  = `최신순 정렬`;
-  document.getElementById('statBannerSub').textContent = `활성 ${activeBanners} / 비활성 ${bannerCount - activeBanners}`;
+  renderStatCardMetrics('statCharSub', [
+    { label: '힘', value: attrCount['力'], tone: 'primary' },
+    { label: '기술', value: attrCount['技'], tone: 'primary' },
+    { label: '마음', value: attrCount['心'], tone: 'primary' },
+  ]);
+  renderStatCardMetrics('statScSub', [
+    { label: '활성화', value: activeSupportChars, tone: 'success' },
+    { label: '비활성화', value: inactiveSupportChars, tone: 'danger' },
+  ]);
+  renderStatCardMetrics('statPvpSub', [
+    { label: '버프', value: pvpBuff, tone: 'success' },
+    { label: '너프', value: pvpNerf, tone: 'danger' },
+  ]);
+  renderStatCardMetrics('statPatchSub', [
+    { label: '공개', value: publishedPatchNotes, tone: 'success' },
+    { label: '비공개', value: hiddenPatchNotes, tone: 'warning' },
+  ]);
+  renderStatCardMetrics('statBannerSub', [
+    { label: '활성화', value: activeBanners, tone: 'success' },
+    { label: '비활성화', value: bannerCount - activeBanners, tone: 'warning' },
+  ]);
+  renderStatCardMetrics('statBoardSub', [
+    { label: '게시판', value: '—', tone: 'primary' },
+  ]);
+  renderStatCardMetrics('statSupportSub', [
+    { label: '문의', value: '—', tone: 'primary' },
+  ]);
 
   if (currentUser) {
     const nickname = profileData?.nickname || currentUser.displayName || currentUser.email || '—';

@@ -249,111 +249,120 @@
       <!-- 관리 메뉴 카드 (메인 배너 → 캐릭터 → 현질 캐릭터 → PvP 패치 → 패치노트 → 게시판 → 이벤트 → 공지사항 → 고객센터) -->
       <div class="dashboard-stat-grid">
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-banner">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-banner">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">메인 배너 관리</div>
+              <div class="stat-card-value" id="statBannerCount"><div class="stat-spinner"></div></div>
+            </div>
           </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">메인 배너 관리</div>
-            <div class="stat-card-value" id="statBannerCount"><div class="stat-spinner"></div></div>
-            <div class="stat-card-sub" id="statBannerSub">—</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('banners')">관리 →</button>
-        </div>
-
-<div class="stat-card">
-          <div class="stat-card-icon stat-icon-char">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">캐릭터 관리</div>
-            <div class="stat-card-value" id="statCharCount"><div class="stat-spinner"></div></div>
-            <div class="stat-card-sub" id="statCharSub">—</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('characters')">관리 →</button>
+          <div class="stat-card-sub" id="statBannerSub">—</div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-char">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-char">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">캐릭터 관리</div>
+              <div class="stat-card-value" id="statCharCount"><div class="stat-spinner"></div></div>
+            </div>
           </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">현질 캐릭터 관리</div>
-            <div class="stat-card-value" id="statScCount"><div class="stat-spinner"></div></div>
-            <div class="stat-card-sub" id="statScSub">—</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('supportchars')">관리 →</button>
+          <div class="stat-card-sub" id="statCharSub">—</div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-pvp">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-char">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">현질 캐릭터 관리</div>
+              <div class="stat-card-value" id="statScCount"><div class="stat-spinner"></div></div>
+            </div>
           </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">PvP 패치 관리</div>
-            <div class="stat-card-value" id="statPvpCount"><div class="stat-spinner"></div></div>
-            <div class="stat-card-sub" id="statPvpSub">—</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('pvppatch')">관리 →</button>
+          <div class="stat-card-sub" id="statScSub">—</div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-patch">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-pvp">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">PvP 패치 관리</div>
+              <div class="stat-card-value" id="statPvpCount"><div class="stat-spinner"></div></div>
+            </div>
           </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">패치노트 관리</div>
-            <div class="stat-card-value" id="statPatchCount"><div class="stat-spinner"></div></div>
-            <div class="stat-card-sub" id="statPatchSub">—</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('patchnote')">관리 →</button>
+          <div class="stat-card-sub" id="statPvpSub">—</div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-patch">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-patch">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">패치노트 관리</div>
+              <div class="stat-card-value" id="statPatchCount"><div class="stat-spinner"></div></div>
+            </div>
           </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">게시판 관리</div>
-            <div class="stat-card-value">—</div>
-            <div class="stat-card-sub">관리 화면</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('boards')">관리 →</button>
+          <div class="stat-card-sub" id="statPatchSub">—</div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-char">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3M4 10h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg>
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-patch">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">게시판 관리</div>
+              <div class="stat-card-value">—</div>
+            </div>
           </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">이벤트 관리</div>
-            <div class="stat-card-value" id="statEventCount"><div class="stat-spinner"></div></div>
-            <div class="stat-card-sub" id="statEventSub">—</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('events')">관리 →</button>
+          <div class="stat-card-sub" id="statBoardSub">—</div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-banner">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-char">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3M4 10h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">이벤트 관리</div>
+              <div class="stat-card-value" id="statEventCount"><div class="stat-spinner"></div></div>
+            </div>
           </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">공지사항 관리</div>
-            <div class="stat-card-value" id="statNoticeCount"><div class="stat-spinner"></div></div>
-            <div class="stat-card-sub" id="statNoticeSub">—</div>
-          </div>
-          <button class="stat-card-goto" onclick="switchSection('notices')">관리 →</button>
+          <div class="stat-card-sub" id="statEventSub">—</div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-card-icon stat-icon-pvp">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 8a6 6 0 00-12 0v4a6 6 0 0012 0V8zM4 12H2m20 0h-2M7 20h10M9 16h6"/></svg>
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-banner">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">공지사항 관리</div>
+              <div class="stat-card-value" id="statNoticeCount"><div class="stat-spinner"></div></div>
+            </div>
           </div>
-          <div class="stat-card-body">
-            <div class="stat-card-label">고객센터 관리</div>
-            <div class="stat-card-value">—</div>
-            <div class="stat-card-sub">관리 화면</div>
+          <div class="stat-card-sub" id="statNoticeSub">—</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-main">
+            <div class="stat-card-icon stat-icon-pvp">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 8a6 6 0 00-12 0v4a6 6 0 0012 0V8zM4 12H2m20 0h-2M7 20h10M9 16h6"/></svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">고객센터 관리</div>
+              <div class="stat-card-value">—</div>
+            </div>
           </div>
-          <button class="stat-card-goto" onclick="switchSection('support')">관리 →</button>
+          <div class="stat-card-sub" id="statSupportSub">—</div>
         </div>
       </div>
 
