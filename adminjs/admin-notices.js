@@ -12,7 +12,7 @@ let filteredNoticeList = [];
 async function loadNotices() {
   const tbody = document.getElementById('noticeTableBody');
   if (!tbody) return;
-  showTableLoading(tbody, 8);
+  showTableLoading(tbody, 7);
   try {
     const snap = await db.collection('notices').orderBy('createdAt', 'desc').get();
     allNotices = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
@@ -21,9 +21,39 @@ async function loadNotices() {
     filterNotices();
     updateBarFromDocs(eff, 'publishInfoNotices');
   } catch (err) {
-    showTableError(tbody, `<tr><td colspan="8" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
+    showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
     showToast('공지사항 로드 실패', 'error');
   }
+}
+
+function getNoticeDisplayIds() {
+  const notices = _applyPendingOps(allNotices, _pendingNotices);
+  const ids = new Map();
+  const usedIds = new Set();
+
+  notices.forEach(notice => {
+    const rawId = notice.id;
+    const numericId = typeof rawId === 'number'
+      ? rawId
+      : typeof rawId === 'string' && /^\d+$/.test(rawId.trim())
+        ? Number(rawId.trim())
+        : NaN;
+    if (Number.isSafeInteger(numericId) && numericId >= 0 && !usedIds.has(numericId)) {
+      ids.set(notice._docId, numericId);
+      usedIds.add(numericId);
+    }
+  });
+
+  let nextId = 1;
+  notices.forEach(notice => {
+    if (ids.has(notice._docId)) return;
+    while (usedIds.has(nextId)) nextId += 1;
+    ids.set(notice._docId, nextId);
+    usedIds.add(nextId);
+    nextId += 1;
+  });
+
+  return ids;
 }
 
 function formatNoticeDate(notice) {
@@ -43,6 +73,7 @@ function renderNoticeTable(list) {
   filteredNoticeList = list;
   const tbody = document.getElementById('noticeTableBody');
   const label = document.getElementById('noticeCountLabel');
+  const noticeDisplayIds = getNoticeDisplayIds();
   if (!tbody) return;
   if (label) {
     label.textContent = list.length === allNotices.length
@@ -57,7 +88,18 @@ function renderNoticeTable(list) {
   const shown = list.slice(start, start + noticePageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, '<tr><td colspan="7" class="table-empty">공지사항이 없습니다</td></tr>');
+    setTableBodyHtml(tbody, `<tr>
+      <td colspan="7" class="table-empty-cell">
+        <div class="notice-empty-state">
+          <svg class="notice-empty-state-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3.5 8.25 5.75 3.5h12.5l2.25 4.75v11.5h-17V8.25Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M3.75 8.5h5l1.5 3h3.5l1.5-3h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <strong class="notice-empty-state-title">데이터가 없습니다</strong>
+          <span class="notice-empty-state-description">등록된 항목이 없습니다.</span>
+        </div>
+      </td>
+    </tr>`);
     applyTableSelection('noticeTableBody', []);
     renderPaginator('noticePaginator', 0, noticePageSize, noticeCurrentPage, () => {});
     return;
@@ -71,7 +113,7 @@ function renderNoticeTable(list) {
     const isPendingDelete = !!n.pendingDelete;
     const rowClass  = isPendingDelete ? 'row-pending-delete' : hasDraft ? 'row-has-draft' : '';
     const safeTitle = escHtml(d.title || '');
-    const noticeId  = n.id ?? n._docId;
+    const noticeId  = noticeDisplayIds.get(n._docId);
     const dateStr   = formatNoticeDate(n);
     const writer    = d.writer || d.author || d.authorName || d.nickname || d.createdBy || '관리자';
     return `
@@ -195,13 +237,21 @@ document.getElementById('noticeFormSubmit')?.addEventListener('click', async () 
   const pinned  = document.getElementById('noticeFieldPinned').checked;
   const visible = document.getElementById('noticeFieldVisible').checked;
   const content = $('#noticeEditor').summernote('code') || '';
+  const isEditing = !!noticeEditDocId;
 
   if (!title)   { errEl.textContent = '제목은 필수입니다.';   errEl.style.display = 'block'; return; }
   if (!content) { errEl.textContent = '본문은 필수입니다.';   errEl.style.display = 'block'; return; }
 
-  const data = { title, content, pinned, visible, updatedBy: getCurrentUserLabel() };
-
-  const isEditing = !!noticeEditDocId;
+  const noticeDisplayIds = getNoticeDisplayIds();
+  let nextNoticeId = 0;
+  noticeDisplayIds.forEach(id => {
+    if (id > nextNoticeId) nextNoticeId = id;
+  });
+  nextNoticeId += 1;
+  const data = {
+    id: isEditing ? noticeDisplayIds.get(noticeEditDocId) : nextNoticeId,
+    title, content, pinned, visible, updatedBy: getCurrentUserLabel()
+  };
   document.getElementById('noticeFormSubmit').disabled = true;
   document.getElementById('noticeSubmitBtnText').textContent = isEditing ? '수정 중...' : '등록 중...';
   document.getElementById('noticeSubmitSpinner').style.display = 'inline-block';

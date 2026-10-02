@@ -3449,6 +3449,39 @@ body {
 .banner-thumb-placeholder { background: #f1f5f9; }
 .table-empty,
 .table-loading { color: #64748b; }
+.admin-table td.table-empty-cell {
+  padding: 0;
+  border-bottom: 0;
+  background: #fff;
+}
+.admin-table tr:hover td.table-empty-cell { background: #fff; }
+.notice-empty-state {
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 24px 16px;
+  text-align: center;
+}
+.notice-empty-state-icon {
+  width: 34px;
+  height: 34px;
+  margin-bottom: 2px;
+  color: #64748b;
+}
+.notice-empty-state-title {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.notice-empty-state-description {
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.4;
+}
 .paginator-btn {
   color: #64748b;
   background: #fff;
