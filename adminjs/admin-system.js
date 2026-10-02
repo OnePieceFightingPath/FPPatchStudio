@@ -237,6 +237,43 @@ async function loadDashboardVisitors() {
   }
 }
 
+function dashboardEventDateKey(value) {
+  if (value && typeof value.toDate === 'function') value = value.toDate();
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+  if (typeof value === 'string') {
+    const match = value.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (match) return match[1];
+  }
+  return '';
+}
+
+function getDashboardEventStatuses(events) {
+  const todayParts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+  const todayValues = Object.fromEntries(todayParts.map(part => [part.type, part.value]));
+  const today = `${todayValues.year}-${todayValues.month}-${todayValues.day}`;
+  let inProgress = 0;
+  let ended = 0;
+
+  events.forEach(event => {
+    const startDate = dashboardEventDateKey(event.startDate || event.date);
+    const endDate = dashboardEventDateKey(event.endDate);
+    if (endDate && endDate < today) {
+      ended++;
+    } else if ((!startDate || startDate <= today) && (!endDate || endDate >= today)) {
+      inProgress++;
+    }
+  });
+
+  return { inProgress, ended };
+}
+
 function loadDashboardStats() {
   loadDashboardVisitors();
 
@@ -277,8 +314,12 @@ function loadDashboardStats() {
   }
   if (document.getElementById('statEventCount')) {
     document.getElementById('statEventCount').textContent = eventCount;
+    const eventStatuses = getDashboardEventStatuses(
+      (typeof allEvtPages !== 'undefined') ? allEvtPages : [],
+    );
     renderStatCardMetrics('statEventSub', [
-      { label: '등록', value: eventCount, tone: 'primary' },
+      { label: '진행중', value: eventStatuses.inProgress, tone: 'success' },
+      { label: '종료됨', value: eventStatuses.ended, tone: 'warning' },
     ]);
   }
   renderStatCardMetrics('statCharSub', [
