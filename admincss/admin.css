@@ -4253,6 +4253,14 @@ body {
 
 /* Dashboard: centered 1166px layout with fluid statistic cards. */
 #section-dashboard.admin-section.active {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  grid-template-areas:
+    "welcome visitors"
+    "title title"
+    "stats stats";
+  column-gap: 16px;
+  align-content: start;
   width: 100%;
   max-width: 1166px;
   margin-inline: auto;
@@ -4260,6 +4268,15 @@ body {
   padding-right: 20px;
   padding-left: 20px;
 }
+
+.dashboard-info-row {
+  display: block;
+  grid-area: welcome;
+  margin-bottom: 28px;
+}
+
+.dashboard-title-row { grid-area: title; }
+.dashboard-stat-grid { grid-area: stats; }
 
 .dashboard-stat-grid {
   display: grid;
@@ -4269,6 +4286,11 @@ body {
   justify-content: stretch;
   gap: 12px;
   margin-inline: auto;
+}
+
+.dashboard-visitor-card {
+  grid-area: visitors;
+  margin-bottom: 28px;
 }
 
 .stat-card {
@@ -4381,11 +4403,23 @@ body {
 
 @media (max-width: 768px) {
   #section-dashboard.admin-section.active {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     width: 100%;
     max-width: 1166px;
     margin-inline: auto;
     padding-right: 10px;
     padding-left: 10px;
+  }
+
+  .dashboard-info-row {
+    display: block;
+    margin-bottom: 28px;
+  }
+
+  .dashboard-visitor-card {
+    margin: 0;
   }
 
   .dashboard-stat-grid {

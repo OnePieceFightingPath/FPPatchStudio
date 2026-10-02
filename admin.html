@@ -219,29 +219,6 @@
           <hr class="dash-divider">
           <div class="dash-last-login" id="dashLastLogin">마지막 로그인은 — 입니다.</div>
         </div>
-        <div class="dashboard-visitor-card" aria-labelledby="dashboardVisitorTitle">
-          <div class="dashboard-visitor-summary">
-            <div class="dashboard-visitor-heading">
-              <span class="dashboard-visitor-dot" aria-hidden="true"></span>
-              <h3 id="dashboardVisitorTitle">방문자 전체</h3>
-            </div>
-            <strong class="dashboard-visitor-total" id="dashboardVisitorTotal" aria-live="polite">—</strong>
-            <div class="dashboard-visitor-updated" id="dashboardVisitorUpdated">방문자 데이터 확인 중...</div>
-          </div>
-          <div class="dashboard-visitor-chart-wrap">
-            <svg class="dashboard-visitor-chart" id="dashboardVisitorChart" viewBox="0 0 1000 320" role="img" aria-label="최근 15일 방문자 통계 그래프">
-              <g id="dashboardVisitorGrid" aria-hidden="true"></g>
-              <g id="dashboardVisitorYAxis" aria-hidden="true"></g>
-              <path id="dashboardVisitorLine" class="dashboard-visitor-line" d="" aria-hidden="true"></path>
-              <circle id="dashboardVisitorLastPoint" class="dashboard-visitor-last-point" cx="0" cy="0" r="5.5" aria-hidden="true"></circle>
-              <g id="dashboardVisitorXAxis" aria-hidden="true"></g>
-            </svg>
-            <div class="dashboard-visitor-empty" id="dashboardVisitorEmpty" role="status">
-              <strong>방문자 데이터가 아직 없습니다</strong>
-              <span>Firestore의 <code>visitorStats</code> 컬렉션에 날짜별 <code>date</code>와 <code>count</code>를 저장하면 표시됩니다.</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- 대시보드 타이틀 + 새로고침 -->
@@ -372,6 +349,30 @@
             </div>
           </div>
           <div class="stat-card-sub" id="statSupportSub">—</div>
+        </div>
+      </div>
+
+      <div class="dashboard-visitor-card" aria-labelledby="dashboardVisitorTitle">
+        <div class="dashboard-visitor-summary">
+          <div class="dashboard-visitor-heading">
+            <span class="dashboard-visitor-dot" aria-hidden="true"></span>
+            <h3 id="dashboardVisitorTitle">방문자 전체</h3>
+          </div>
+          <strong class="dashboard-visitor-total" id="dashboardVisitorTotal" aria-live="polite">—</strong>
+          <div class="dashboard-visitor-updated" id="dashboardVisitorUpdated">방문자 데이터 확인 중...</div>
+        </div>
+        <div class="dashboard-visitor-chart-wrap">
+          <svg class="dashboard-visitor-chart" id="dashboardVisitorChart" viewBox="0 0 1000 320" role="img" aria-label="최근 15일 방문자 통계 그래프">
+            <g id="dashboardVisitorGrid" aria-hidden="true"></g>
+            <g id="dashboardVisitorYAxis" aria-hidden="true"></g>
+            <path id="dashboardVisitorLine" class="dashboard-visitor-line" d="" aria-hidden="true"></path>
+            <circle id="dashboardVisitorLastPoint" class="dashboard-visitor-last-point" cx="0" cy="0" r="5.5" aria-hidden="true"></circle>
+            <g id="dashboardVisitorXAxis" aria-hidden="true"></g>
+          </svg>
+          <div class="dashboard-visitor-empty" id="dashboardVisitorEmpty" role="status">
+            <strong>방문자 데이터가 아직 없습니다</strong>
+            <span>Firestore의 <code>visitorStats</code> 컬렉션에 날짜별 <code>date</code>와 <code>count</code>를 저장하면 표시됩니다.</span>
+          </div>
         </div>
       </div>
 
