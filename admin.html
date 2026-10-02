@@ -828,6 +828,7 @@
       </div>
 
       <div class="section-btn-row">
+        <span class="toolbar-count" id="noticeCountLabel">로딩 중...</span>
         <button class="btn-primary" id="btnAddNotice">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           공지 추가
@@ -835,36 +836,40 @@
       </div>
 
       <div class="admin-toolbar">
-        <span class="toolbar-count" id="noticeCountLabel">로딩 중...</span>
-        <div class="search-wrap">
-          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          <input type="search" id="noticeSearch" class="admin-search" placeholder="제목 검색...">
+        <div class="toolbar-filter-group"></div>
+        <div class="toolbar-actions">
+          <button class="btn-toolbar-icon" title="새로고침" onclick="refreshTableWithReset(['noticeSearch'], loadNotices, 'noticeTableBody')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </button>
+          <div class="search-wrap">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="search" id="noticeSearch" class="admin-search" placeholder="제목 검색...">
+          </div>
+          <select class="admin-select per-page-select" id="noticePerPage">
+            <option value="10" selected>10개</option>
+            <option value="20">20개</option>
+            <option value="30">30개</option>
+            <option value="40">40개</option>
+            <option value="50">50개</option>
+          </select>
         </div>
-        <button class="btn-toolbar-icon" title="새로고침" onclick="refreshTableWithReset(['noticeSearch'], loadNotices, 'noticeTableBody')">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-        </button>
-        <select class="admin-select per-page-select" id="noticePerPage">
-          <option value="10" selected>10개</option>
-          <option value="20">20개</option>
-          <option value="30">30개</option>
-          <option value="50">50개</option>
-        </select>
       </div>
 
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
-              <th style="width:60px">고정</th>
+              <th>ID</th>
+              <th>날짜</th>
               <th>제목</th>
-              
-              <th style="width:70px">노출</th>
-              <th style="width:120px">관리자</th>
+              <th>글쓴이</th>
+              <th>노출 상태</th>
+              <th>관리자</th>
               <th class="col-actions">작업</th>
             </tr>
           </thead>
           <tbody id="noticeTableBody">
-            <tr><td colspan="6" class="table-loading"><div class="spinner"></div><span>데이터 로딩 중...</span></td></tr>
+            <tr><td colspan="8" class="table-loading"><div class="spinner"></div><span>데이터 로딩 중...</span></td></tr>
           </tbody>
         </table>
       </div>

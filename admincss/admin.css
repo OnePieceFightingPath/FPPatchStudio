@@ -4224,6 +4224,10 @@ body {
   box-sizing: border-box;
   padding: 0 8px;
 }
+#section-boards #boardCategoryFilter {
+  width: 115px;
+  min-width: 115px;
+}
 .toolbar-actions {
   margin-left: auto;
   flex: 0 0 auto;
@@ -4261,6 +4265,7 @@ body {
 #section-pvppatch .section-btn-row .toolbar-count,
 #section-patchnote .section-btn-row .toolbar-count,
 #section-events .section-btn-row .toolbar-count,
+#section-notices .section-btn-row .toolbar-count,
 #section-boards .section-btn-row .toolbar-count {
   display: inline-flex;
   align-items: center;
