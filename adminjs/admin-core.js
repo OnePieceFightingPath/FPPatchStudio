@@ -91,6 +91,7 @@ const SECTION_CONFIG = [
   { sidebarKey: 'patchnote',    permKey: 'patchNotes',   label: '패치노트' },
   { sidebarKey: 'banners',      permKey: 'banners',      label: '배너' },
   { sidebarKey: 'events',       permKey: 'events',       label: '이벤트' },
+  { sidebarKey: 'boards',       permKey: 'boards',       label: '게시판' },
   { sidebarKey: 'notices',      permKey: 'notices',      label: '공지사항' },
 ];
 const PERM_ACTIONS = [
@@ -135,6 +136,7 @@ function _enforcePermUI() {
     { id: 'btnAddPatchNote',   key: 'patchNotes' },
     { id: 'btnAddBanner',      key: 'banners' },
     { id: 'btnAddEvtPage',     key: 'events' },
+    { id: 'btnAddBoard',       key: 'boards' },
   ];
   addBtns.forEach(({ id, key }) => {
     const el = document.getElementById(id);
@@ -771,6 +773,7 @@ function switchSection(sectionKey) {
   if (sectionKey === 'members') loadPermUsers();
   if (sectionKey === 'permissions') loadPermissionsSection();
   if (sectionKey === 'events') loadEvtPages();
+  if (sectionKey === 'boards') loadBoards();
   if (sectionKey === 'notices') loadNotices();
 }
 
@@ -922,7 +925,7 @@ let filteredSupportCharList = [];
 
 async function loadAllData() {
   await loadAdminNicknameMap();
-  await Promise.all([loadCharacters(), loadPvpPatches(), loadPatchNotes(), loadBanners(), loadSupportChars(), loadEvtPages(), loadNotices()]);
+  await Promise.all([loadCharacters(), loadPvpPatches(), loadPatchNotes(), loadBanners(), loadSupportChars(), loadEvtPages(), loadBoards(), loadNotices()]);
   loadDashboardStats();
 }
 
@@ -950,6 +953,7 @@ const _allTableFilterControlIds = [
   'pvpTypeFilter', 'pvpSearch', 'patchNoteSearch',
   'bannerStatusFilter', 'bannerSearch', 'evtBannerStatusFilter', 'evtBannerSearch',
   'evtPageSearch', 'noticeSearch', 'permUserSearch',
+  'boardCategoryFilter', 'boardSearch',
 ];
 
 function resetTableFilterControls(controlIds = _allTableFilterControlIds) {
