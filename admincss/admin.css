@@ -564,7 +564,7 @@ input, select, textarea { font-family: inherit; }
 .section-btn-row {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 10px;
   margin-bottom: 16px;
 }
@@ -1385,7 +1385,7 @@ select.form-input { cursor: pointer; }
   .section-title { font-size: 18px; }
   .section-desc { font-size: 12px; }
   .section-description code { word-break: break-all; white-space: normal; }
-  .section-btn-row { justify-content: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .section-btn-row { justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 
   /* ── 툴바 ── */
   .admin-toolbar { flex-wrap: wrap; gap: 8px; }
@@ -2580,9 +2580,9 @@ body.dragging-banner * { cursor: grabbing !important; }
     margin-left: auto;
   }
 
-  /* ── 관리 페이지 카운터·추가 버튼 좌측 정렬 ── */
+  /* ── 관리 페이지 카운터 좌측·추가 버튼 우측 정렬 ── */
   .section-btn-row {
-    justify-content: flex-start;
+    justify-content: space-between;
   }
 
   /* ── PvP 캐릭터 드롭다운: 모바일에서 높이 제한 ── */
@@ -4122,7 +4122,7 @@ body {
 
 /* ===== 메인 배너 관리 전용 레이아웃 ===== */
 #section-banners .section-btn-row {
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 #section-banners .section-btn-row .toolbar-count {
@@ -4294,6 +4294,7 @@ body {
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
+  margin-left: auto;
 }
 .board-content-input {
   min-height: 220px;
