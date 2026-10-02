@@ -14,7 +14,6 @@ function renderStatCardMetrics(id, metrics) {
       const divider = document.createElement('span');
       divider.className = 'stat-card-status-divider';
       divider.setAttribute('aria-hidden', 'true');
-      divider.textContent = '|';
       fragment.appendChild(divider);
     }
 
