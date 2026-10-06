@@ -16,6 +16,8 @@
   --text: #e6edf3;
   --text-muted: #8b949e;
   --text-dim: #6e7681;
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
   --accent: #4d9fff;
   --accent-hover: #79b8ff;
   --gold: #f0c040;
@@ -5374,3 +5376,377 @@ html[data-theme="dark"] .sidebar-settings-panel { color: #e0e7ff; }
   .gnb-actions .hamburger-btn:hover { background: var(--bg-hover); }
   html[data-theme="dark"] .gnb-actions .hamburger-btn span { background: var(--text-muted); }
 }
+
+/* Complete dark palette for fixed light-theme text, controls, and overlays */
+html[data-theme="dark"] {
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .section-title,
+  .dash-welcome,
+  .stat-card-value,
+  .dash-homepage-title,
+  .backup-block-title,
+  .cell-name,
+  .admin-table th,
+  .admin-table td,
+  .table-empty-state-title,
+  .dashboard-visitor-total,
+  .dashboard-visitor-heading h3,
+  .dashboard-visitor-empty strong,
+  .admin-reference-modal .modal-panel-header h2,
+  .admin-reference-modal .form-modal-title,
+  .admin-reference-modal .form-input,
+  .confirm-title,
+  .char-editor-title,
+  .toast-info
+) {
+  color: var(--text) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .section-desc,
+  .dashboard-admin-label,
+  .dash-last-login,
+  .stat-card-sub,
+  .stat-card-label,
+  .backup-block-desc,
+  .dash-homepage-desc,
+  .cell-id,
+  .admin-email-cell,
+  .table-empty,
+  .table-loading,
+  .table-empty-state-description,
+  .table-empty-state-icon,
+  .dashboard-visitor-updated,
+  .dashboard-visitor-empty,
+  .form-label,
+  .form-section-label,
+  .form-hint,
+  .form-label-optional,
+  .modal-close-btn,
+  .form-modal-close,
+  .char-editor-subtitle,
+  .char-tool-btn,
+  .backup-export-card-hint,
+  .import-preview-code,
+  .publish-bar-hint,
+  .publish-last-info,
+  .admin-reference-modal .form-label,
+  .admin-reference-modal .form-section-label,
+  .admin-reference-modal .modal-close-btn,
+  .admin-reference-modal .form-modal-close,
+  .note-editor .note-toolbar .note-btn,
+  .note-editor .note-statusbar,
+  .note-dropdown-item
+) {
+  color: var(--text-muted) !important;
+}
+
+html[data-theme="dark"] .admin-main .form-input::placeholder,
+html[data-theme="dark"] .admin-main .profile-nickname-input::placeholder,
+html[data-theme="dark"] .admin-reference-modal .form-input::placeholder,
+html[data-theme="dark"] .admin-reference-modal input::placeholder {
+  color: var(--text-dim) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .admin-search,
+  .admin-select,
+  .form-input,
+  .profile-nickname-input,
+  .pvp-char-dd-btn,
+  .admin-reference-modal .form-input,
+  .note-modal input[type="text"],
+  .note-modal input[type="url"]
+) {
+  color: var(--text) !important;
+  background-color: #172233 !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .admin-search,
+  .form-input,
+  .profile-nickname-input,
+  .admin-reference-modal .form-input
+)::placeholder {
+  color: var(--text-dim) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .admin-select,
+  .admin-select option
+) {
+  color: var(--text) !important;
+  background-color: #172233 !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .admin-table-wrap,
+  .admin-table td.table-empty-cell,
+  .dashboard-admin-card,
+  .dashboard-visitor-card,
+  .stat-card,
+  .dash-homepage-card,
+  .backup-block,
+  .backup-export-card,
+  .backup-import-preview,
+  .sub-item,
+  .img-upload-preview-box,
+  .firestore-rules-code,
+  .pvp-char-dd-panel,
+  .pvp-cal-popup,
+  .modal-panel,
+  .form-modal,
+  .modal-confirm,
+  .char-editor-modal,
+  .admin-reference-modal .modal-panel,
+  .admin-reference-modal .form-modal,
+  .admin-reference-modal .modal-panel-body,
+  .admin-reference-modal .form-modal-body,
+  .admin-reference-modal .modal-panel-footer,
+  .admin-reference-modal .form-modal-footer,
+  .toast-info,
+  .note-editor .note-editable,
+  .note-dropdown-menu,
+  .note-modal .note-modal-content
+) {
+  color: var(--text);
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .admin-table th,
+  .admin-table td,
+  .dashboard-visitor-summary,
+  .admin-reference-modal .form-input
+) {
+  color: var(--text) !important;
+  background-color: #172233 !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .modal-panel-header,
+  .form-modal-header,
+  .modal-panel-footer,
+  .form-modal-footer,
+  .admin-reference-modal .modal-panel-header,
+  .admin-reference-modal .form-modal-header,
+  .admin-reference-modal .modal-panel-footer,
+  .admin-reference-modal .form-modal-footer,
+  .note-editor .note-toolbar,
+  .note-editor .note-statusbar,
+  .note-modal .note-modal-header
+) {
+  color: var(--text);
+  background-color: #172233 !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .pvp-char-dd-item,
+  .backup-export-card-label,
+  .admin-reference-modal .btn-secondary
+) {
+  color: var(--text) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .btn-secondary,
+  .btn-revert,
+  .btn-toolbar-icon,
+  .btn-order-manage,
+  .paginator-btn,
+  .pvp-char-dd-item:hover,
+  .evt-tab:hover,
+  .perm-tab:hover,
+  .admin-reference-modal .btn-secondary,
+  .admin-reference-modal .btn-add-sub,
+  .admin-reference-modal .btn-secondary:hover,
+  .admin-reference-modal .btn-add-sub:hover,
+  .char-tool-btn
+) {
+  color: var(--text) !important;
+  background-color: #263449 !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .admin-table tr:hover td,
+  .pvp-char-dd-item:hover,
+  .evt-tab:hover,
+  .perm-tab:hover,
+  .btn-secondary:hover,
+  .btn-revert:hover,
+  .btn-toolbar-icon:hover,
+  .btn-order-manage:hover,
+  .paginator-btn:hover:not(:disabled),
+  .char-tool-btn:hover,
+  .admin-reference-modal .btn-secondary:hover,
+  .admin-reference-modal .btn-add-sub:hover
+) {
+  background-color: #33445c !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .evt-tab,
+  .perm-tab,
+  .btn-secondary,
+  .btn-revert,
+  .btn-toolbar-icon,
+  .btn-order-manage,
+  .paginator-btn,
+  .admin-reference-modal .form-label,
+  .admin-reference-modal .form-section-label
+) {
+  color: var(--text-muted) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .modal-overlay,
+  .form-overlay,
+  .char-editor-overlay
+) {
+  background-color: rgba(2, 6, 23, 0.78);
+}
+
+html[data-theme="dark"] .admin-main .publish-bar {
+  color: var(--text);
+  background: rgba(23, 31, 46, 0.96) !important;
+  border-top-color: var(--border);
+}
+html[data-theme="dark"] .admin-main .publish-last-info {
+  color: var(--text-muted) !important;
+  background: #263449 !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .admin-main .note-editor .note-editable,
+html[data-theme="dark"] .admin-main .note-editor .note-editable li,
+html[data-theme="dark"] .admin-main .note-dropdown-item,
+html[data-theme="dark"] .admin-main .note-modal input[type="text"],
+html[data-theme="dark"] .admin-main .note-modal input[type="url"] {
+  color: var(--text) !important;
+}
+html[data-theme="dark"] .admin-main .note-editor .note-toolbar .note-btn {
+  color: var(--text-muted) !important;
+  background-color: #263449 !important;
+}
+html[data-theme="dark"] .admin-main .note-dropdown-item:hover {
+  background-color: #33445c !important;
+}
+
+html[data-theme="dark"] :is(.modal-overlay, .form-overlay, .char-editor-overlay) {
+  background-color: rgba(2, 6, 23, 0.78);
+}
+html[data-theme="dark"] :is(
+  .modal-overlay .modal-panel,
+  .modal-overlay .modal-confirm,
+  .form-overlay .form-modal,
+  .char-editor-overlay .char-editor-modal
+) {
+  color: var(--text) !important;
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+}
+html[data-theme="dark"] :is(
+  .modal-overlay .modal-panel-header,
+  .modal-overlay .modal-panel-body,
+  .modal-overlay .modal-panel-footer,
+  .modal-overlay .confirm-title,
+  .modal-overlay .confirm-desc,
+  .form-overlay .form-modal-header,
+  .form-overlay .form-modal-body,
+  .form-overlay .form-modal-footer,
+  .form-overlay .form-modal-title,
+  .form-overlay .form-label,
+  .form-overlay .form-section-label,
+  .form-overlay .form-hint,
+  .form-overlay .form-label-optional,
+  .char-editor-overlay .char-editor-title,
+  .char-editor-overlay .char-editor-subtitle,
+  .char-editor-overlay .char-tool-btn
+) {
+  color: var(--text) !important;
+}
+html[data-theme="dark"] :is(
+  .modal-overlay .form-input,
+  .form-overlay .form-input,
+  .form-overlay .pvp-char-dd-btn,
+  .form-overlay .pvp-char-dd-search,
+  .form-overlay .pvp-char-dd-panel,
+  .form-overlay .pvp-char-dd-item,
+  .form-overlay .pvp-cal-popup
+) {
+  color: var(--text) !important;
+  background-color: #172233 !important;
+  border-color: var(--border) !important;
+}
+html[data-theme="dark"] .modal-overlay .form-input::placeholder,
+html[data-theme="dark"] .form-overlay .form-input::placeholder,
+html[data-theme="dark"] .form-overlay .pvp-char-dd-search::placeholder,
+html[data-theme="dark"] .form-overlay input::placeholder,
+html[data-theme="dark"] .form-overlay textarea::placeholder {
+  color: var(--text-dim) !important;
+}
+html[data-theme="dark"] :is(
+  .modal-overlay .btn-secondary,
+  .form-overlay .btn-secondary,
+  .form-overlay .btn-add-sub,
+  .char-editor-overlay .char-tool-btn
+) {
+  color: var(--text) !important;
+  background-color: #263449 !important;
+  border-color: var(--border) !important;
+}
+html[data-theme="dark"] :is(
+  .modal-overlay .btn-secondary:hover,
+  .form-overlay .btn-secondary:hover,
+  .form-overlay .btn-add-sub:hover,
+  .char-editor-overlay .char-tool-btn:hover,
+  .form-overlay .pvp-char-dd-item:hover
+) {
+  background-color: #33445c !important;
+}
+html[data-theme="dark"] .form-overlay .note-editor .note-editable,
+html[data-theme="dark"] .form-overlay .note-editor .note-editable li,
+html[data-theme="dark"] .form-overlay .note-dropdown-menu,
+html[data-theme="dark"] .form-overlay .note-modal .note-modal-content,
+html[data-theme="dark"] .form-overlay .note-modal input[type="text"],
+html[data-theme="dark"] .form-overlay .note-modal input[type="url"] {
+  color: var(--text) !important;
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+}
+html[data-theme="dark"] .form-overlay .note-editor .note-toolbar,
+html[data-theme="dark"] .form-overlay .note-editor .note-statusbar,
+html[data-theme="dark"] .form-overlay .note-modal .note-modal-header,
+html[data-theme="dark"] .form-overlay .note-dropdown-item {
+  color: var(--text-muted) !important;
+  background-color: #172233 !important;
+  border-color: var(--border) !important;
+}
+html[data-theme="dark"] .form-overlay .note-dropdown-item:hover {
+  background-color: #33445c !important;
+}
+html[data-theme="dark"] .toast-info {
+  color: var(--text) !important;
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .admin-main :is(
+  .stat-card-status-success
+) { color: #86efac !important; }
+html[data-theme="dark"] .admin-main .stat-card-status-danger { color: #fca5a5 !important; }
+html[data-theme="dark"] .admin-main .stat-card-status-warning {
+  color: #fcd34d !important;
+}
+html[data-theme="dark"] .admin-main .stat-card-status-primary { color: #a5b4fc !important; }
+html[data-theme="dark"] .admin-main .stat-card-status-divider { background-color: #64748b; }
+html[data-theme="dark"] .admin-main .dashboard-visitor-axis-label { fill: var(--text-muted); }
