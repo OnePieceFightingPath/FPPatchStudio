@@ -68,7 +68,7 @@
         <span class="admin-badge">Admin</span>
       </a>
     </div>
-    <div class="sidebar-scroll">
+    <div class="sidebar-scroll" id="adminMainSidebar">
     <nav class="sidebar-nav">
       <button class="sidebar-section-item" type="button" aria-expanded="true">운영 <svg class="sidebar-section-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
       <button class="sidebar-item" data-section="members" id="sidebarMembersBtn" style="display:none">
@@ -120,6 +120,40 @@
       </div>
     </nav>
     </div>
+    <div class="sidebar-settings-panel" id="sidebarSettingsPanel" aria-hidden="true">
+      <button class="settings-back-button" id="sidebarSettingsBack" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        뒤로 돌아가기
+      </button>
+      <div class="settings-sidebar-section">
+        <div class="settings-sidebar-label">사용자</div>
+        <button class="settings-sidebar-item" id="settingsProfileItem" type="button">
+          <span class="settings-sidebar-item-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </span>
+          <span>프로필</span>
+          <svg class="settings-item-chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div class="settings-sidebar-section settings-theme-section" id="settingsThemeSection">
+        <div class="settings-sidebar-label">테마</div>
+        <button class="settings-sidebar-item settings-theme-option" type="button" data-theme-choice="system">
+          <span class="settings-sidebar-item-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364-.707.707M6.343 17.657l-.707.707m12.728 0-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg></span>
+          <span class="settings-theme-copy"><strong>사용자 설정</strong><small>기기 테마에 맞춥니다</small></span>
+          <span class="settings-theme-check" aria-hidden="true">✓</span>
+        </button>
+        <button class="settings-sidebar-item settings-theme-option" type="button" data-theme-choice="dark">
+          <span class="settings-sidebar-item-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20.5 15.5A8.5 8.5 0 018.5 3.5 8.5 8.5 0 1020.5 15.5z"/></svg></span>
+          <span class="settings-theme-copy"><strong>다크</strong><small>어두운 작업 화면</small></span>
+          <span class="settings-theme-check" aria-hidden="true">✓</span>
+        </button>
+        <button class="settings-sidebar-item settings-theme-option" type="button" data-theme-choice="light">
+          <span class="settings-sidebar-item-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="4" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2v2m0 16v2m10-10h-2M4 12H2m17.07-7.07-1.41 1.41M6.34 17.66l-1.41 1.41m14.14 0-1.41-1.41M6.34 6.34 4.93 4.93"/></svg></span>
+          <span class="settings-theme-copy"><strong>라이트</strong><small>밝은 작업 화면</small></span>
+          <span class="settings-theme-check" aria-hidden="true">✓</span>
+        </button>
+      </div>
+    </div>
     <div class="admin-auth-area sidebar-profile" id="adminAuthArea">
       <div class="sidebar-profile-row">
         <div class="admin-profile-btn" id="adminProfileBtn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
@@ -131,21 +165,45 @@
           </span>
           <span class="admin-user-name" id="adminUserName">—</span>
         </div>
-        <button class="sidebar-profile-settings" id="sidebarProfileSettings" type="button" aria-label="내 프로필 설정">
+        <button class="sidebar-profile-settings" id="sidebarProfileSettings" type="button" aria-label="설정">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         </button>
       </div>
       <div class="admin-profile-dropdown" id="adminProfileDropdown">
-        <button class="profile-dropdown-item" id="btnMyProfile">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7-7h14a7 7 0 00-7-7z"/></svg>
-          내 프로필
+        <button class="profile-dropdown-item" id="btnOpenSettings" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 001.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"/><circle cx="12" cy="12" r="3" stroke-width="1.8"/></svg>
+          설정
+        </button>
+        <button class="profile-dropdown-item" id="btnOpenNotifications" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+          알림
+          <span class="profile-notification-count" id="profileNotificationCount" hidden></span>
+        </button>
+        <button class="profile-dropdown-item" id="btnOpenThemeSettings" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="9" stroke-width="1.8"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v18a9 9 0 000-18z"/></svg>
+          테마
         </button>
         <div class="profile-dropdown-divider"></div>
-        <button class="profile-dropdown-item profile-dropdown-item-danger" id="btnSignout">
+        <button class="profile-dropdown-item profile-dropdown-item-danger" id="btnSignout" type="button">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
           로그아웃
         </button>
       </div>
+      <section class="notification-popover" id="notificationPopover" role="dialog" aria-label="고객센터 알림" aria-hidden="true">
+        <div class="notification-popover-header">
+          <div>
+            <h2>알림</h2>
+            <p>고객센터 문의 알림</p>
+          </div>
+          <button class="notification-close" id="notificationClose" type="button" aria-label="알림 닫기">×</button>
+        </div>
+        <div class="notification-tabs" role="tablist" aria-label="알림 필터">
+          <button class="notification-tab active" id="notificationUnreadTab" type="button" role="tab" aria-selected="true" data-notification-filter="unread">읽지 않음 <span id="notificationUnreadCount">0</span></button>
+          <button class="notification-tab" id="notificationAllTab" type="button" role="tab" aria-selected="false" data-notification-filter="all">전체</button>
+          <button class="notification-mark-all" id="notificationMarkAll" type="button">모두 읽음</button>
+        </div>
+        <div class="notification-list" id="notificationList" role="tabpanel" aria-live="polite"></div>
+      </section>
     </div>
   </aside>
 

@@ -286,6 +286,7 @@ function stopSessionExpiryCheck() {
 
 auth.onAuthStateChanged(async user => {
   if (!user) {
+    stopSupportInquiryListener();
     stopSessionExpiryCheck();
     _showLoginOverlay();
     return;
@@ -301,6 +302,7 @@ auth.onAuthStateChanged(async user => {
     return;
   }
   currentUser = user;
+  startSupportInquiryListener();
   startSessionExpiryCheck();
   _hideLoginOverlay(user);
   try {
@@ -442,9 +444,12 @@ if (document.readyState === 'loading') {
 (function initProfileDropdown() {
   const authArea   = document.getElementById('adminAuthArea');
   const profileBtn = document.getElementById('adminProfileBtn');
-  const btnMyProfile = document.getElementById('btnMyProfile');
+  const sidebar = document.querySelector('.admin-sidebar');
+  const settingsPanel = document.getElementById('sidebarSettingsPanel');
+  const notificationPopover = document.getElementById('notificationPopover');
 
   function openProfileDropdown() {
+    closeNotificationPopover();
     authArea?.classList.add('open');
     profileBtn?.setAttribute('aria-expanded', 'true');
   }
@@ -452,7 +457,25 @@ if (document.readyState === 'loading') {
     authArea?.classList.remove('open');
     profileBtn?.setAttribute('aria-expanded', 'false');
   }
+  function openSettingsSidebar(focus = 'profile') {
+    closeProfileDropdown();
+    closeNotificationPopover();
+    sidebar?.classList.add('settings-mode');
+    settingsPanel?.setAttribute('aria-hidden', 'false');
+    settingsPanel?.classList.toggle('theme-focused', focus === 'theme');
+    if (focus === 'theme') {
+      document.getElementById('settingsThemeSection')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } else {
+      settingsPanel?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+  function closeSettingsSidebar() {
+    sidebar?.classList.remove('settings-mode');
+    settingsPanel?.setAttribute('aria-hidden', 'true');
+    settingsPanel?.classList.remove('theme-focused');
+  }
   window.closeProfileDropdown = closeProfileDropdown;
+  window.openAdminSettingsSidebar = openSettingsSidebar;
 
   profileBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -471,21 +494,277 @@ if (document.readyState === 'loading') {
 
   document.getElementById('sidebarProfileSettings')?.addEventListener('click', (e) => {
     e.stopPropagation();
-    closeProfileDropdown();
+    openSettingsSidebar('profile');
+  });
+
+  document.getElementById('btnOpenSettings')?.addEventListener('click', () => openSettingsSidebar('profile'));
+  document.getElementById('btnOpenThemeSettings')?.addEventListener('click', () => openSettingsSidebar('theme'));
+  document.getElementById('sidebarSettingsBack')?.addEventListener('click', closeSettingsSidebar);
+  document.getElementById('settingsProfileItem')?.addEventListener('click', () => {
     switchSection('profile');
     loadProfileSection();
   });
-
-  btnMyProfile?.addEventListener('click', () => {
-    closeProfileDropdown();
-    switchSection('profile');
-    loadProfileSection();
+  document.querySelectorAll('.settings-theme-option').forEach(button => {
+    button.addEventListener('click', () => setAdminTheme(button.dataset.themeChoice));
   });
 
   document.addEventListener('click', (e) => {
     if (!authArea?.contains(e.target)) closeProfileDropdown();
+    if (notificationPopover?.classList.contains('open')
+      && !notificationPopover.contains(e.target)
+      && !document.getElementById('btnOpenNotifications')?.contains(e.target)) {
+      closeNotificationPopover();
+    }
   });
 })();
+
+// ===== THEME PREFERENCE =====
+const ADMIN_THEME_KEY = 'fpp-admin-theme';
+const adminThemeMedia = window.matchMedia?.('(prefers-color-scheme: dark)');
+
+function getAdminThemePreference() {
+  try {
+    const saved = localStorage.getItem(ADMIN_THEME_KEY);
+    return ['system', 'dark', 'light'].includes(saved) ? saved : 'system';
+  } catch (_) {
+    return 'system';
+  }
+}
+
+function applyAdminTheme() {
+  const preference = getAdminThemePreference();
+  const resolved = preference === 'system'
+    ? (adminThemeMedia?.matches ? 'dark' : 'light')
+    : preference;
+  document.documentElement.dataset.theme = resolved;
+  document.documentElement.dataset.themePreference = preference;
+  document.querySelectorAll('.settings-theme-option').forEach(button => {
+    const selected = button.dataset.themeChoice === preference;
+    button.classList.toggle('selected', selected);
+    button.setAttribute('aria-pressed', String(selected));
+  });
+}
+
+function setAdminTheme(preference) {
+  if (!['system', 'dark', 'light'].includes(preference)) return;
+  try { localStorage.setItem(ADMIN_THEME_KEY, preference); } catch (_) {}
+  applyAdminTheme();
+}
+
+adminThemeMedia?.addEventListener?.('change', () => {
+  if (getAdminThemePreference() === 'system') applyAdminTheme();
+});
+applyAdminTheme();
+
+// ===== CUSTOMER SUPPORT NOTIFICATIONS =====
+// The public customer-center page is not part of this repository. New inquiry
+// documents are expected in supportInquiries; the field mapper below accepts
+// the common title/requester/timestamp variants used by the customer site.
+const SUPPORT_INQUIRY_COLLECTION = 'supportInquiries';
+let _supportInquiryUnsubscribe = null;
+let _supportInquiryNotifications = [];
+let _notificationFilter = 'unread';
+let _supportInquiryLoadError = false;
+let _supportInquiryLoading = false;
+
+function getSupportReadStorageKey() {
+  return `fpp-support-notification-reads:${currentUser?.uid || 'guest'}`;
+}
+
+function getReadSupportInquiryIds() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(getSupportReadStorageKey()) || '[]');
+    return new Set(Array.isArray(saved) ? saved : []);
+  } catch (_) {
+    return new Set();
+  }
+}
+
+function saveReadSupportInquiryIds(ids) {
+  try { localStorage.setItem(getSupportReadStorageKey(), JSON.stringify([...ids])); } catch (_) {}
+}
+
+function getInquiryTimestampValue(value) {
+  if (!value) return 0;
+  try {
+    const date = typeof value.toDate === 'function' ? value.toDate() : new Date(value);
+    return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+  } catch (_) {
+    return 0;
+  }
+}
+
+function formatInquiryTimestamp(value) {
+  const ms = getInquiryTimestampValue(value);
+  return ms ? new Date(ms).toLocaleString('ko-KR', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+}
+
+function getSupportInquiryTitle(data) {
+  const title = data.title || data.subject || data.inquiryTitle || data.questionTitle;
+  if (title) return String(title);
+  const body = data.message || data.content || data.question || data.body;
+  return body ? String(body).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80) : '제목 없는 고객센터 문의';
+}
+
+function getSupportInquiryRequester(data) {
+  return String(data.nickname || data.name || data.userName || data.requesterName
+    || data.writer || data.author || data.email || data.userEmail || '문의자 정보 없음');
+}
+
+function renderSupportNotifications() {
+  const list = document.getElementById('notificationList');
+  const unreadCountEl = document.getElementById('notificationUnreadCount');
+  const unreadBadge = document.getElementById('profileNotificationCount');
+  if (!list) return;
+
+  const readIds = getReadSupportInquiryIds();
+  const unread = _supportInquiryNotifications.filter(item => !readIds.has(item.id));
+  const visible = _notificationFilter === 'unread'
+    ? unread
+    : _supportInquiryNotifications;
+  if (unreadCountEl) unreadCountEl.textContent = String(unread.length);
+  if (unreadBadge) {
+    unreadBadge.textContent = unread.length > 99 ? '99+' : String(unread.length);
+    unreadBadge.hidden = unread.length === 0;
+  }
+
+  list.replaceChildren();
+  if (_supportInquiryLoadError) {
+    const empty = document.createElement('div');
+    empty.className = 'notification-empty';
+    empty.textContent = '고객센터 알림을 불러오지 못했습니다. 데이터 연결과 권한을 확인해 주세요.';
+    list.appendChild(empty);
+    return;
+  }
+  if (_supportInquiryLoading) {
+    const loading = document.createElement('div');
+    loading.className = 'notification-empty';
+    loading.textContent = '고객센터 알림을 불러오는 중...';
+    list.appendChild(loading);
+    return;
+  }
+  if (!visible.length) {
+    const empty = document.createElement('div');
+    empty.className = 'notification-empty';
+    empty.textContent = _notificationFilter === 'unread'
+      ? '알림을 모두 읽었습니다!'
+      : '표시할 알림이 없습니다.';
+    list.appendChild(empty);
+    return;
+  }
+
+  visible.forEach(item => {
+    const isRead = readIds.has(item.id);
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = `notification-item${isRead ? ' is-read' : ' is-unread'}`;
+    card.dataset.notificationId = item.id;
+    const title = document.createElement('strong');
+    title.className = 'notification-item-title';
+    title.textContent = item.title;
+    const requester = document.createElement('span');
+    requester.className = 'notification-item-requester';
+    requester.textContent = item.requester;
+    const meta = document.createElement('span');
+    meta.className = 'notification-item-meta';
+    meta.textContent = item.timestamp ? formatInquiryTimestamp(item.timestamp) : '고객센터 문의';
+    card.append(title, requester, meta);
+    card.addEventListener('click', () => {
+      const nextReadIds = getReadSupportInquiryIds();
+      nextReadIds.add(item.id);
+      saveReadSupportInquiryIds(nextReadIds);
+      renderSupportNotifications();
+    });
+    list.appendChild(card);
+  });
+}
+
+function startSupportInquiryListener() {
+  stopSupportInquiryListener();
+  if (!currentUser || !db) return;
+  _supportInquiryLoadError = false;
+  _supportInquiryLoading = true;
+  renderSupportNotifications();
+  try {
+    _supportInquiryUnsubscribe = db.collection(SUPPORT_INQUIRY_COLLECTION).onSnapshot(snapshot => {
+      _supportInquiryNotifications = snapshot.docs.map(doc => {
+        const data = doc.data() || {};
+        const timestamp = data.createdAt || data.created_at || data.submittedAt || data.date || data.timestamp;
+        return {
+          id: doc.id,
+          title: getSupportInquiryTitle(data),
+          requester: getSupportInquiryRequester(data),
+          timestamp,
+          sortTime: getInquiryTimestampValue(timestamp),
+        };
+      }).sort((a, b) => b.sortTime - a.sortTime);
+      _supportInquiryLoadError = false;
+      _supportInquiryLoading = false;
+      renderSupportNotifications();
+    }, error => {
+      console.warn('고객센터 알림을 불러오지 못했습니다:', error);
+      _supportInquiryNotifications = [];
+      _supportInquiryLoadError = true;
+      _supportInquiryLoading = false;
+      renderSupportNotifications();
+    });
+  } catch (error) {
+    console.warn('고객센터 알림 구독을 시작하지 못했습니다:', error);
+    _supportInquiryLoadError = true;
+    _supportInquiryLoading = false;
+    renderSupportNotifications();
+  }
+}
+
+function stopSupportInquiryListener() {
+  if (_supportInquiryUnsubscribe) {
+    _supportInquiryUnsubscribe();
+    _supportInquiryUnsubscribe = null;
+  }
+  _supportInquiryNotifications = [];
+  _supportInquiryLoadError = false;
+  _supportInquiryLoading = false;
+  renderSupportNotifications();
+}
+
+function closeNotificationPopover() {
+  const popover = document.getElementById('notificationPopover');
+  popover?.classList.remove('open');
+  popover?.setAttribute('aria-hidden', 'true');
+  document.getElementById('btnOpenNotifications')?.setAttribute('aria-expanded', 'false');
+}
+
+document.getElementById('btnOpenNotifications')?.addEventListener('click', () => {
+  const popover = document.getElementById('notificationPopover');
+  if (!popover) return;
+  const shouldOpen = !popover.classList.contains('open');
+  document.getElementById('adminAuthArea')?.classList.remove('open');
+  document.getElementById('adminProfileBtn')?.setAttribute('aria-expanded', 'false');
+  popover.classList.toggle('open', shouldOpen);
+  popover.setAttribute('aria-hidden', String(!shouldOpen));
+  document.getElementById('btnOpenNotifications')?.setAttribute('aria-expanded', String(shouldOpen));
+  renderSupportNotifications();
+});
+
+document.getElementById('notificationClose')?.addEventListener('click', closeNotificationPopover);
+document.querySelectorAll('[data-notification-filter]').forEach(button => {
+  button.addEventListener('click', () => {
+    _notificationFilter = button.dataset.notificationFilter;
+    document.querySelectorAll('[data-notification-filter]').forEach(tab => {
+      const active = tab === button;
+      tab.classList.toggle('active', active);
+      tab.setAttribute('aria-selected', String(active));
+    });
+    renderSupportNotifications();
+  });
+});
+document.getElementById('notificationMarkAll')?.addEventListener('click', () => {
+  saveReadSupportInquiryIds(new Set([
+    ...getReadSupportInquiryIds(),
+    ..._supportInquiryNotifications.map(item => item.id),
+  ]));
+  renderSupportNotifications();
+});
 
 // ===== SECTION SWITCH =====
 function initSidebarSections() {

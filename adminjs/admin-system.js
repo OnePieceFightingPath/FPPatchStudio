@@ -567,6 +567,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 고객센터 문의 — 관리자만 읽기 (문의 작성 규칙은 고객 페이지 정책에 맞춰 별도 유지)
+    match /supportInquiries/{docId} {
+      allow read: if isAdmin();
+    }
+
     // 사용자 프로필 — 본인만 읽기/쓰기
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
