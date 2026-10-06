@@ -4267,8 +4267,8 @@ body {
   max-width: none;
   margin: 0;
   box-sizing: border-box;
-  padding-right: 0;
-  padding-left: 0;
+  padding-right: 20px;
+  padding-left: 20px;
 }
 
 .dashboard-info-row {
@@ -4416,8 +4416,8 @@ body {
     width: 100%;
     max-width: none;
     margin: 0;
-    padding-right: 0;
-    padding-left: 0;
+    padding-right: 20px;
+    padding-left: 20px;
   }
 
   .dashboard-info-row {

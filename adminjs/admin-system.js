@@ -1329,8 +1329,7 @@ async function applyCharEditor() {
 }
 
 /**
- * 하위 호환: openImgEditor('char') 호출 시 새 편집기로 연결
- * 배너 호출은 이 함수를 거치지 않으므로 영향 없음
+ * 이미지별 편집 버튼에서 공용 Cropper 편집기를 연다.
  */
 function openImgEditor(target) {
   if (target === 'char') {
@@ -1341,6 +1340,10 @@ function openImgEditor(target) {
     _charEditorTarget = 'supportChar';
     const srcUrl = document.getElementById('scFieldImgData')?.value || '';
     openCharEditor(_scEditBlob || null, srcUrl || null);
+  } else if (target === 'banner') {
+    _charEditorTarget = 'banner';
+    const srcUrl = document.getElementById('bannerFieldImageUrl')?.value || '';
+    openCharEditor(_bannerEditBlob || null, srcUrl || null);
   }
 }
 

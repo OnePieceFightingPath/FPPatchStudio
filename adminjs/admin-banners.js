@@ -224,6 +224,7 @@ function resetBannerImgWidget() {
   document.getElementById('bannerFieldImgUrlRow').style.display = 'none';
   updateBannerImgPreview('');
 }
+
 document.getElementById('bannerFieldImgRemove')?.addEventListener('click', () => {
   document.getElementById('bannerFieldImageUrl').value = '';
   document.getElementById('bannerFieldImg').value = '';
