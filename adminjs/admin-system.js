@@ -1089,6 +1089,43 @@ let _charEditorTarget = 'char';
 let _charCropper    = null;
 let _charFlippedH   = false;
 let _charEditorBlobUrl = null;
+let _charEditorPreviousBodyOverflow = '';
+
+function _getCharEditorCropBoxSize(containerData) {
+  if (_charEditorTarget === 'banner') {
+    const ratio = 1472 / 420;
+    const width = Math.min(920, containerData.width - 4, (containerData.height - 4) * ratio);
+    return { width, height: width / ratio };
+  }
+  const size = Math.min(500, containerData.height - 4, containerData.width - 4);
+  return { width: size, height: size };
+}
+
+function _positionCharEditorCropper() {
+  if (!_charCropper) return;
+  const containerData = _charCropper.getContainerData();
+  const imageData = _charCropper.getImageData();
+  const cropSize = _getCharEditorCropBoxSize(containerData);
+
+  _charCropper.setCropBoxData({
+    left: (containerData.width - cropSize.width) / 2,
+    top: (containerData.height - cropSize.height) / 2,
+    width: cropSize.width,
+    height: cropSize.height,
+  });
+
+  const coverZoom = Math.max(
+    cropSize.width / imageData.naturalWidth,
+    cropSize.height / imageData.naturalHeight
+  );
+  _charCropper.zoomTo(coverZoom);
+  const newWidth = imageData.naturalWidth * coverZoom;
+  const newHeight = imageData.naturalHeight * coverZoom;
+  _charCropper.setCanvasData({
+    left: (containerData.width - newWidth) / 2,
+    top: (containerData.height - newHeight) / 2,
+  });
+}
 
 /**
  * 캐릭터 이미지 편집기 열기
@@ -1113,12 +1150,19 @@ function openCharEditor(file, srcUrl) {
 
   _charFlippedH = false;
   const editorImg = document.getElementById('charEditorImg');
+  const isBannerEditor = _charEditorTarget === 'banner';
+  document.getElementById('charEditorTitle').textContent = isBannerEditor ? '배너 이미지 편집' : '캐릭터 이미지 편집';
+  document.getElementById('charEditorSubtitle').textContent = isBannerEditor
+    ? '가로형 비율 고정 · 출력 1472×420 px'
+    : '1:1 비율 고정 · 출력 500×500 px';
+  editorImg.alt = isBannerEditor ? '배너 편집 이미지' : '캐릭터 편집 이미지';
 
   const _initCropper = () => {
     // ① 먼저 오버레이를 열어 컨테이너 치수 확보
     // (display:none 상태에서 Cropper를 초기화하면 컨테이너 크기가 0 → 이미지 좌상단 배치 버그)
     const overlay    = document.getElementById('charEditorOverlay');
     const editorBody = document.getElementById('charEditorBody');
+    _charEditorPreviousBodyOverflow = document.body.style.overflow;
     overlay.classList.add('open');
     editorBody.classList.add('ce-loading'); // Cropper 준비 완료 전까지 숨김 (flash 방지)
     document.body.style.overflow = 'hidden';
@@ -1127,7 +1171,7 @@ function openCharEditor(file, srcUrl) {
     //    double-RAF: 첫 번째 RAF에서 스타일 적용, 두 번째 RAF에서 페인트 완료 보장
     requestAnimationFrame(() => requestAnimationFrame(() => {
       _charCropper = new Cropper(editorImg, {
-        aspectRatio: 1,
+        aspectRatio: isBannerEditor ? 1472 / 420 : 1,
         viewMode: 0,   // 이미지를 에디터 밖까지 자유롭게 이동 가능
         dragMode: 'move',
         autoCropArea: 1,
@@ -1140,29 +1184,7 @@ function openCharEditor(file, srcUrl) {
         rotatable: true,
         scalable: true,
         ready() {
-          const cd      = _charCropper.getContainerData();
-          const imgData = _charCropper.getImageData();
-          const sz      = Math.min(500, cd.height - 4, cd.width - 4);
-
-          // ③ 크롭박스 500×500 중앙 배치
-          _charCropper.setCropBoxData({
-            left:   (cd.width  - sz) / 2,
-            top:    (cd.height - sz) / 2,
-            width:  sz,
-            height: sz,
-          });
-
-          // ④ 이미지를 크롭박스를 cover로 꽉 채우도록 줌 (viewMode:0 이므로 직접 계산)
-          const coverZoom  = Math.max(sz / imgData.naturalWidth, sz / imgData.naturalHeight);
-          _charCropper.zoomTo(coverZoom);
-
-          // ⑤ 이미지(캔버스)를 컨테이너 중앙 정렬 → 크롭박스 중앙과 일치
-          const newW = imgData.naturalWidth  * coverZoom;
-          const newH = imgData.naturalHeight * coverZoom;
-          _charCropper.setCanvasData({
-            left: (cd.width  - newW) / 2,
-            top:  (cd.height - newH) / 2,
-          });
+          _positionCharEditorCropper();
 
           // ⑥ 위치 결정 완료 후 ce-loading 제거 → 편집기 표시 (flash 없음)
           editorBody.classList.remove('ce-loading');
@@ -1209,17 +1231,20 @@ function _addCharGuideOverlays() {
   // 기존 오버레이 제거
   cropBox.querySelectorAll('.ce-guide').forEach(el => el.remove());
 
-  // Main Area — 크롭 영역 테두리 (500×500)
+  const isBannerEditor = _charEditorTarget === 'banner';
   const main = document.createElement('div');
   main.className = 'ce-guide ce-guide-main';
-  main.innerHTML = '<span class="ce-guide-label">Main Area (500×500)</span>';
+  main.innerHTML = isBannerEditor
+    ? '<span class="ce-guide-label">Banner Area (1472×420)</span>'
+    : '<span class="ce-guide-label">Main Area (500×500)</span>';
   cropBox.appendChild(main);
 }
 
 /** 캐릭터 이미지 편집기 닫기 */
 function closeCharEditor() {
   document.getElementById('charEditorOverlay').classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow = _charEditorPreviousBodyOverflow;
+  _charEditorPreviousBodyOverflow = '';
   if (_charCropper) {
     _charCropper.destroy();
     _charCropper = null;
@@ -1240,6 +1265,10 @@ function closeCharEditor() {
 /** 편집 완료 — 500×500 크롭 후 Cloudinary 업로드 */
 async function applyCharEditor() {
   if (!_charCropper) return;
+  const isBannerEditor = _charEditorTarget === 'banner';
+  const outputWidth = isBannerEditor ? 1472 : 500;
+  const outputHeight = isBannerEditor ? 420 : 500;
+  const outputType = isBannerEditor ? 'image/jpeg' : 'image/png';
 
   const applyBtn     = document.getElementById('charEditorApplyBtn');
   const applyText    = document.getElementById('charEditorApplyText');
@@ -1249,10 +1278,10 @@ async function applyCharEditor() {
   if (applySpinner) applySpinner.style.display = 'inline-block';
 
   try {
-    // 500×500 크롭 캔버스 생성
+    // 배너는 1472×420, 캐릭터 이미지는 500×500으로 크롭
     const canvas = _charCropper.getCroppedCanvas({
-      width:  500,
-      height: 500,
+      width:  outputWidth,
+      height: outputHeight,
       imageSmoothingEnabled:  true,
       imageSmoothingQuality: 'high',
     });
@@ -1260,13 +1289,23 @@ async function applyCharEditor() {
     if (!canvas) throw new Error('크롭 캔버스 생성 실패');
 
     const blob = await new Promise((res, rej) =>
-      canvas.toBlob(b => b ? res(b) : rej(new Error('Canvas export 실패')), 'image/png')
+      canvas.toBlob(
+        b => b ? res(b) : rej(new Error('Canvas export 실패')),
+        outputType,
+        isBannerEditor ? 0.92 : undefined
+      )
     );
-    const file = new File([blob], 'character.png', { type: 'image/png' });
-    const folder = _charEditorTarget === 'supportChar' ? 'supportCharacters' : 'characters';
+    const file = new File([blob], isBannerEditor ? 'banner.jpg' : 'character.png', { type: outputType });
+    const folder = isBannerEditor
+      ? 'banners'
+      : _charEditorTarget === 'supportChar' ? 'supportCharacters' : 'characters';
     const url  = await uploadImageToStorage(file, folder);
 
-    if (_charEditorTarget === 'supportChar') {
+    if (isBannerEditor) {
+      document.getElementById('bannerFieldImageUrl').value = url;
+      _bannerEditBlob = file;
+      showBannerImgUrl(url);
+    } else if (_charEditorTarget === 'supportChar') {
       document.getElementById('scFieldImgData').value = url;
       _scEditBlob = file;
       showScImgUrl(url);
@@ -1275,7 +1314,7 @@ async function applyCharEditor() {
       _charEditBlob = file;
       showCharImgUrl(url);
     }
-    showToast('이미지가 적용되었습니다.', 'success');
+    showToast(isBannerEditor ? '배너 이미지가 적용되었습니다.' : '이미지가 적용되었습니다.', 'success');
     closeCharEditor();
   } catch (err) {
     const msg = err.name === 'SecurityError'
@@ -1343,21 +1382,7 @@ function openImgEditor(target) {
     _charCropper.reset();
     requestAnimationFrame(() => {
       if (!_charCropper) return;  // 닫기가 RAF보다 먼저 호출된 경우 방어
-      const cd      = _charCropper.getContainerData();
-      const imgData = _charCropper.getImageData();
-      const sz      = Math.min(500, cd.height - 4, cd.width - 4);
-      _charCropper.setCropBoxData({
-        left: (cd.width - sz) / 2, top: (cd.height - sz) / 2,
-        width: sz, height: sz,
-      });
-      const coverZoom = Math.max(sz / imgData.naturalWidth, sz / imgData.naturalHeight);
-      _charCropper.zoomTo(coverZoom);
-      const newW = imgData.naturalWidth * coverZoom;
-      const newH = imgData.naturalHeight * coverZoom;
-      _charCropper.setCanvasData({
-        left: (cd.width - newW) / 2,
-        top:  (cd.height - newH) / 2,
-      });
+      _positionCharEditorCropper();
     });
   });
 

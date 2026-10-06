@@ -1057,6 +1057,7 @@ select.form-input { cursor: pointer; }
 .img-upload-placeholder { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: var(--text-dim); }
 .img-upload-placeholder svg { width: 28px; height: 28px; }
 .banner-upload-preview { width: 190px; height: 59px; }
+#bannerImgPreviewBox { width: 190px; height: auto; aspect-ratio: 1472 / 420; }
 .evt-thumb-preview { width: 160px; height: 90px; }   /* 16:9 */
 
 /* 날짜 범위 선택 행 */
@@ -1439,6 +1440,7 @@ select.form-input { cursor: pointer; }
   .img-upload-widget { flex-direction: column; gap: 10px; }
   .img-upload-preview-box { width: 100%; height: 100px; }
   .banner-upload-preview { width: 100%; height: 72px; }
+  #bannerImgPreviewBox { width: 100%; height: auto; }
   .profile-upload-preview { width: 80px; height: 80px; align-self: center; }
   .img-upload-side { width: 100%; }
   .img-upload-specs { display: none; }

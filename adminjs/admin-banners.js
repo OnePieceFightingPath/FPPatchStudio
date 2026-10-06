@@ -165,6 +165,7 @@ document.getElementById('bannerLinkType')?.addEventListener('change', e => {
 
 function openBannerForm(docId) {
   bannerEditDocId = docId || null;
+  _bannerEditBlob = null;
   document.getElementById('bannerFormError').style.display = 'none';
 
   if (docId) {
@@ -226,6 +227,7 @@ function resetBannerImgWidget() {
 document.getElementById('bannerFieldImgRemove')?.addEventListener('click', () => {
   document.getElementById('bannerFieldImageUrl').value = '';
   document.getElementById('bannerFieldImg').value = '';
+  _bannerEditBlob = null;
   resetBannerImgWidget();
 });
 
@@ -233,62 +235,16 @@ document.getElementById('bannerImgPreviewBox')?.addEventListener('click', () => 
   document.getElementById('bannerFieldImg')?.click();
 });
 
-async function resizeBannerToBlob(file) {
-  const TARGET_W = 1920;
-  const TARGET_H = 645;
-  return new Promise((resolve, reject) => {
-    const objectUrl = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      try {
-        URL.revokeObjectURL(objectUrl);
-        const srcW = img.naturalWidth;
-        const srcH = img.naturalHeight;
-        if (!srcW || !srcH) { reject(new Error('이미지 크기를 읽을 수 없습니다')); return; }
-        // cover: 1920×645를 꽉 채우고 넘치는 부분 잘라냄
-        const scale = Math.max(TARGET_W / srcW, TARGET_H / srcH);
-        const dw = Math.round(srcW * scale);
-        const dh = Math.round(srcH * scale);
-        const oc  = document.createElement('canvas');
-        oc.width  = TARGET_W;
-        oc.height = TARGET_H;
-        const ctx = oc.getContext('2d');
-        if (!ctx) { reject(new Error('Canvas 초기화 실패')); return; }
-        ctx.drawImage(img, (TARGET_W - dw) / 2, (TARGET_H - dh) / 2, dw, dh);
-        oc.toBlob(b => b ? resolve(b) : reject(new Error('리사이즈 실패')), 'image/jpeg', 0.92);
-      } catch (err) {
-        reject(err);
-      }
-    };
-    img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('이미지 로드 실패')); };
-    img.src = objectUrl;
-  });
-}
-
-document.getElementById('bannerFieldImg')?.addEventListener('change', async (e) => {
+document.getElementById('bannerFieldImg')?.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
   if (file.size > 3 * 1024 * 1024) {
     showToast(`파일 용량이 초과되었습니다. 현재 ${(file.size / 1024 / 1024).toFixed(1)} MB · 최대 3 MB`, 'error');
     e.target.value = ''; return;
   }
-  document.getElementById('bannerFieldImgBtnRow').style.display = 'none';
-  document.getElementById('bannerFieldImgUrlRow').style.display = 'flex';
-  document.getElementById('bannerFieldImgUrlText').textContent = '업로드 중...';
-  try {
-    const resizedBlob = await resizeBannerToBlob(file);
-    const resizedFile = new File([resizedBlob], 'banner.jpg', { type: 'image/jpeg' });
-    const url = await uploadImageToStorage(resizedFile, 'banners');
-    document.getElementById('bannerFieldImageUrl').value = url;
-    _bannerEditBlob = resizedFile;
-    showBannerImgUrl(url);
-  } catch (err) {
-    showToast('이미지 업로드 실패: ' + err.message, 'error');
-    _bannerEditBlob = null;
-    resetBannerImgWidget();
-  } finally {
-    e.target.value = '';
-  }
+  _charEditorTarget = 'banner';
+  openCharEditor(file, null);
+  e.target.value = '';
 });
 document.getElementById('bannerFieldIsActive')?.addEventListener('change', e => updateBannerToggleText(e.target.checked));
 
