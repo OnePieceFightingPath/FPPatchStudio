@@ -4861,6 +4861,12 @@ body {
   min-width: 0;
 }
 
+#noticeFormOverlay #noticeAutoIdDisplay {
+  color: #9ca3af;
+  background: #f3f4f6;
+  cursor: default;
+}
+
 #noticeFormOverlay .notice-status-row {
   display: flex;
   align-items: center;
