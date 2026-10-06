@@ -109,9 +109,9 @@ function renderNoticeTable(list) {
     <tr class="${rowClass}">
       <td class="cell-id">#${escHtml(String(noticeId))}</td>
       <td>${escHtml(dateStr)}</td>
-      <td class="cell-name">${isPinned ? '<span class="badge-visible-on">고정</span> ' : ''}${safeTitle || '—'}${isPendingDelete ? '<span class="badge-pending-delete">삭제 예정</span>' : ''}</td>
+      <td class="cell-name">${safeTitle || '—'}${isPendingDelete ? '<span class="badge-pending-delete">삭제 예정</span>' : ''}</td>
       <td>${escHtml(String(writer))}</td>
-      <td>${isPinned ? 'Y' : 'N'}</td>
+      <td><span class="${isPinned ? 'badge-visible-on' : 'badge-visible-off'}">${isPinned ? 'Y' : 'N'}</span></td>
       <td><span class="${isVisible ? 'badge-visible-on' : 'badge-visible-off'}">${isVisible ? 'ON' : 'OFF'}</span></td>
       <td><span class="admin-email-cell">${escHtml(resolveAdminLabel(d.updatedBy))}</span></td>
       <td>
