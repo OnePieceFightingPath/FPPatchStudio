@@ -657,7 +657,6 @@ function copyFirestoreRules() {
 // ============================================================
 
 let bannerOrderList = [];
-let dragSrcIndex   = null;
 
 function openBannerOrderModal() {
   bannerOrderList = [...allBanners].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
@@ -673,8 +672,8 @@ function openBannerOrderModal() {
 function closeBannerOrderModal() {
   document.getElementById('bannerOrderOverlay').classList.remove('open');
   document.body.style.overflow = '';
+  document.body.classList.remove('dragging-banner');
   bannerOrderList = [];
-  dragSrcIndex = null;
 }
 
 document.getElementById('bannerOrderClose')?.addEventListener('click', closeBannerOrderModal);
@@ -690,18 +689,11 @@ function renderBannerOrderList() {
     return;
   }
   ul.innerHTML = bannerOrderList.map((b, i) => `
-    <li class="banner-order-item"
-        draggable="true"
-        data-index="${i}"
-        ondragstart="onOrderDragStart(event, ${i})"
-        ondragover="onOrderDragOver(event)"
-        ondrop="onOrderDrop(event, ${i})"
-        ondragend="onOrderDragEnd(event)"
-        ondragleave="onOrderDragLeave(event)">
+    <li class="banner-order-item" data-index="${i}" draggable="false">
       <div class="drag-handle"><span></span><span></span><span></span></div>
       <div class="order-num-badge">${i + 1}</div>
       ${b.imageUrl
-        ? `<img class="order-thumb" src="${b.imageUrl}" alt="${b.title || ''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        ? `<img class="order-thumb" src="${b.imageUrl}" alt="${b.title || ''}" draggable="false" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
            <div class="order-thumb-placeholder" style="display:none">없음</div>`
         : `<div class="order-thumb-placeholder">이미지 없음</div>`}
       <span class="order-item-title">${b.title || '<span style="color:var(--text-dim)">제목 없음</span>'}</span>
@@ -710,85 +702,79 @@ function renderBannerOrderList() {
   `).join('');
 }
 
-function onOrderDragStart(e, index) {
-  dragSrcIndex = index;
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', index);
-  document.body.classList.add('dragging-banner');
-  requestAnimationFrame(() => {
-    const el = document.querySelector(`.banner-order-item[data-index="${index}"]`);
-    el?.classList.add('dragging');
-  });
-}
-function onOrderDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  const item = e.currentTarget;
-  if (!item.classList.contains('dragging')) item.classList.add('drag-over');
-}
-function onOrderDragLeave(e) {
-  e.currentTarget.classList.remove('drag-over');
-}
-function onOrderDrop(e, targetIndex) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('drag-over');
-  if (dragSrcIndex === null || dragSrcIndex === targetIndex) return;
-  const moved = bannerOrderList.splice(dragSrcIndex, 1)[0];
-  bannerOrderList.splice(targetIndex, 0, moved);
-  dragSrcIndex = null;
-  renderBannerOrderList();
-}
-function onOrderDragEnd(e) {
-  document.body.classList.remove('dragging-banner');
-  document.querySelectorAll('.banner-order-item').forEach(el => el.classList.remove('dragging', 'drag-over'));
-  dragSrcIndex = null;
-}
-
-// 배너 순서 — 터치 드래그 지원 (모바일)
-(function initBannerOrderTouch() {
+// 메인 배너 순서 — 목록 안에서만 포인터 드래그 허용
+(function initBannerOrderPointerDrag() {
   const ul = document.getElementById('bannerOrderList');
   if (!ul) return;
-  let _touchIdx = null;
-  let _dragEl   = null;
+  // 썸네일 등 자식 요소에서 시작되는 브라우저 기본 드래그도 차단한다.
+  ul.addEventListener('dragstart', e => e.preventDefault());
+  let sourceIndex = null;
+  let sourceItem = null;
+  let activePointerId = null;
 
-  ul.addEventListener('touchstart', e => {
-    const handle = e.target.closest('.drag-handle');
-    const li     = e.target.closest('.banner-order-item');
-    if (!li || !handle) return;
-    _touchIdx = parseInt(li.dataset.index, 10);
-    _dragEl   = li;
-    li.classList.add('dragging');
-    document.body.classList.add('dragging-banner');
-  }, { passive: true });
+  const getItemAtPoint = (x, y) => {
+    const bounds = ul.getBoundingClientRect();
+    if (x < bounds.left || x > bounds.right || y < bounds.top || y > bounds.bottom) return null;
+    const hit = document.elementFromPoint(x, y);
+    const item = hit?.closest('#bannerOrderList .banner-order-item');
+    return item && ul.contains(item) ? item : null;
+  };
 
-  ul.addEventListener('touchmove', e => {
-    if (_touchIdx === null) return;
-    e.preventDefault();
-    const touch  = e.touches[0];
-    const el     = document.elementFromPoint(touch.clientX, touch.clientY);
-    ul.querySelectorAll('.banner-order-item').forEach(item => item.classList.remove('drag-over'));
-    const target = el?.closest('.banner-order-item');
-    if (target && target !== _dragEl) target.classList.add('drag-over');
-  }, { passive: false });
-
-  ul.addEventListener('touchend', e => {
-    if (_touchIdx === null) return;
-    const touch  = e.changedTouches[0];
-    const el     = document.elementFromPoint(touch.clientX, touch.clientY);
-    const target = el?.closest('.banner-order-item');
-    const toIdx  = target ? parseInt(target.dataset.index, 10) : NaN;
-
-    ul.querySelectorAll('.banner-order-item').forEach(i => i.classList.remove('dragging', 'drag-over'));
+  const clearDragState = () => {
+    if (sourceItem && activePointerId !== null) {
+      try {
+        if (sourceItem.hasPointerCapture(activePointerId)) sourceItem.releasePointerCapture(activePointerId);
+      } catch (_) {}
+    }
+    ul.querySelectorAll('.banner-order-item').forEach(item => item.classList.remove('dragging', 'drag-over'));
     document.body.classList.remove('dragging-banner');
+    sourceIndex = null;
+    sourceItem = null;
+    activePointerId = null;
+  };
 
-    if (!isNaN(toIdx) && toIdx !== _touchIdx) {
-      const moved = bannerOrderList.splice(_touchIdx, 1)[0];
-      bannerOrderList.splice(toIdx, 0, moved);
+  ul.addEventListener('pointerdown', e => {
+    const handle = e.target.closest('.drag-handle');
+    const item = e.target.closest('.banner-order-item');
+    if (!handle || !item || !ul.contains(item) || e.button !== 0) return;
+    const index = Number(item.dataset.index);
+    if (!Number.isInteger(index)) return;
+
+    e.preventDefault();
+    sourceIndex = index;
+    sourceItem = item;
+    activePointerId = e.pointerId;
+    try { item.setPointerCapture(e.pointerId); } catch (_) {}
+    item.classList.add('dragging');
+    document.body.classList.add('dragging-banner');
+  });
+
+  ul.addEventListener('pointermove', e => {
+    if (sourceIndex === null || e.pointerId !== activePointerId) return;
+    ul.querySelectorAll('.banner-order-item').forEach(item => item.classList.remove('drag-over'));
+    const target = getItemAtPoint(e.clientX, e.clientY);
+    if (target && target !== sourceItem) target.classList.add('drag-over');
+  });
+
+  const finishPointerDrag = (e, shouldDrop) => {
+    if (sourceIndex === null || e.pointerId !== activePointerId) return;
+    const fromIndex = sourceIndex;
+    const target = shouldDrop && document.getElementById('bannerOrderOverlay').classList.contains('open')
+      ? getItemAtPoint(e.clientX, e.clientY)
+      : null;
+    const toIndex = target ? Number(target.dataset.index) : NaN;
+    clearDragState();
+
+    if (Number.isInteger(toIndex) && toIndex >= 0 && toIndex < bannerOrderList.length && toIndex !== fromIndex) {
+      const moved = bannerOrderList.splice(fromIndex, 1)[0];
+      if (!moved) return;
+      bannerOrderList.splice(toIndex, 0, moved);
       renderBannerOrderList();
     }
-    _touchIdx = null;
-    _dragEl   = null;
-  }, { passive: true });
+  };
+
+  ul.addEventListener('pointerup', e => finishPointerDrag(e, true));
+  ul.addEventListener('pointercancel', e => finishPointerDrag(e, false));
 })();
 
 document.getElementById('bannerOrderSave')?.addEventListener('click', async () => {
