@@ -22,7 +22,11 @@
 <body>
 
 <!-- ===== LOGIN OVERLAY ===== -->
-<div class="login-overlay" id="loginOverlay">
+<div class="login-overlay auth-pending" id="loginOverlay">
+  <div class="login-auth-loading" role="status" aria-live="polite">
+    <span class="login-auth-spinner" aria-hidden="true"></span>
+    <span>로그인 상태를 확인하고 있습니다.</span>
+  </div>
   <div class="login-box">
     <div class="login-logo">
       <div class="gnb-logo-icon">

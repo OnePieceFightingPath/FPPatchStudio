@@ -123,6 +123,24 @@ input, select, textarea { font-family: inherit; }
   padding: 20px;
 }
 .login-overlay.hidden { display: none; }
+.login-overlay.auth-pending .login-box { display: none; }
+.login-auth-loading {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 14px;
+}
+.login-overlay.auth-pending .login-auth-loading { display: flex; }
+.login-auth-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, .35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: login-auth-spin .8s linear infinite;
+}
+@keyframes login-auth-spin { to { transform: rotate(360deg); } }
 
 .login-box {
   background: var(--bg-card);

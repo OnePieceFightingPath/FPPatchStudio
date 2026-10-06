@@ -258,6 +258,17 @@ function updateBarFromDocs(docs, infoElId) {
 
 const ADMIN_SESSION_EXPIRY_KEY = 'adminSessionExpiry';
 const ADMIN_SESSION_EXPIRY_MS  = 6 * 60 * 60 * 1000; // 6시간
+const ADMIN_LAST_SECTION_KEY_PREFIX = 'fppAdminLastSection:';
+
+function _adminLastSectionStorageKey(user = currentUser) {
+  return user?.uid ? `${ADMIN_LAST_SECTION_KEY_PREFIX}${user.uid}` : null;
+}
+
+function _saveLastAdminSection(section) {
+  const key = _adminLastSectionStorageKey();
+  if (!key) return;
+  try { localStorage.setItem(key, section); } catch (_) {}
+}
 
 function _isSessionExpired() {
   const v = sessionStorage.getItem(ADMIN_SESSION_EXPIRY_KEY);
@@ -286,6 +297,7 @@ function stopSessionExpiryCheck() {
 
 auth.onAuthStateChanged(async user => {
   if (!user) {
+    currentUser = null;
     stopSupportInquiryListener();
     stopSessionExpiryCheck();
     _showLoginOverlay();
@@ -301,25 +313,31 @@ auth.onAuthStateChanged(async user => {
     await auth.signOut();
     return;
   }
+  const loginOverlay = document.getElementById('loginOverlay');
+  loginOverlay.classList.remove('hidden');
+  loginOverlay.classList.add('auth-pending');
   currentUser = user;
+  _myCanPermission = false;
+  _myCanManageUsers = false;
+  _myPerms = null;
   startSupportInquiryListener();
   startSessionExpiryCheck();
-  _hideLoginOverlay(user);
   try {
     await loadAllData();
   } catch (err) {
     console.error('관리자 데이터 로드 실패:', err);
     showToast('데이터를 불러오지 못했습니다. 페이지를 새로고침해 주세요.', 'error');
   }
+  await _hideLoginOverlay(user);
 });
 
 function _showLoginOverlay() {
-  document.getElementById('loginOverlay').classList.remove('hidden');
+  const overlay = document.getElementById('loginOverlay');
+  overlay.classList.remove('hidden', 'auth-pending');
   document.getElementById('adminAuthArea').style.display = 'none';
 }
 
-function _hideLoginOverlay(user) {
-  document.getElementById('loginOverlay').classList.add('hidden');
+async function _hideLoginOverlay(user) {
   document.getElementById('adminAuthArea').style.display = 'flex';
 
   // 총괄 관리자 or 관련 권한이 있는 관리자에게 운영 메뉴 노출
@@ -333,7 +351,8 @@ function _hideLoginOverlay(user) {
     } else {
       permBtn.style.display = 'none';
       if (memberBtn) memberBtn.style.display = 'none';
-      db.collection('adminPermissions').doc(user.email).get().then(snap => {
+      try {
+        const snap = await db.collection('adminPermissions').doc(user.email).get();
         if (snap.exists) {
           const d = snap.data();
           _myCanPermission  = d.canPermission  === true;
@@ -342,8 +361,8 @@ function _hideLoginOverlay(user) {
         }
         if (permBtn) permBtn.style.display = _myCanPermission ? '' : 'none';
         if (memberBtn) memberBtn.style.display = hasMemberAccess() ? '' : 'none';
-        _enforcePermUI();
-      }).catch(() => {});
+      } catch (_) {}
+      _enforcePermUI();
     }
   }
 
@@ -360,6 +379,9 @@ function _hideLoginOverlay(user) {
       saveAdminNicknameToMap();
     }
   }).catch(() => {});
+
+  _restoreLastAdminSection();
+  document.getElementById('loginOverlay').classList.add('hidden');
 }
 
 function _showLoginError(msg) {
@@ -1093,6 +1115,7 @@ function renderGnbTabs() {
 
 function activateGnbTab(section, pushHistory = true) {
   _activeTab = section;
+  _saveLastAdminSection(section);
   syncSidebarSections(section);
   document.querySelectorAll('.sidebar-item').forEach(b => {
     b.classList.toggle('active', b.dataset.section === section);
@@ -1105,6 +1128,25 @@ function activateGnbTab(section, pushHistory = true) {
     if (_tabHistory[_tabCursor] !== section) { _tabHistory.push(section); _tabCursor++; }
   }
   renderGnbBreadcrumb(section);
+}
+
+function _restoreLastAdminSection() {
+  const key = _adminLastSectionStorageKey();
+  if (!key) return;
+
+  let section;
+  try { section = localStorage.getItem(key); } catch (_) { return; }
+  if (!section || section === 'dashboard' || section === 'userpage' ||
+      !Object.prototype.hasOwnProperty.call(SECTION_NAMES, section)) return;
+  if (section === 'permissions' && !hasPermAccess()) return;
+  if (section === 'members' && !hasMemberAccess()) return;
+  if (!isSuperAdmin() && !canViewSection(section)) return;
+
+  if (!_openTabs.includes(section)) _openTabs.push(section);
+  activateGnbTab(section);
+  if (section === 'profile') loadProfileSection();
+  if (section === 'members') loadPermUsers();
+  if (section === 'permissions') loadPermissionsSection();
 }
 
 function closeGnbTab(section) {
