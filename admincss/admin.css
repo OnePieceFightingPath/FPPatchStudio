@@ -622,9 +622,54 @@ input, select, textarea { font-family: inherit; }
 .section-header {
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
   gap: 16px;
   margin-bottom: 12px;
 }
+.content-visibility-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-height: 34px;
+  margin-left: auto;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.content-visibility-label { font-size: 12px; }
+.visibility-switch { position: relative; display: inline-flex; width: 38px; height: 22px; cursor: pointer; }
+.visibility-switch input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+.visibility-switch-track {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-hover);
+  transition: background var(--transition), border-color var(--transition);
+}
+.visibility-switch-track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform var(--transition), background var(--transition);
+}
+.visibility-switch input:checked + .visibility-switch-track { border-color: var(--success); background: rgba(79, 198, 106, .28); }
+.visibility-switch input:checked + .visibility-switch-track::after { transform: translateX(16px); background: var(--success); }
+.visibility-switch input:focus-visible + .visibility-switch-track { outline: 2px solid var(--accent); outline-offset: 2px; }
+.visibility-switch-state { min-width: 23px; color: var(--danger); font-size: 11px; }
+.content-visibility-control.is-on .visibility-switch-state { color: var(--success); }
+.content-visibility-control.is-saving { opacity: .65; }
+.visibility-switch input:disabled { cursor: not-allowed; }
+.visibility-switch:has(input:disabled) { cursor: not-allowed; }
 .section-btn-row {
   display: flex;
   align-items: center;

@@ -777,6 +777,14 @@
         <div>
           <h2 class="section-title">이벤트 관리</h2>
         </div>
+        <div class="content-visibility-control">
+          <span class="content-visibility-label">사용자 페이지</span>
+          <label class="visibility-switch">
+            <input type="checkbox" id="eventVisibilityToggle" aria-label="사용자 페이지 이벤트 On/Off" checked>
+            <span class="visibility-switch-track"></span>
+          </label>
+          <strong class="visibility-switch-state" id="eventVisibilityState">ON</strong>
+        </div>
       </div>
       <div class="section-btn-row">
         <span class="toolbar-count" id="evtPageCountLabel">로딩 중...</span>
@@ -933,6 +941,14 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">게시판 관리</h2>
+        </div>
+        <div class="content-visibility-control">
+          <span class="content-visibility-label">사용자 페이지</span>
+          <label class="visibility-switch">
+            <input type="checkbox" id="boardVisibilityToggle" aria-label="사용자 페이지 게시판 On/Off" checked>
+            <span class="visibility-switch-track"></span>
+          </label>
+          <strong class="visibility-switch-state" id="boardVisibilityState">ON</strong>
         </div>
       </div>
       <div class="section-btn-row">
@@ -2345,6 +2361,7 @@
 <script src="adminjs/admin-banners.js"></script>
 <script src="adminjs/admin-events.js"></script>
 <script src="adminjs/admin-boards.js"></script>
+<script src="adminjs/admin-community-settings.js"></script>
 <script src="adminjs/admin-notices.js"></script>
 <script src="adminjs/admin-system.js"></script>
 <script src="adminjs/admin-font-icons.js"></script>

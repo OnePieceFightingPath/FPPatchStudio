@@ -382,6 +382,7 @@ async function _hideLoginOverlay(user) {
 
   _restoreLastAdminSection();
   document.getElementById('loginOverlay').classList.add('hidden');
+  document.dispatchEvent(new CustomEvent('admin:permissions-ready'));
 }
 
 function _showLoginError(msg) {
