@@ -1338,7 +1338,7 @@
 </div>
 
 <!-- ===== CHARACTER FORM MODAL ===== -->
-<div class="modal-overlay" id="charFormOverlay">
+<div class="modal-overlay admin-reference-modal" id="charFormOverlay">
   <div class="modal-panel" id="charFormPanel">
     <div class="modal-panel-header">
       <h2 id="charFormTitle">캐릭터 추가</h2>
@@ -1351,10 +1351,15 @@
     <div class="modal-panel-body">
       <form id="charForm" novalidate>
         <div class="form-section">
-          <div class="form-section-label">기본 정보 <span class="required">*</span></div>
-          <div class="form-group">
-            <label class="form-label">ID</label>
-            <input type="text" id="charAutoIdDisplay" class="form-input" readonly style="cursor:default;opacity:.65;background:var(--bg-card,#1e2330)">
+          <div class="form-row-2 admin-id-title-row">
+            <div class="form-group">
+              <label class="form-label">ID</label>
+              <input type="text" id="charAutoIdDisplay" class="form-input" readonly style="cursor:default;opacity:.65">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="fieldName">이름 <span class="required">*</span></label>
+              <input type="text" id="fieldName" class="form-input" placeholder="캐릭터 이름" required>
+            </div>
           </div>
           <div class="form-row-3">
             <div class="form-group">
@@ -1388,10 +1393,6 @@
                 <option value="원소">원소</option>
               </select>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="fieldName">이름 <span class="required">*</span></label>
-            <input type="text" id="fieldName" class="form-input" placeholder="캐릭터 이름" required>
           </div>
           <div class="form-group">
             <label class="form-label">이미지 파일 <span class="required">*</span></label>
@@ -1500,7 +1501,7 @@
 </div>
 
 <!-- ===== SUPPORT CHARACTER FORM MODAL ===== -->
-<div class="modal-overlay" id="scFormOverlay">
+<div class="modal-overlay admin-reference-modal" id="scFormOverlay">
   <div class="modal-panel" id="scFormPanel">
     <div class="modal-panel-header">
       <h2 id="scFormTitle">서포트 캐릭터 추가</h2>
@@ -1513,28 +1514,27 @@
     <div class="modal-panel-body">
       <form id="scForm" novalidate>
         <div class="form-section">
-          <div class="form-section-label">기본 정보</div>
-          <div class="form-group">
-            <label class="form-label">ID</label>
-            <input type="text" id="scAutoIdDisplay" class="form-input" readonly style="cursor:default;opacity:.65;background:var(--bg-card,#1e2330)">
-          </div>
-          <div class="form-row-3">
+          <div class="form-row-2 admin-id-title-row">
             <div class="form-group">
-              <label class="form-label" for="scFieldGrade">등급 <span class="required">*</span></label>
-              <select id="scFieldGrade" class="form-input">
-                <option value="">등급 선택</option>
-                <option value="특전">특전</option>
-                <option value="SS">SS</option>
-                <option value="S">S</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-              </select>
+              <label class="form-label">ID</label>
+              <input type="text" id="scAutoIdDisplay" class="form-input" readonly style="cursor:default;opacity:.65">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="scFieldName">이름 <span class="required">*</span></label>
+              <input type="text" id="scFieldName" class="form-input" placeholder="캐릭터 이름" required>
             </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="scFieldName">이름 <span class="required">*</span></label>
-            <input type="text" id="scFieldName" class="form-input" placeholder="캐릭터 이름" required>
+          <div class="form-group support-grade-group">
+            <label class="form-label" for="scFieldGrade">등급 <span class="required">*</span></label>
+            <select id="scFieldGrade" class="form-input">
+              <option value="">등급 선택</option>
+              <option value="특전">특전</option>
+              <option value="SS">SS</option>
+              <option value="S">S</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
           </div>
           <div class="form-group">
             <label class="form-label">이미지 파일 <span class="required">*</span></label>
@@ -1738,7 +1738,7 @@
 </div>
 
 <!-- ===== BANNER FORM MODAL ===== -->
-<div class="modal-overlay" id="bannerFormOverlay">
+<div class="modal-overlay admin-reference-modal" id="bannerFormOverlay">
   <div class="modal-panel">
     <div class="modal-panel-header">
       <h2 id="bannerFormTitle">배너 추가</h2>
@@ -1751,27 +1751,16 @@
     <div class="modal-panel-body">
       <form id="bannerForm" novalidate>
         <div class="form-section">
-          <div class="form-section-label">배너 정보</div>
           <!-- 정렬 순서: UI에서 제거, 데이터 구조 유지용 hidden input -->
           <input type="hidden" id="bannerFieldOrder" value="0">
-          <div class="form-group">
-            <label class="form-label">ID</label>
-            <input type="text" id="bannerAutoIdDisplay" class="form-input" readonly style="cursor:default;opacity:.65;background:var(--bg-card,#1e2330)">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="bannerFieldTitle">제목 <span class="required">*</span></label>
-            <input type="text" id="bannerFieldTitle" class="form-input" placeholder="배너 위에 표시될 제목">
-          </div>
-          <div class="form-group">
-            <label class="form-label">활성화 상태 <span class="required">*</span></label>
-            <div class="banner-toggle-row">
-              <label class="toggle-switch-label">
-                <input type="checkbox" id="bannerFieldIsActive" checked>
-                <span class="toggle-track">
-                  <span class="toggle-thumb"></span>
-                </span>
-                <span class="toggle-text" id="bannerToggleText">활성화 On</span>
-              </label>
+          <div class="form-row-2 admin-id-title-row banner-id-title-row">
+            <div class="form-group">
+              <label class="form-label">ID</label>
+              <input type="text" id="bannerAutoIdDisplay" class="form-input" readonly style="cursor:default;opacity:.65">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bannerFieldTitle">제목 <span class="required">*</span></label>
+              <input type="text" id="bannerFieldTitle" class="form-input" placeholder="배너 위에 표시될 제목">
             </div>
           </div>
           <div class="form-group">
@@ -1809,22 +1798,36 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">클릭 동작 (선택)</label>
-            <select id="bannerLinkType" class="form-input" style="margin-bottom:8px">
-              <option value="none">없음</option>
-              <option value="external">외부 링크 열기</option>
-              <option value="page">내부 탭 이동</option>
-            </select>
-            <div id="bannerLinkExternalWrap" style="display:none">
-              <input type="url" id="bannerFieldLink" class="form-input" placeholder="https://...">
+            <label class="form-label">활성화 상태 <span class="required">*</span></label>
+            <div class="banner-toggle-row">
+              <label class="toggle-switch-label">
+                <input type="checkbox" id="bannerFieldIsActive" checked>
+                <span class="toggle-track">
+                  <span class="toggle-thumb"></span>
+                </span>
+                <span class="toggle-text" id="bannerToggleText">활성화 On</span>
+              </label>
             </div>
-            <div id="bannerLinkPageWrap" style="display:none">
-              <select id="bannerFieldPage" class="form-input">
-                <option value="home">홈</option>
-                <option value="character">캐릭터</option>
-                <option value="patchnote">패치노트</option>
-                <option value="pvppatch">PvP 패치</option>
+          </div>
+          <div class="form-group">
+            <label class="form-label">바로가기 URL <span class="form-label-optional">(선택)</span></label>
+            <div class="banner-link-row">
+              <select id="bannerLinkType" class="form-input">
+                <option value="external">외부 링크 열기</option>
+                <option value="page">내부 탭 이동</option>
+                <option value="none">없음</option>
               </select>
+              <div id="bannerLinkExternalWrap" class="banner-link-target">
+                <input type="url" id="bannerFieldLink" class="form-input" placeholder="https://...">
+              </div>
+              <div id="bannerLinkPageWrap" class="banner-link-target" style="display:none">
+                <select id="bannerFieldPage" class="form-input">
+                  <option value="home">홈</option>
+                  <option value="character">캐릭터</option>
+                  <option value="patchnote">패치노트</option>
+                  <option value="pvppatch">PvP 패치</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -1945,7 +1948,7 @@
 -->
 
 <!-- ===== EVENT PAGE FORM MODAL ===== -->
-<div class="modal-overlay" id="evtPgFormOverlay">
+<div class="modal-overlay admin-reference-modal" id="evtPgFormOverlay">
   <div class="modal-panel modal-panel-wide">
     <div class="modal-panel-header">
       <h2 id="evtPgFormTitle">이벤트 추가</h2>
@@ -1958,10 +1961,15 @@
     <div class="modal-panel-body">
       <form id="evtPgForm" onsubmit="return false" novalidate>
         <div class="form-section">
-          <div class="form-section-label">이벤트 정보</div>
-          <div class="form-group">
-            <label class="form-label">ID</label>
-            <input type="text" id="evtPgAutoIdDisplay" class="form-input" readonly style="cursor:default;opacity:.65;background:var(--bg-card,#1e2330)">
+          <div class="form-row-2 admin-id-title-row event-id-title-row">
+            <div class="form-group">
+              <label class="form-label">ID</label>
+              <input type="text" id="evtPgAutoIdDisplay" class="form-input" readonly style="cursor:default;opacity:.65">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="evtPgFieldTitle">제목 <span class="required">*</span></label>
+              <input type="text" id="evtPgFieldTitle" class="form-input" placeholder="이벤트 제목 입력" maxlength="200">
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">기간 <span class="required">*</span></label>
@@ -2001,10 +2009,6 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="evtPgFieldTitle">제목 <span class="required">*</span></label>
-            <input type="text" id="evtPgFieldTitle" class="form-input" placeholder="이벤트 제목 입력" maxlength="200">
           </div>
           <div class="form-group">
             <label class="form-label">본문 <span class="required">*</span></label>
@@ -2166,8 +2170,8 @@
 
 
 <!-- ===== NOTICE FORM MODAL ===== -->
-<div class="form-overlay" id="noticeFormOverlay">
-  <div class="form-modal" style="max-width:720px">
+<div class="form-overlay admin-reference-modal" id="noticeFormOverlay">
+  <div class="form-modal admin-notice-modal" style="max-width:720px">
     <div class="form-modal-header">
       <h3 class="form-modal-title" id="noticeFormTitle">공지사항 추가</h3>
       <button class="form-modal-close" id="noticeFormClose">
@@ -2176,23 +2180,31 @@
     </div>
     <div class="form-modal-body">
       <div class="form-error" id="noticeFormError" style="display:none"></div>
-      <div class="form-row">
-        <label class="form-label">제목 <span class="form-required">*</span></label>
-        <input type="text" id="noticeFieldTitle" class="form-input" placeholder="공지 제목을 입력하세요">
+      <div class="notice-id-title-row">
+        <div class="form-row">
+          <label class="form-label">ID</label>
+          <input type="text" id="noticeAutoIdDisplay" class="form-input" readonly>
+        </div>
+        <div class="form-row">
+          <label class="form-label">제목 <span class="form-required">*</span></label>
+          <input type="text" id="noticeFieldTitle" class="form-input" placeholder="공지 제목을 입력하세요">
+        </div>
+      </div>
+      <div class="notice-status-row">
+        <label class="notice-switch-label">
+          <input type="checkbox" id="noticeFieldPinned">
+          <span class="notice-switch-track"><span></span></span>
+          <span>상단고정</span>
+        </label>
+        <label class="notice-switch-label">
+          <input type="checkbox" id="noticeFieldVisible" checked>
+          <span class="notice-switch-track"><span></span></span>
+          <span>노출</span>
+        </label>
       </div>
       <div class="form-row">
         <label class="form-label">본문 <span class="form-required">*</span></label>
         <textarea id="noticeEditor"></textarea>
-      </div>
-      <div class="form-row" style="display:flex;gap:24px;flex-wrap:wrap">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="checkbox" id="noticeFieldPinned">
-          <span class="form-label" style="margin:0">상단 고정</span>
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="checkbox" id="noticeFieldVisible" checked>
-          <span class="form-label" style="margin:0">노출 (ON)</span>
-        </label>
       </div>
     </div>
     <div class="form-modal-footer">

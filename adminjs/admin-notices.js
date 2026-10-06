@@ -179,6 +179,8 @@ function initNoticeEditor() {
 async function openNoticeForm(docId) {
   noticeEditDocId = docId || null;
   document.getElementById('noticeFormError').style.display = 'none';
+  const noticeDisplayIds = getNoticeDisplayIds();
+  const nextNoticeDisplayId = Math.max(0, ...noticeDisplayIds.values()) + 1;
 
   const content = (() => {
     if (docId) {
@@ -186,12 +188,14 @@ async function openNoticeForm(docId) {
       if (!n) return '';
       const src = (n.hasDraft && n.draftData) ? n.draftData : n;
       document.getElementById('noticeFormTitle').textContent = '공지사항 수정';
+      document.getElementById('noticeAutoIdDisplay').value = noticeDisplayIds.get(docId) ?? src.id ?? '';
       document.getElementById('noticeFieldTitle').value   = src.title   || '';
       document.getElementById('noticeFieldPinned').checked = !!src.pinned;
       document.getElementById('noticeFieldVisible').checked = src.visible !== false;
       return src.content || '';
     } else {
       document.getElementById('noticeFormTitle').textContent = '공지사항 추가';
+      document.getElementById('noticeAutoIdDisplay').value = nextNoticeDisplayId;
       document.getElementById('noticeFieldTitle').value   = '';
       document.getElementById('noticeFieldPinned').checked  = false;
       document.getElementById('noticeFieldVisible').checked = true;

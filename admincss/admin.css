@@ -4692,3 +4692,319 @@ body {
     flex: 1 1 200px;
   }
 }
+
+/* Reference-matched add/edit dialogs */
+.admin-reference-modal .modal-panel,
+.admin-reference-modal .form-modal {
+  background: #fff;
+  color: #334155;
+  border-color: #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.18);
+}
+
+.admin-reference-modal .modal-panel-header,
+.admin-reference-modal .form-modal-header {
+  padding: 20px 22px 16px;
+  border-bottom-color: #e5e7eb;
+}
+
+.admin-reference-modal .modal-panel-header h2,
+.admin-reference-modal .form-modal-title {
+  color: #1f2937;
+  font-size: 17px;
+}
+
+.admin-reference-modal .modal-close-btn,
+.admin-reference-modal .form-modal-close {
+  color: #6b7280;
+}
+
+.admin-reference-modal .modal-close-btn:hover,
+.admin-reference-modal .form-modal-close:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.admin-reference-modal .modal-panel-body,
+.admin-reference-modal .form-modal-body {
+  padding: 20px 22px;
+  background: #fff;
+}
+
+.admin-reference-modal .modal-panel-footer,
+.admin-reference-modal .form-modal-footer {
+  padding: 14px 22px;
+  border-top-color: #e5e7eb;
+  background: #fff;
+}
+
+.admin-reference-modal .form-section {
+  margin-bottom: 20px;
+}
+
+.admin-reference-modal .form-label,
+.admin-reference-modal .form-section-label {
+  color: #64748b;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.admin-reference-modal .form-input {
+  min-height: 39px;
+  padding: 8px 12px;
+  color: #374151;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  box-shadow: none;
+}
+
+.admin-reference-modal .form-input::placeholder {
+  color: #9ca3af;
+}
+
+.admin-reference-modal .form-input:focus {
+  border-color: #7768ef;
+  box-shadow: 0 0 0 3px rgba(119, 104, 239, 0.11);
+}
+
+.admin-reference-modal .form-input[readonly] {
+  background: #fff;
+}
+
+.admin-reference-modal .form-row-2.admin-id-title-row {
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.admin-reference-modal .admin-id-title-row .form-group {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+#bannerFormOverlay .banner-id-title-row {
+  grid-template-columns: 120px minmax(0, 1fr);
+}
+
+#bannerFormOverlay .banner-link-row {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 8px;
+}
+
+#bannerFormOverlay .banner-link-target {
+  min-width: 0;
+}
+
+#bannerFormOverlay .banner-link-target .form-input {
+  width: 100%;
+}
+
+#bannerFormOverlay .img-upload-widget,
+#charFormOverlay .img-upload-widget,
+#scFormOverlay .img-upload-widget,
+#evtPgFormOverlay .img-upload-widget {
+  align-items: flex-start;
+}
+
+#bannerFormOverlay .banner-upload-preview {
+  width: 190px;
+  height: 54px;
+}
+
+#charFormOverlay .form-row-3 {
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+#scFormOverlay .support-grade-group {
+  width: 200px;
+  margin-bottom: 16px;
+}
+
+#evtPgFormOverlay .event-id-title-row {
+  margin-bottom: 14px;
+}
+
+#evtPgFormOverlay .date-range-row {
+  gap: 8px;
+}
+
+#evtPgFormOverlay .date-range-row .form-input {
+  min-height: 39px;
+}
+
+#evtPgFormOverlay .evt-thumb-preview {
+  width: 160px;
+  height: 90px;
+}
+
+#noticeFormOverlay .form-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#noticeFormOverlay .form-row {
+  margin: 0;
+}
+
+#noticeFormOverlay .notice-id-title-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 16px;
+}
+
+#noticeFormOverlay .notice-id-title-row .form-row {
+  min-width: 0;
+}
+
+#noticeFormOverlay .notice-status-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-height: 30px;
+}
+
+#noticeFormOverlay .notice-switch-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+#noticeFormOverlay .notice-switch-label input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+#noticeFormOverlay .notice-switch-track {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  flex: 0 0 40px;
+  border-radius: 999px;
+  background: #d1d5db;
+  transition: background 0.18s ease;
+}
+
+#noticeFormOverlay .notice-switch-track span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.2);
+  transition: transform 0.18s ease;
+}
+
+#noticeFormOverlay .notice-switch-label input:checked + .notice-switch-track {
+  background: #299bd0;
+}
+
+#noticeFormOverlay .notice-switch-label input:checked + .notice-switch-track span {
+  transform: translateX(18px);
+}
+
+#noticeFormOverlay .notice-switch-label input:focus-visible + .notice-switch-track {
+  outline: 3px solid rgba(41, 155, 208, 0.2);
+}
+
+.admin-reference-modal .btn-primary {
+  background: #685bea;
+  border-color: #685bea;
+  border-radius: 9px;
+  box-shadow: 0 2px 5px rgba(104, 91, 234, 0.2);
+}
+
+.admin-reference-modal .btn-primary:hover {
+  background: #5849db;
+  border-color: #5849db;
+}
+
+.admin-reference-modal .btn-secondary {
+  color: #4b5563;
+  background: #fff;
+  border-color: #e5e7eb;
+  border-radius: 9px;
+}
+
+.admin-reference-modal .btn-secondary:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.admin-reference-modal .btn-add-sub {
+  color: #5b55ad;
+  background: #f3f2ff;
+  border-color: #d9d6fb;
+  border-radius: 9px;
+}
+
+.admin-reference-modal .toggle-track {
+  background: #d1d5db;
+}
+
+.admin-reference-modal .toggle-switch-label input:checked + .toggle-track {
+  background: #20bf6b;
+}
+
+.admin-reference-modal .img-upload-preview-box,
+.admin-reference-modal .sub-item {
+  background: #f8fafc;
+  border-color: #e5e7eb;
+}
+
+.admin-reference-modal .btn-upload-trigger {
+  background: #685bea;
+  border-radius: 9px;
+}
+
+.admin-reference-modal .btn-upload-trigger:hover {
+  background: #5849db;
+}
+
+@media (max-width: 600px) {
+  .admin-reference-modal .modal-panel-header,
+  .admin-reference-modal .form-modal-header {
+    padding: 14px 16px 12px;
+  }
+
+  .admin-reference-modal .modal-panel-body,
+  .admin-reference-modal .form-modal-body {
+    padding: 14px;
+  }
+
+  .admin-reference-modal .modal-panel-footer,
+  .admin-reference-modal .form-modal-footer {
+    padding: 12px 14px;
+  }
+
+  .admin-reference-modal .form-row-2.admin-id-title-row,
+  #noticeFormOverlay .notice-id-title-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  #scFormOverlay .support-grade-group {
+    width: 100%;
+  }
+
+  #bannerFormOverlay .banner-link-row {
+    grid-template-columns: 1fr;
+  }
+
+  #noticeFormOverlay .notice-status-row {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+}

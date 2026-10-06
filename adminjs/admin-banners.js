@@ -193,6 +193,8 @@ function openBannerForm(docId) {
     document.getElementById('bannerFieldImg').value = '';
     document.getElementById('bannerFieldIsActive').checked = true;
     _setBannerLinkUI('');
+    document.getElementById('bannerLinkType').value = 'external';
+    document.getElementById('bannerLinkExternalWrap').style.display = 'block';
     resetBannerImgWidget();
     updateBannerToggleText(true);
   }
