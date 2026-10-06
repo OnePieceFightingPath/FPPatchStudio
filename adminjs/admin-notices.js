@@ -12,7 +12,7 @@ let filteredNoticeList = [];
 async function loadNotices() {
   const tbody = document.getElementById('noticeTableBody');
   if (!tbody) return;
-  showTableLoading(tbody, 7);
+  showTableLoading(tbody, 8);
   try {
     const snap = await db.collection('notices').orderBy('createdAt', 'desc').get();
     allNotices = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
@@ -21,7 +21,7 @@ async function loadNotices() {
     filterNotices();
     updateBarFromDocs(eff, 'publishInfoNotices');
   } catch (err) {
-    showTableError(tbody, `<tr><td colspan="7" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
+    showTableError(tbody, `<tr><td colspan="8" class="table-empty">로드 실패: ${escHtml(err.message)}</td></tr>`);
     showToast('공지사항 로드 실패', 'error');
   }
 }
@@ -88,7 +88,7 @@ function renderNoticeTable(list) {
   const shown = list.slice(start, start + noticePageSize);
 
   if (!list.length) {
-    setTableBodyHtml(tbody, tableEmptyStateRow(7));
+    setTableBodyHtml(tbody, tableEmptyStateRow(8));
     applyTableSelection('noticeTableBody', []);
     renderPaginator('noticePaginator', 0, noticePageSize, noticeCurrentPage, () => {});
     return;
@@ -111,6 +111,7 @@ function renderNoticeTable(list) {
       <td>${escHtml(dateStr)}</td>
       <td class="cell-name">${isPinned ? '<span class="badge-visible-on">고정</span> ' : ''}${safeTitle || '—'}${isPendingDelete ? '<span class="badge-pending-delete">삭제 예정</span>' : ''}</td>
       <td>${escHtml(String(writer))}</td>
+      <td>${isPinned ? 'Y' : 'N'}</td>
       <td><span class="${isVisible ? 'badge-visible-on' : 'badge-visible-off'}">${isVisible ? 'ON' : 'OFF'}</span></td>
       <td><span class="admin-email-cell">${escHtml(resolveAdminLabel(d.updatedBy))}</span></td>
       <td>
