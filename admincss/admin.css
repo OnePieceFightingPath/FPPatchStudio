@@ -1,3 +1,28 @@
+/* ===== LOCAL FONTS ===== */
+@font-face {
+  font-family: 'Spoqa Han Sans Neo';
+  src: url('../fonts/SpoqaHanSansNeo-Regular.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Spoqa Han Sans Neo';
+  src: url('../fonts/SpoqaHanSansNeo-Medium.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Spoqa Han Sans Neo';
+  src: url('../fonts/SpoqaHanSansNeo-Bold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 /* ===== BASE RESET & VARIABLES ===== */
 *,
 *::before,
@@ -50,7 +75,7 @@ html { scroll-behavior: smooth; }
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -66,6 +91,25 @@ input, select, textarea { font-family: inherit; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 * { scrollbar-width: thin; scrollbar-color: var(--border) var(--bg); }
+
+/* SVG 기능 아이콘은 공통 아이콘 폰트 글리프로 런타임 치환됩니다. */
+.admin-font-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex: 0 0 auto;
+  line-height: 1;
+  font-style: normal;
+  color: inherit;
+}
+
+.sidebar-item .admin-font-icon { color: #a5b4fc; }
+.sidebar-item.active .admin-font-icon { color: #fff; }
+.skill-collapsed .skill-section-toggle .admin-font-icon { transform: rotate(-90deg); }
+.publish-info-item .admin-font-icon { display: none; }
+.ic-v2-control-zoom-in-line::before { content: "\e95a"; }
+.ic-v2-control-zoom-out-line::before { content: "\e958"; }
 
 /* ===== LOGIN OVERLAY ===== */
 .login-overlay {
@@ -3134,8 +3178,7 @@ body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
 }
 
 ::-webkit-scrollbar-track { background: var(--bg); }
