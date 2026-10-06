@@ -5275,3 +5275,102 @@ html[data-theme="dark"] .dashboard-visitor-grid-line { stroke: #334155; }
 html[data-theme="dark"] .dashboard-visitor-empty { color: var(--text-muted); }
 html[data-theme="dark"] .dashboard-visitor-empty strong { color: var(--text); }
 html[data-theme="dark"] .sidebar-settings-panel { color: #e0e7ff; }
+
+/* Compact GNB: home + location breadcrumb + user-site shortcut */
+.admin-gnb {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 0 20px;
+}
+.gnb-home-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-width: 68px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: var(--text);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: color var(--transition), background var(--transition);
+}
+.gnb-home-link:hover { color: var(--accent); background: var(--bg-hover); }
+.gnb-home-link svg { width: 18px; height: 18px; flex: 0 0 18px; }
+.gnb-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.gnb-breadcrumb-separator { flex: 0 0 auto; color: var(--text-dim); }
+.gnb-breadcrumb-group,
+.gnb-breadcrumb-current {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gnb-breadcrumb-group { flex: 0 1 auto; color: var(--text-muted); }
+.gnb-breadcrumb-current { flex: 0 1 auto; color: var(--text); font-weight: 600; }
+.gnb-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+.gnb-shortcut-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  transition: color var(--transition), background var(--transition);
+}
+.gnb-shortcut-link:hover { color: var(--accent); background: var(--bg-hover); }
+.gnb-shortcut-link svg { width: 19px; height: 19px; }
+.gnb-actions .hamburger-btn { display: none; }
+
+@media (max-width: 600px) {
+  .admin-gnb {
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 0 10px;
+  }
+  .gnb-home-link {
+    min-width: 56px;
+    height: 36px;
+    gap: 6px;
+    padding: 0 6px;
+    font-size: 12px;
+  }
+  .gnb-home-link svg { width: 17px; height: 17px; flex-basis: 17px; }
+  .gnb-breadcrumb { gap: 6px; font-size: 12px; }
+  .gnb-actions { gap: 2px; }
+  .gnb-shortcut-link { width: 36px; height: 36px; flex-basis: 36px; }
+  .gnb-actions .hamburger-btn {
+    display: flex;
+    order: 0;
+    width: 38px;
+    height: 38px;
+    margin: 0;
+    border-radius: 8px;
+  }
+  .gnb-actions .hamburger-btn:hover { background: var(--bg-hover); }
+  html[data-theme="dark"] .gnb-actions .hamburger-btn span { background: var(--text-muted); }
+}

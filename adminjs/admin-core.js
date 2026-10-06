@@ -869,7 +869,7 @@ document.querySelectorAll('.sidebar-item').forEach((btn) => {
 
 // ===== GNB 멀티탭 시스템 =====
 const SECTION_NAMES = {
-  dashboard:    '홈',
+  dashboard:    '대시보드',
   characters:   '캐릭터 관리',
   supportchars: '현질 서폿 캐릭터 관리',
   pvppatch:     'PvP 패치 관리',
@@ -886,12 +886,58 @@ const SECTION_NAMES = {
   userpage:     '사용자 페이지',
 };
 
+const SECTION_GROUPS = {
+  members: '운영',
+  permissions: '운영',
+  banners: '페이지',
+  characters: '페이지',
+  supportchars: '페이지',
+  pvppatch: '페이지',
+  patchnote: '페이지',
+  boards: '페이지',
+  events: '페이지',
+  notices: '서비스',
+  support: '서비스',
+  backup: '시스템',
+  profile: '사용자',
+  userpage: '바로가기',
+};
+
 let _openTabs   = ['dashboard'];
 let _activeTab  = 'dashboard';
 let _tabHistory = ['dashboard'];
 let _tabCursor  = 0;
 
 let _dragSrcSection = null;
+
+function renderGnbBreadcrumb(section) {
+  const container = document.getElementById('gnbBreadcrumb');
+  if (!container) return;
+  container.replaceChildren();
+  if (!section || section === 'dashboard') return;
+
+  const addSeparator = () => {
+    const separator = document.createElement('span');
+    separator.className = 'gnb-breadcrumb-separator';
+    separator.setAttribute('aria-hidden', 'true');
+    separator.textContent = '>';
+    container.appendChild(separator);
+  };
+  const group = SECTION_GROUPS[section];
+  addSeparator();
+  if (group) {
+    const groupLabel = document.createElement('span');
+    groupLabel.className = 'gnb-breadcrumb-group';
+    groupLabel.textContent = group;
+    container.appendChild(groupLabel);
+    addSeparator();
+  }
+  const current = document.createElement('span');
+  current.className = 'gnb-breadcrumb-current';
+  current.textContent = SECTION_NAMES[section] || section;
+  current.setAttribute('aria-current', 'page');
+  container.appendChild(current);
+}
 
 function renderGnbTabs() {
   const container = document.getElementById('gnbTabs');
@@ -1058,9 +1104,7 @@ function activateGnbTab(section, pushHistory = true) {
     _tabHistory = _tabHistory.slice(0, _tabCursor + 1);
     if (_tabHistory[_tabCursor] !== section) { _tabHistory.push(section); _tabCursor++; }
   }
-  renderGnbTabs();
-  const mobileTitle = document.getElementById('gnbMobileTitle');
-  if (mobileTitle) mobileTitle.textContent = SECTION_NAMES[section] || section;
+  renderGnbBreadcrumb(section);
 }
 
 function closeGnbTab(section) {
@@ -1111,7 +1155,8 @@ document.getElementById('gnbNavClose')?.addEventListener('click', () => {
   activateGnbTab('dashboard');
 });
 
-renderGnbTabs();
+document.getElementById('gnbHomeBtn')?.addEventListener('click', () => switchSection('dashboard'));
+renderGnbBreadcrumb(_activeTab);
 
 // HTML 특수문자 이스케이프 (에러 메시지 XSS 방지)
 function escHtml(s) {
