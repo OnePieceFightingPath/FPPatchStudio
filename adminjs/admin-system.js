@@ -613,6 +613,7 @@ function copyFirestoreRules() {
     document.body.style.overflow = '';
     if (hamburgerBtn) { hamburgerBtn.setAttribute('aria-expanded', 'false'); hamburgerBtn.setAttribute('aria-label', '메뉴 열기'); }
   }
+  window.closeMobileSidebar = closeSidebar;
 
   hamburgerBtn?.addEventListener('click', () => {
     if (adminSidebar?.classList.contains('open')) closeSidebar();

@@ -189,21 +189,6 @@
           로그아웃
         </button>
       </div>
-      <section class="notification-popover" id="notificationPopover" role="dialog" aria-label="고객센터 알림" aria-hidden="true">
-        <div class="notification-popover-header">
-          <div>
-            <h2>알림</h2>
-            <p>고객센터 문의 알림</p>
-          </div>
-          <button class="notification-close" id="notificationClose" type="button" aria-label="알림 닫기">×</button>
-        </div>
-        <div class="notification-tabs" role="tablist" aria-label="알림 필터">
-          <button class="notification-tab active" id="notificationUnreadTab" type="button" role="tab" aria-selected="true" data-notification-filter="unread">읽지 않음 <span id="notificationUnreadCount">0</span></button>
-          <button class="notification-tab" id="notificationAllTab" type="button" role="tab" aria-selected="false" data-notification-filter="all">전체</button>
-          <button class="notification-mark-all" id="notificationMarkAll" type="button">모두 읽음</button>
-        </div>
-        <div class="notification-list" id="notificationList" role="tabpanel" aria-live="polite"></div>
-      </section>
     </div>
   </aside>
 
@@ -1394,6 +1379,24 @@
     </section>
 
   </main>
+</div>
+
+<div class="notification-overlay" id="notificationOverlay" aria-hidden="true">
+  <section class="notification-popover" id="notificationPopover" role="dialog" aria-modal="true" aria-label="고객센터 알림" aria-hidden="true" tabindex="-1">
+    <div class="notification-popover-header">
+      <div>
+        <h2>알림</h2>
+        <p>고객센터 문의 알림</p>
+      </div>
+      <button class="notification-close" id="notificationClose" type="button" aria-label="알림 닫기">×</button>
+    </div>
+    <div class="notification-tabs" role="tablist" aria-label="알림 필터">
+      <button class="notification-tab active" id="notificationUnreadTab" type="button" role="tab" aria-selected="true" data-notification-filter="unread">읽지 않음 <span id="notificationUnreadCount">0</span></button>
+      <button class="notification-tab" id="notificationAllTab" type="button" role="tab" aria-selected="false" data-notification-filter="all">전체</button>
+      <button class="notification-mark-all" id="notificationMarkAll" type="button">모두 읽음</button>
+    </div>
+    <div class="notification-list" id="notificationList" role="tabpanel" aria-live="polite"></div>
+  </section>
 </div>
 
 <!-- ===== CHARACTER FORM MODAL ===== -->

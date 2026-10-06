@@ -729,24 +729,48 @@ function stopSupportInquiryListener() {
 
 function closeNotificationPopover() {
   const popover = document.getElementById('notificationPopover');
+  const overlay = document.getElementById('notificationOverlay');
+  const shouldRestoreFocus = overlay?.classList.contains('open')
+    && overlay.contains(document.activeElement);
   popover?.classList.remove('open');
   popover?.setAttribute('aria-hidden', 'true');
+  overlay?.classList.remove('open');
+  overlay?.setAttribute('aria-hidden', 'true');
   document.getElementById('btnOpenNotifications')?.setAttribute('aria-expanded', 'false');
+  if (shouldRestoreFocus) {
+    const focusTarget = window.innerWidth <= 600
+      ? document.getElementById('hamburgerBtn')
+      : document.getElementById('adminProfileBtn');
+    focusTarget?.focus({ preventScroll: true });
+  }
 }
 
 document.getElementById('btnOpenNotifications')?.addEventListener('click', () => {
   const popover = document.getElementById('notificationPopover');
-  if (!popover) return;
-  const shouldOpen = !popover.classList.contains('open');
+  const overlay = document.getElementById('notificationOverlay');
+  if (!popover || !overlay) return;
+  const shouldOpen = !overlay.classList.contains('open');
+  if (shouldOpen && window.innerWidth <= 600) window.closeMobileSidebar?.();
   document.getElementById('adminAuthArea')?.classList.remove('open');
   document.getElementById('adminProfileBtn')?.setAttribute('aria-expanded', 'false');
   popover.classList.toggle('open', shouldOpen);
   popover.setAttribute('aria-hidden', String(!shouldOpen));
+  overlay.classList.toggle('open', shouldOpen);
+  overlay.setAttribute('aria-hidden', String(!shouldOpen));
   document.getElementById('btnOpenNotifications')?.setAttribute('aria-expanded', String(shouldOpen));
   renderSupportNotifications();
+  if (shouldOpen) document.getElementById('notificationClose')?.focus({ preventScroll: true });
 });
 
 document.getElementById('notificationClose')?.addEventListener('click', closeNotificationPopover);
+document.getElementById('notificationOverlay')?.addEventListener('click', event => {
+  if (event.target === document.getElementById('notificationOverlay')) closeNotificationPopover();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.getElementById('notificationOverlay')?.classList.contains('open')) {
+    closeNotificationPopover();
+  }
+});
 document.querySelectorAll('[data-notification-filter]').forEach(button => {
   button.addEventListener('click', () => {
     _notificationFilter = button.dataset.notificationFilter;
