@@ -524,6 +524,10 @@ function initSidebarSections() {
       const shouldOpen = !group.classList.contains('open');
       document.querySelectorAll('.sidebar-group').forEach(otherGroup => {
         if (otherGroup !== group) {
+          if (otherGroup.classList.contains('sidebar-shortcut-group')) {
+            otherGroup.classList.add('open');
+            return;
+          }
           otherGroup.classList.remove('open');
           otherGroup.querySelector('.sidebar-section-item')?.setAttribute('aria-expanded', 'false');
         }
