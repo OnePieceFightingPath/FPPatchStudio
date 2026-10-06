@@ -305,7 +305,7 @@ async function publishNotices() {
   } catch (err) {
     showToast('저장 실패: ' + err.message, 'error');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '저장'; }
+    if (btn) { syncPublishButtonState('publishInfoNotices'); btn.textContent = '저장'; }
   }
 }
 

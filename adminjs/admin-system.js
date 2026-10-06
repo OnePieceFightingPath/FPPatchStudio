@@ -710,7 +710,12 @@ function renderBannerOrderList() {
   ul.addEventListener('dragstart', e => e.preventDefault());
   let sourceIndex = null;
   let sourceItem = null;
+  let dragProxy = null;
   let activePointerId = null;
+  let pointerOffsetX = 0;
+  let pointerOffsetY = 0;
+  let sourceWidth = 0;
+  let sourceHeight = 0;
 
   const getItemAtPoint = (x, y) => {
     const bounds = ul.getBoundingClientRect();
@@ -726,11 +731,17 @@ function renderBannerOrderList() {
         if (sourceItem.hasPointerCapture(activePointerId)) sourceItem.releasePointerCapture(activePointerId);
       } catch (_) {}
     }
+    dragProxy?.remove();
+    dragProxy = null;
     ul.querySelectorAll('.banner-order-item').forEach(item => item.classList.remove('dragging', 'drag-over'));
     document.body.classList.remove('dragging-banner');
     sourceIndex = null;
     sourceItem = null;
     activePointerId = null;
+    pointerOffsetX = 0;
+    pointerOffsetY = 0;
+    sourceWidth = 0;
+    sourceHeight = 0;
   };
 
   ul.addEventListener('pointerdown', e => {
@@ -746,11 +757,35 @@ function renderBannerOrderList() {
     activePointerId = e.pointerId;
     try { item.setPointerCapture(e.pointerId); } catch (_) {}
     item.classList.add('dragging');
+    const itemRect = item.getBoundingClientRect();
+    const listRect = ul.getBoundingClientRect();
+    sourceWidth = itemRect.width;
+    sourceHeight = itemRect.height;
+    pointerOffsetX = e.clientX - itemRect.left;
+    pointerOffsetY = e.clientY - itemRect.top;
+    dragProxy = item.cloneNode(true);
+    dragProxy.classList.remove('dragging', 'drag-over');
+    dragProxy.classList.add('banner-order-drag-proxy');
+    dragProxy.setAttribute('aria-hidden', 'true');
+    dragProxy.style.width = `${sourceWidth}px`;
+    dragProxy.style.height = `${sourceHeight}px`;
+    dragProxy.style.left = `${itemRect.left - listRect.left}px`;
+    dragProxy.style.top = `${itemRect.top - listRect.top}px`;
+    ul.appendChild(dragProxy);
     document.body.classList.add('dragging-banner');
   });
 
   ul.addEventListener('pointermove', e => {
     if (sourceIndex === null || e.pointerId !== activePointerId) return;
+    if (dragProxy) {
+      const listRect = ul.getBoundingClientRect();
+      const maxLeft = Math.max(0, ul.clientWidth - sourceWidth);
+      const maxTop = Math.max(0, ul.clientHeight - sourceHeight);
+      const left = Math.max(0, Math.min(maxLeft, e.clientX - listRect.left - pointerOffsetX));
+      const top = Math.max(0, Math.min(maxTop, e.clientY - listRect.top - pointerOffsetY));
+      dragProxy.style.left = `${left}px`;
+      dragProxy.style.top = `${top}px`;
+    }
     ul.querySelectorAll('.banner-order-item').forEach(item => item.classList.remove('drag-over'));
     const target = getItemAtPoint(e.clientX, e.clientY);
     if (target && target !== sourceItem) target.classList.add('drag-over');

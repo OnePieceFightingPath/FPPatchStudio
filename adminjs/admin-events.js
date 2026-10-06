@@ -107,7 +107,7 @@ async function publishChars() {
     showToast('캐릭터 저장되었습니다.', 'success');
     await loadCharacters();
   } catch (err) { showToast('저장 실패: ' + err.message, 'error'); }
-  finally { if (btn) { btn.disabled = false; btn.textContent = '저장'; } }
+  finally { if (btn) { syncPublishButtonState('publishInfoChars'); btn.textContent = '저장'; } }
 }
 async function publishPvpPatches() {
   if (!_pendingPvp.length) { showToast('저장할 변경사항이 없습니다.', 'info'); return; }
@@ -126,7 +126,7 @@ async function publishPvpPatches() {
     showToast('PvP 패치 저장되었습니다.', 'success');
     await loadPvpPatches();
   } catch (err) { showToast('저장 실패: ' + err.message, 'error'); }
-  finally { if (btn) { btn.disabled = false; btn.textContent = '저장'; } }
+  finally { if (btn) { syncPublishButtonState('publishInfoPvp'); btn.textContent = '저장'; } }
 }
 async function publishPatchNotes() {
   if (!_pendingPatch.length) { showToast('저장할 변경사항이 없습니다.', 'info'); return; }
@@ -145,7 +145,7 @@ async function publishPatchNotes() {
     showToast('패치노트 저장되었습니다.', 'success');
     await loadPatchNotes();
   } catch (err) { showToast('저장 실패: ' + err.message, 'error'); }
-  finally { if (btn) { btn.disabled = false; btn.textContent = '저장'; } }
+  finally { if (btn) { syncPublishButtonState('publishInfoPatch'); btn.textContent = '저장'; } }
 }
 async function publishBanners() {
   if (!_pendingBanners.length) { showToast('저장할 변경사항이 없습니다.', 'info'); return; }
@@ -175,7 +175,7 @@ async function publishBanners() {
     showToast('배너 저장되었습니다.', 'success');
     await loadBanners();
   } catch (err) { showToast('저장 실패: ' + err.message, 'error'); }
-  finally { if (btn) { btn.disabled = false; btn.textContent = '저장'; } }
+  finally { if (btn) { syncPublishButtonState('publishInfoBanners'); btn.textContent = '저장'; } }
 }
 
 async function revertChars() {
@@ -567,7 +567,7 @@ async function publishEvtBanners() {
     showToast('이벤트 배너 저장되었습니다.', 'success');
     await loadEvtBanners();
   } catch (err) { showToast('저장 실패: ' + err.message, 'error'); }
-  finally { if (btn) { btn.disabled = false; btn.textContent = '저장'; } }
+  finally { if (btn) { syncPublishButtonState('publishInfoEvtPages'); btn.textContent = '저장'; } }
 }
 
 async function revertEvtBanners() {

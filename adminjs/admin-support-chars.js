@@ -363,7 +363,7 @@ async function publishSupportChars() {
     showToast('서포트 캐릭터 저장되었습니다.', 'success');
     await loadSupportChars();
   } catch (err) { showToast('저장 실패: ' + err.message, 'error'); }
-  finally { if (btn) { btn.disabled = false; btn.textContent = '저장'; } }
+  finally { if (btn) { syncPublishButtonState('publishInfoSupportChars'); btn.textContent = '저장'; } }
 }
 async function revertSupportChars() {
   if (!_pendingSC.length) { showToast('되돌릴 변경사항이 없습니다.', 'info'); return; }

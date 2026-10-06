@@ -221,7 +221,23 @@ async function saveAdminNicknameToMap() {
 }
 
 // 컬렉션 도큐먼트 목록에서 가장 최근 변경 정보를 추출해 하단 퍼블리시 바에 표시
+function syncPublishButtonState(infoElId) {
+  const states = {
+    publishInfoChars:        { buttonId: 'btnPublishChars',        pending: _pendingChars },
+    publishInfoSupportChars: { buttonId: 'btnPublishSupportChars', pending: _pendingSC },
+    publishInfoPvp:          { buttonId: 'btnPublishPvp',          pending: _pendingPvp },
+    publishInfoPatch:        { buttonId: 'btnPublishPatchNotes',   pending: _pendingPatch },
+    publishInfoBanners:      { buttonId: 'btnPublishBanners',      pending: _pendingBanners },
+    publishInfoEvtPages:     { buttonId: 'btnPublishEvtPages',     pending: _pendingEvtPages },
+    publishInfoNotices:      { buttonId: 'btnPublishNotices',      pending: _pendingNotices },
+  };
+  const state = states[infoElId];
+  const button = state && document.getElementById(state.buttonId);
+  if (button) button.disabled = !state.pending.length;
+}
+
 function updateBarFromDocs(docs, infoElId) {
+  syncPublishButtonState(infoElId);
   if (!docs || !docs.length) return;
   let best = null, bestMs = 0;
   docs.forEach(d => {
