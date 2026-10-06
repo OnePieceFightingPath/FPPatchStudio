@@ -4251,7 +4251,7 @@ body {
   min-width: 115px;
 }
 
-/* Dashboard: centered 1166px layout with fluid statistic cards. */
+/* Dashboard: full-width layout with fluid statistic cards. */
 #section-dashboard.admin-section.active {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
@@ -4262,11 +4262,11 @@ body {
   column-gap: 16px;
   align-content: start;
   width: 100%;
-  max-width: 1166px;
-  margin-inline: auto;
+  max-width: none;
+  margin: 0;
   box-sizing: border-box;
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .dashboard-info-row {
@@ -4281,11 +4281,11 @@ body {
 .dashboard-stat-grid {
   display: grid;
   width: 100%;
-  max-width: 1166px;
+  max-width: none;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr));
   justify-content: stretch;
   gap: 12px;
-  margin-inline: auto;
+  margin-inline: 0;
 }
 
 .dashboard-visitor-card {
@@ -4412,10 +4412,10 @@ body {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    max-width: 1166px;
-    margin-inline: auto;
-    padding-right: 10px;
-    padding-left: 10px;
+    max-width: none;
+    margin: 0;
+    padding-right: 0;
+    padding-left: 0;
   }
 
   .dashboard-info-row {
@@ -4429,10 +4429,10 @@ body {
 
   .dashboard-stat-grid {
     width: 100%;
-    max-width: 1166px;
+    max-width: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
-    margin-inline: auto;
+    margin-inline: 0;
   }
 
   .stat-card {
