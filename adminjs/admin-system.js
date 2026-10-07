@@ -1570,9 +1570,14 @@ function openSectionPermModal(email) {
 
 function _renderSectionPermTable() {
   const tbody = document.getElementById('permSectionModalBody');
+  let currentGroup = '';
   tbody.innerHTML = SECTION_CONFIG.map(sec => {
     const sp = _editingPermData[sec.permKey] || {};
-    return `<tr>
+    const groupHeading = sec.group && sec.group !== currentGroup
+      ? `<tr class="perm-section-group"><th colspan="${PERM_ACTIONS.length + 1}" style="padding:12px 12px 6px;text-align:left;color:var(--text-muted);font-size:12px;font-weight:700;border-bottom:1px solid var(--border)">${escHtml(sec.group)}</th></tr>`
+      : '';
+    if (sec.group) currentGroup = sec.group;
+    return `${groupHeading}<tr>
       <td style="font-weight:600;padding:10px 12px">${escHtml(sec.label)}</td>
       ${PERM_ACTIONS.map(a => `
       <td style="text-align:center;padding:10px 8px">

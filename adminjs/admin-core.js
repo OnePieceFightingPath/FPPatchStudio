@@ -85,14 +85,15 @@ function hasMemberAccess() {
 
 // ===== GRANULAR SECTION PERMISSIONS =====
 const SECTION_CONFIG = [
+  { sidebarKey: 'banners',      permKey: 'banners',      label: '메인 배너', group: '페이지 관리' },
   { sidebarKey: 'characters',   permKey: 'characters',   label: '캐릭터' },
-  { sidebarKey: 'supportchars', permKey: 'supportChars', label: '서포트 캐릭터' },
+  { sidebarKey: 'supportchars', permKey: 'supportChars', label: '현질 서폿 캐릭터' },
   { sidebarKey: 'pvppatch',     permKey: 'pvpPatch',     label: 'PvP 패치' },
   { sidebarKey: 'patchnote',    permKey: 'patchNotes',   label: '패치노트' },
-  { sidebarKey: 'banners',      permKey: 'banners',      label: '배너' },
-  { sidebarKey: 'events',       permKey: 'events',       label: '이벤트' },
   { sidebarKey: 'boards',       permKey: 'boards',       label: '게시판' },
-  { sidebarKey: 'notices',      permKey: 'notices',      label: '공지사항' },
+  { sidebarKey: 'events',       permKey: 'events',       label: '이벤트' },
+  { sidebarKey: 'notices',      permKey: 'notices',      label: '공지사항', group: '서비스 관리' },
+  { sidebarKey: 'support',      permKey: 'support',      label: '고객센터' },
 ];
 const PERM_ACTIONS = [
   { key: 'view',    label: '보기' },
@@ -128,6 +129,23 @@ function _enforcePermUI() {
     if (['profile', 'permissions', 'members', 'backup', 'dashboard', 'userpage'].includes(sk)) return;
     btn.style.display = canViewSection(sk) ? '' : 'none';
   });
+  // 페이지/서비스 그룹은 하위 메뉴가 모두 보기 OFF이면 그룹명도 숨긴다.
+  document.querySelectorAll('.sidebar-group[data-sidebar-group]').forEach(group => {
+    if (!['페이지', '서비스'].includes(group.dataset.sidebarGroup)) return;
+    const items = [...group.querySelectorAll('.sidebar-item[data-section]')];
+    group.style.display = items.some(item => item.style.display !== 'none') ? '' : 'none';
+  });
+  // 보기 권한이 해제된 섹션은 열린 상단 탭과 탐색 기록에서도 제거한다.
+  const deniedSections = SECTION_CONFIG
+    .filter(sec => !canViewSection(sec.sidebarKey))
+    .map(sec => sec.sidebarKey);
+  _openTabs = _openTabs.filter(section => !deniedSections.includes(section));
+  if (!_openTabs.includes('dashboard')) _openTabs.unshift('dashboard');
+  _tabHistory = _tabHistory.filter(section => !deniedSections.includes(section));
+  if (!_tabHistory.length) _tabHistory = ['dashboard'];
+  _tabCursor = Math.min(_tabCursor, _tabHistory.length - 1);
+  if (deniedSections.includes(_activeTab)) activateGnbTab('dashboard', false);
+  renderGnbTabs();
   // 추가 버튼
   const addBtns = [
     { id: 'btnAddChar',        key: 'characters' },
