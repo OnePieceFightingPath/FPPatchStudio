@@ -104,6 +104,7 @@ const PERM_ACTIONS = [
 ];
 
 let _myPerms = null; // { canManageContent?, sectionPerms?: { [permKey]: { view,add,edit,delete,publish } } }
+let _adminPermissionUnsubscribe = null;
 
 function _checkSectionPerm(permKey, action) {
   if (isSuperAdmin()) return true;
@@ -316,6 +317,10 @@ function stopSessionExpiryCheck() {
 auth.onAuthStateChanged(async user => {
   if (!user) {
     currentUser = null;
+    if (_adminPermissionUnsubscribe) {
+      _adminPermissionUnsubscribe();
+      _adminPermissionUnsubscribe = null;
+    }
     stopSupportInquiryListener();
     stopSessionExpiryCheck();
     _showLoginOverlay();
@@ -370,17 +375,34 @@ async function _hideLoginOverlay(user) {
       permBtn.style.display = 'none';
       if (memberBtn) memberBtn.style.display = 'none';
       try {
-        const snap = await db.collection('adminPermissions').doc(user.email).get();
-        if (snap.exists) {
-          const d = snap.data();
-          _myCanPermission  = d.canPermission  === true;
-          _myCanManageUsers = d.canManageUsers === true;
-          _myPerms = { canManageContent: d.canManageContent, sectionPerms: d.sectionPerms || null };
-        }
-        if (permBtn) permBtn.style.display = _myCanPermission ? '' : 'none';
-        if (memberBtn) memberBtn.style.display = hasMemberAccess() ? '' : 'none';
+          if (_adminPermissionUnsubscribe) _adminPermissionUnsubscribe();
+          const permissionRef = db.collection('adminPermissions').doc(user.email);
+          await new Promise(resolve => {
+            let isFirstSnapshot = true;
+            _adminPermissionUnsubscribe = permissionRef.onSnapshot(snap => {
+              const d = snap.exists ? snap.data() : {};
+              _myCanPermission = d.canPermission === true;
+              _myCanManageUsers = d.canManageUsers === true;
+              _myPerms = {
+                canManageContent: d.canManageContent,
+                sectionPerms: d.sectionPerms || null,
+              };
+              if (permBtn) permBtn.style.display = _myCanPermission ? '' : 'none';
+              if (memberBtn) memberBtn.style.display = hasMemberAccess() ? '' : 'none';
+              _enforcePermUI();
+              if (isFirstSnapshot) {
+                isFirstSnapshot = false;
+                resolve();
+              }
+            }, error => {
+              console.warn('관리자 권한을 불러오지 못했습니다:', error);
+              if (isFirstSnapshot) {
+                isFirstSnapshot = false;
+                resolve();
+              }
+            });
+          });
       } catch (_) {}
-      _enforcePermUI();
     }
   }
 
