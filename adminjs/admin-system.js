@@ -1583,7 +1583,7 @@ function _renderSectionPermTable() {
       <td style="text-align:center;padding:10px 8px">
         <label class="perm-toggle-wrap" style="justify-content:center">
           <input type="checkbox" class="perm-toggle-input" ${sp[a.key] ? 'checked' : ''}
-            onchange="_editingPermData['${sec.permKey}']['${a.key}'] = this.checked; _syncViewPerm('${sec.permKey}')">
+            onchange="_editingPermData['${sec.permKey}']['${a.key}'] = this.checked; _syncViewPerm('${sec.permKey}', '${a.key}', this.checked)">
           <span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span>
         </label>
       </td>`).join('')}
@@ -1592,9 +1592,13 @@ function _renderSectionPermTable() {
 }
 
 // 추가/수정/삭제/저장 권한이 하나라도 있으면 보기 자동 ON
-function _syncViewPerm(permKey) {
+function _syncViewPerm(permKey, actionKey, checked) {
   const sp = _editingPermData[permKey];
-  if (sp.add || sp.edit || sp.delete || sp.publish) sp.view = true;
+  if (actionKey === 'view' && checked === false) {
+    PERM_ACTIONS.forEach(action => { sp[action.key] = false; });
+  } else if (actionKey !== 'view' && checked) {
+    sp.view = true;
+  }
   // 체크박스 직접 업데이트
   _renderSectionPermTable();
 }
@@ -1607,7 +1611,15 @@ function toggleSectionRow(permKey, checked) {
 
 // 열 전체 선택/해제
 function toggleSectionCol(actionKey, checked) {
-  SECTION_CONFIG.forEach(sec => { _editingPermData[sec.permKey][actionKey] = checked; });
+  SECTION_CONFIG.forEach(sec => {
+    const sp = _editingPermData[sec.permKey];
+    if (actionKey === 'view' && !checked) {
+      PERM_ACTIONS.forEach(action => { sp[action.key] = false; });
+    } else {
+      sp[actionKey] = checked;
+      if (actionKey !== 'view' && checked) sp.view = true;
+    }
+  });
   _renderSectionPermTable();
 }
 
