@@ -1672,36 +1672,52 @@ document.getElementById('btnRefreshPermUsers')?.addEventListener('click', () =>
 
 // ── 관리자 권한 탭 ──
 let _permAdminList = [];
+let _permAdminsLoaded = false;
+let _permAdminsLoadPromise = null;
 
-async function loadPermAdmins() {
+async function loadPermAdmins(forceRefresh = false) {
   if (!isSuperAdmin()) return;
+  if (_permAdminsLoaded && !forceRefresh) {
+    renderPermAdminTable();
+    return;
+  }
+  if (_permAdminsLoadPromise) return _permAdminsLoadPromise;
+
   const tbody = document.getElementById('permAdminTableBody');
   showTableLoading(tbody, 6);
-  try {
-    // adminMeta/nicknames 에서 닉네임 맵 가져오기
-    const nickSnap = await db.collection('adminMeta').doc('nicknames').get();
-    const nickMap  = nickSnap.exists ? nickSnap.data() : {};
+  _permAdminsLoadPromise = (async () => {
+    try {
+      // 두 데이터를 동시에 가져오고, 권한 문서는 등록된 관리자 ID만 조회한다.
+      const [nickSnap, permSnap] = await Promise.all([
+        db.collection('adminMeta').doc('nicknames').get(),
+        db.collection('adminPermissions')
+          .where(firebase.firestore.FieldPath.documentId(), 'in', ADMIN_EMAILS)
+          .get(),
+      ]);
+      const nickMap = nickSnap.exists ? nickSnap.data() : {};
+      const permMap = {};
+      permSnap.docs.forEach(d => { permMap[d.id] = d.data(); });
 
-    // 각 관리자의 권한 정보를 adminPermissions 컬렉션에서 조회
-    const permSnap = await db.collection('adminPermissions').get();
-    const permMap  = {};
-    permSnap.docs.forEach(d => { permMap[d.id] = d.data(); });
+      _permAdminList = ADMIN_EMAILS.map(email => ({
+        email,
+        nickname: nickMap[email] || '',
+        canManageUsers:   permMap[email]?.canManageUsers   ?? false,
+        canManageContent: permMap[email]?.canManageContent ?? true,
+        canPermission:    permMap[email]?.canPermission    ?? false,
+        sectionPerms:     permMap[email]?.sectionPerms      ?? null,
+        isSuperAdmin:     email === SUPER_ADMIN_EMAIL,
+      }));
 
-    _permAdminList = ADMIN_EMAILS.map(email => ({
-      email,
-      nickname: nickMap[email] || '',
-      canManageUsers:   permMap[email]?.canManageUsers   ?? false,
-      canManageContent: permMap[email]?.canManageContent ?? true,
-      canPermission:    permMap[email]?.canPermission    ?? false,
-      sectionPerms:     permMap[email]?.sectionPerms      ?? null,
-      isSuperAdmin:     email === SUPER_ADMIN_EMAIL,
-    }));
-
-    document.getElementById('permAdminCountLabel').textContent = `총 ${_permAdminList.length}명`;
-    renderPermAdminTable();
-  } catch (e) {
-    showTableError(tbody, `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--danger)">로드 실패: ${escHtml(e.message)}</td></tr>`);
-  }
+      _permAdminsLoaded = true;
+      document.getElementById('permAdminCountLabel').textContent = `총 ${_permAdminList.length}명`;
+      renderPermAdminTable();
+    } catch (e) {
+      showTableError(tbody, `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--danger)">로드 실패: ${escHtml(e.message)}</td></tr>`);
+    } finally {
+      _permAdminsLoadPromise = null;
+    }
+  })();
+  return _permAdminsLoadPromise;
 }
 
 function renderPermAdminTable() {
@@ -1769,7 +1785,7 @@ async function saveAdminPermRow(email) {
 }
 
 document.getElementById('btnRefreshPermAdmins')?.addEventListener('click', () =>
-  refreshTableWithReset([], loadPermAdmins, 'permAdminTableBody')
+  refreshTableWithReset([], () => loadPermAdmins(true), 'permAdminTableBody')
 );
 
 
