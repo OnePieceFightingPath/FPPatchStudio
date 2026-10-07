@@ -132,6 +132,10 @@ function _enforcePermUI() {
   });
   // 페이지/서비스 그룹은 하위 메뉴가 모두 보기 OFF이면 그룹명도 숨긴다.
   document.querySelectorAll('.sidebar-group[data-sidebar-group]').forEach(group => {
+    if (group.dataset.sidebarGroup === '운영') {
+      group.style.display = (_myCanManageUsers || _myCanPermission) ? '' : 'none';
+      return;
+    }
     if (!['페이지', '서비스'].includes(group.dataset.sidebarGroup)) return;
     const items = [...group.querySelectorAll('.sidebar-item[data-section]')];
     group.style.display = items.some(item => item.style.display !== 'none') ? '' : 'none';

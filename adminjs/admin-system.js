@@ -1729,7 +1729,8 @@ function renderPermAdminTable() {
   }
   const rowsHtml = _permAdminList.map((admin, idx) => {
     const superBadge = admin.isSuperAdmin ? ' <span class="perm-badge perm-badge-super">총괄</span>' : '';
-    const disabled   = admin.isSuperAdmin ? ' disabled title="총괄 관리자는 변경 불가"' : '';
+    const disabled   = (admin.isSuperAdmin || !isSuperAdmin())
+      ? ' disabled title="총괄 관리자만 변경할 수 있습니다"' : '';
     return `
       <tr>
         <td>${escHtml(admin.nickname || '—')}${superBadge}</td>
@@ -1742,16 +1743,16 @@ function renderPermAdminTable() {
           </label>
         </td>
         <td>
-          ${admin.isSuperAdmin
-            ? '<span style="color:var(--text-muted);font-size:12px">총괄 (전체)</span>'
-            : `<button class="btn-primary btn-sm" onclick="openSectionPermModal('${admin.email}')">세부 권한 설정</button>`}
-        </td>
-        <td>
           <label class="perm-toggle-wrap">
             <input type="checkbox" class="perm-toggle-input" ${admin.canPermission ? 'checked' : ''} ${disabled}
               onchange="updateAdminPerm('${admin.email}', 'canPermission', this.checked)">
             <span class="perm-toggle-track"><span class="perm-toggle-thumb"></span></span>
           </label>
+        </td>
+        <td>
+          ${admin.isSuperAdmin
+            ? '<span style="color:var(--text-muted);font-size:12px">총괄 (전체)</span>'
+            : `<button class="btn-primary btn-sm" onclick="openSectionPermModal('${admin.email}')">세부 권한 설정</button>`}
         </td>
         <td class="col-actions">
           ${admin.isSuperAdmin ? '<span style="color:var(--text-muted);font-size:12px">변경 불가</span>' : `<button class="btn-primary btn-sm" onclick="saveAdminPermRow('${admin.email}')">저장</button>`}
