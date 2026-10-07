@@ -346,16 +346,16 @@ auth.onAuthStateChanged(async user => {
   currentUser = user;
   _myCanPermission = false;
   _myCanManageUsers = false;
-  _myPerms = null;
+  _myPerms = isSuperAdmin() ? null : { sectionPerms: {} };
+  if (!isSuperAdmin()) _enforcePermUI();
   startSupportInquiryListener();
   startSessionExpiryCheck();
-  try {
-    await loadAllData();
-  } catch (err) {
-    console.error('관리자 데이터 로드 실패:', err);
-    showToast('데이터를 불러오지 못했습니다. 페이지를 새로고침해 주세요.', 'error');
-  }
   await _hideLoginOverlay(user);
+  // 사용자 인증을 기다리게 하지 않도록 초기 화면 표시 후 콘텐츠는 백그라운드에서 로드한다.
+  loadAllData().catch(err => {
+    console.error('관리자 데이터 로드 실패:', err);
+    showToast('일부 데이터를 불러오지 못했습니다. 연결 상태를 확인해 주세요.', 'error');
+  });
 });
 
 function _showLoginOverlay() {
@@ -379,33 +379,24 @@ async function _hideLoginOverlay(user) {
       permBtn.style.display = 'none';
       if (memberBtn) memberBtn.style.display = 'none';
       try {
-          if (_adminPermissionUnsubscribe) _adminPermissionUnsubscribe();
-          const permissionRef = db.collection('adminPermissions').doc(user.email);
-          await new Promise(resolve => {
-            let isFirstSnapshot = true;
-            _adminPermissionUnsubscribe = permissionRef.onSnapshot(snap => {
-              const d = snap.exists ? snap.data() : {};
-              _myCanPermission = d.canPermission === true;
-              _myCanManageUsers = d.canManageUsers === true;
-              _myPerms = {
-                canManageContent: d.canManageContent,
-                sectionPerms: d.sectionPerms || null,
-              };
-              if (permBtn) permBtn.style.display = _myCanPermission ? '' : 'none';
-              if (memberBtn) memberBtn.style.display = hasMemberAccess() ? '' : 'none';
-              _enforcePermUI();
-              if (isFirstSnapshot) {
-                isFirstSnapshot = false;
-                resolve();
-              }
-            }, error => {
-              console.warn('관리자 권한을 불러오지 못했습니다:', error);
-              if (isFirstSnapshot) {
-                isFirstSnapshot = false;
-                resolve();
-              }
-            });
-          });
+        if (_adminPermissionUnsubscribe) _adminPermissionUnsubscribe();
+        const permissionRef = db.collection('adminPermissions').doc(user.email);
+        _adminPermissionUnsubscribe = permissionRef.onSnapshot(snap => {
+          if (currentUser?.email !== user.email) return;
+          const d = snap.exists ? snap.data() : {};
+          _myCanPermission = d.canPermission === true;
+          _myCanManageUsers = d.canManageUsers === true;
+          _myPerms = {
+            canManageContent: d.canManageContent,
+            sectionPerms: d.sectionPerms || null,
+          };
+          if (permBtn) permBtn.style.display = _myCanPermission ? '' : 'none';
+          if (memberBtn) memberBtn.style.display = hasMemberAccess() ? '' : 'none';
+          _enforcePermUI();
+          document.dispatchEvent(new CustomEvent('admin:permissions-ready'));
+        }, error => {
+          console.warn('관리자 권한을 불러오지 못했습니다:', error);
+        });
       } catch (_) {}
     }
   }
