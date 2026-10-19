@@ -510,76 +510,31 @@ async function confirmImport() {
 // FIRESTORE RULES DISPLAY
 // ============================================================
 
-const FIRESTORE_RULES = `rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+const FIRESTORE_RULES_URL =
+  'https://raw.githubusercontent.com/Kimnatsu/STGFPPatch_V2/main/firestore.rules';
+let FIRESTORE_RULES = '';
 
-    // ─────────────────────────────────────────────
-    // 관리자 이메일 목록 (ADMIN_EMAILS와 동기화 필요)
-    // ─────────────────────────────────────────────
-    function isAdmin() {
-      return request.auth != null &&
-        request.auth.token.email in [
-          'your-email@gmail.com'
-          // 'another-admin@gmail.com'
-        ];
-    }
-
-    // 캐릭터 — 누구나 읽기, 관리자만 쓰기
-    match /characters/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // PvP 패치 — 누구나 읽기, 관리자만 쓰기
-    match /pvpPatch/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 패치노트 — 누구나 읽기, 관리자만 쓰기
-    match /patchNotes/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 배너 — 누구나 읽기, 관리자만 쓰기
-    match /banners/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 퍼블리시 메타 — 누구나 읽기, 관리자만 쓰기
-    match /publishMeta/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 서포트 캐릭터 — 누구나 읽기, 관리자만 쓰기
-    match /supportCharacters/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 관리자 메타 — 관리자만 읽기/쓰기
-    match /adminMeta/{docId} {
-      allow read:  if isAdmin();
-      allow write: if isAdmin();
-    }
-
-    // 고객센터 문의 — 관리자만 읽기 (문의 작성 규칙은 고객 페이지 정책에 맞춰 별도 유지)
-    match /supportInquiries/{docId} {
-      allow read: if isAdmin();
-    }
-
-    // 사용자 프로필 — 본인만 읽기/쓰기
-    match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
-    }
+async function loadFirestoreRules() {
+  const display = document.getElementById('firestoreRulesDisplay');
+  if (!display) return;
+  display.textContent = '현재 프로젝트의 Firestore 규칙을 불러오는 중...';
+  try {
+    const response = await fetch(FIRESTORE_RULES_URL, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    FIRESTORE_RULES = await response.text();
+    display.textContent = FIRESTORE_RULES;
+  } catch (error) {
+    FIRESTORE_RULES = '';
+    display.textContent =
+      '규칙 파일을 불러오지 못했습니다. STGFPPatch_V2 저장소의 firestore.rules 파일을 확인하세요.';
   }
-}`;
+}
 
 function copyFirestoreRules() {
+  if (!FIRESTORE_RULES) {
+    showToast('최신 Firestore 규칙을 불러오지 못했습니다.', 'error');
+    return;
+  }
   navigator.clipboard.writeText(FIRESTORE_RULES).then(() => {
     showToast('보안 규칙이 클립보드에 복사되었습니다.', 'success');
   }).catch(() => {
@@ -587,10 +542,7 @@ function copyFirestoreRules() {
   });
 }
 
-(function () {
-  const el = document.getElementById('firestoreRulesDisplay');
-  if (el) el.textContent = FIRESTORE_RULES;
-})();
+loadFirestoreRules();
 
 // ============================================================
 // MOBILE SIDEBAR TOGGLE
