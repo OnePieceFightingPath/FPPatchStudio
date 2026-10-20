@@ -11,12 +11,12 @@
   };
   const tableBody = document.getElementById('supportInquiryTableBody');
   const countLabel = document.getElementById('supportInquiryCountLabel');
+  const statusFilter = document.getElementById('supportInquiryStatusFilter');
   const selectAllCheckbox = document.getElementById('supportInquirySelectAll');
   const modal = document.getElementById('supportInquiryModal');
   const modalTitle = document.getElementById('supportInquiryModalTitle');
   const modalRequester = document.getElementById('supportInquiryModalRequester');
   const modalDate = document.getElementById('supportInquiryModalDate');
-  const modalEmail = document.getElementById('supportInquiryModalEmail');
   const modalContent = document.getElementById('supportInquiryModalContent');
   const answerGroup = document.getElementById('supportInquiryAnswerGroup');
   const answerInput = document.getElementById('supportInquiryAnswer');
@@ -31,6 +31,7 @@
   let activeInquiry = null;
   let modalMode = 'content';
   let savingReply = false;
+  let selectedStatus = 'all';
   const selectedIds = new Set();
   const busyIds = new Set();
   const nicknameCache = new Map();
@@ -40,7 +41,7 @@
     if (countLabel) countLabel.textContent = text;
   }
 
-  function showMessage(message, loading) {
+  function showMessage(message, loading, countText) {
     if (!tableBody) return;
     tableBody.replaceChildren();
     const row = document.createElement('tr');
@@ -61,7 +62,7 @@
       selectAllCheckbox.indeterminate = false;
       selectAllCheckbox.disabled = true;
     }
-    setCount(loading ? '로딩 중...' : '총 0건');
+    setCount(countText || (loading ? '로딩 중...' : '총 0건'));
   }
 
   function timestampValue(value) {
@@ -93,6 +94,15 @@
     return fallback;
   }
 
+  function firstNickname(values) {
+    for (const value of values) {
+      if (value == null) continue;
+      const nickname = String(value).trim();
+      if (nickname && !nickname.includes('@')) return nickname;
+    }
+    return '';
+  }
+
   function normalizeStatus(value) {
     const status = String(value || '').trim();
     if (Object.values(STATUS).includes(status)) return status;
@@ -117,10 +127,9 @@
     const data = doc.data() || {};
     const submittedAt = data.createdAt || data.created_at || data.submittedAt || data.date || data.timestamp;
     const submittedDate = timestampValue(submittedAt);
-    const email = firstValue([data.replyEmail, data.contactEmail, data.email, data.userEmail, data.contact], '이메일 미입력');
     return {
       id: doc.id,
-      requester: firstValue([
+      requester: firstNickname([
         data.nickname,
         data.name,
         data.userName,
@@ -133,12 +142,28 @@
       uid: firstValue([data.uid, data.userId], ''),
       title: firstValue([data.title, data.subject, data.inquiryTitle, data.questionTitle], '제목 없음'),
       content: firstValue([data.content, data.message, data.body, data.question], '내용 없음'),
-      email,
+      administrator: firstNickname([
+        data.replyAdminNickname,
+        data.replyAdminName,
+        data.repliedByNickname,
+        data.replyByNickname,
+        data.adminReplyNickname,
+        data.answerAdminNickname,
+        data.responderNickname,
+        data.adminNickname,
+        data.adminName
+      ]) || '—',
       status: normalizeStatus(data.status),
       answer: getAnswer(data),
       submittedAt,
       sortTime: submittedDate ? submittedDate.getTime() : 0
     };
+  }
+
+  function visibleInquiries() {
+    return selectedStatus === 'all'
+      ? inquiries
+      : inquiries.filter(inquiry => inquiry.status === selectedStatus);
   }
 
   function fetchRequesterNickname(uid) {
@@ -147,7 +172,7 @@
     const request = db.collection('users').doc(uid).get()
       .then(snapshot => {
         const profile = snapshot.exists ? snapshot.data() || {} : {};
-        const nickname = firstValue([profile.nickname, profile.displayName], '');
+        const nickname = firstNickname([profile.nickname, profile.displayName]);
         nicknameCache.set(uid, nickname);
         return nickname;
       })
@@ -197,12 +222,13 @@
     return cell;
   }
 
-  function updateSelectAllState() {
+  function updateSelectAllState(visible) {
     if (!selectAllCheckbox) return;
-    const selectedCount = inquiries.filter(inquiry => selectedIds.has(inquiry.id)).length;
-    selectAllCheckbox.checked = inquiries.length > 0 && selectedCount === inquiries.length;
-    selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < inquiries.length;
-    selectAllCheckbox.disabled = inquiries.length === 0;
+    const rows = visible || visibleInquiries();
+    const selectedCount = rows.filter(inquiry => selectedIds.has(inquiry.id)).length;
+    selectAllCheckbox.checked = rows.length > 0 && selectedCount === rows.length;
+    selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < rows.length;
+    selectAllCheckbox.disabled = rows.length === 0;
   }
 
   function makeActionButton(row, inquiry, label, action, className) {
@@ -258,15 +284,23 @@
   function renderRows() {
     if (!tableBody) return;
     tableBody.replaceChildren();
-    setCount(`총 ${inquiries.length}건`);
-    updateSelectAllState();
+    const visible = visibleInquiries();
+    const countText = selectedStatus === 'all'
+      ? `총 ${inquiries.length}건`
+      : `${visible.length}건 / 전체 ${inquiries.length}건`;
+    setCount(countText);
+    updateSelectAllState(visible);
 
-    if (!inquiries.length) {
-      showMessage('아직 접수된 문의가 없습니다.', false);
+    if (!visible.length) {
+      showMessage(
+        inquiries.length ? '선택한 상태의 문의가 없습니다.' : '아직 접수된 문의가 없습니다.',
+        false,
+        countText
+      );
       return;
     }
 
-    inquiries.forEach(inquiry => {
+    visible.forEach(inquiry => {
       const row = document.createElement('tr');
       const requester = inquiry.requester || '닉네임 정보 없음';
       const checkboxCell = document.createElement('td');
@@ -298,7 +332,7 @@
       contentCell.appendChild(viewButton);
       row.appendChild(contentCell);
 
-      addCell(row, inquiry.email, 'support-inquiry-email');
+      addCell(row, inquiry.administrator, 'support-inquiry-admin');
       const statusCell = document.createElement('td');
       const statusBadge = document.createElement('span');
       const statusClass = inquiry.status === STATUS.RECEIVED ? 'received'
@@ -330,6 +364,20 @@
     }
   }
 
+  async function currentAdminNickname() {
+    const user = auth.currentUser || currentUser;
+    if (!user) return '관리자';
+    try {
+      const snapshot = await db.collection('users').doc(user.uid).get();
+      if (snapshot.exists) {
+        const profile = snapshot.data() || {};
+        const nickname = firstNickname([profile.nickname, profile.displayName]);
+        if (nickname) return nickname;
+      }
+    } catch (_) {}
+    return firstNickname([user.displayName]) || '관리자';
+  }
+
   function setModalVisible(visible) {
     if (!modal) return;
     modal.classList.toggle('open', visible);
@@ -346,7 +394,6 @@
     }
     if (modalRequester) modalRequester.textContent = inquiry.requester;
     if (modalDate) modalDate.textContent = formatDate(inquiry.submittedAt);
-    if (modalEmail) modalEmail.textContent = inquiry.email;
     if (modalContent) modalContent.textContent = inquiry.content;
 
     const showAnswer = mode === 'compose' || mode === 'completed';
@@ -386,8 +433,10 @@
     if (modalCancel) modalCancel.disabled = true;
     if (modalClose) modalClose.disabled = true;
     try {
+      const replyAdminNickname = await currentAdminNickname();
       await db.collection('inquiries').doc(activeInquiry.id).update({
         reply: answer,
+        replyAdminNickname,
         status: STATUS.COMPLETED,
         repliedAt: firebase.firestore.FieldValue.serverTimestamp(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -408,10 +457,16 @@
 
   if (selectAllCheckbox) {
     selectAllCheckbox.addEventListener('change', () => {
-      inquiries.forEach(inquiry => {
+      visibleInquiries().forEach(inquiry => {
         if (selectAllCheckbox.checked) selectedIds.add(inquiry.id);
         else selectedIds.delete(inquiry.id);
       });
+      renderRows();
+    });
+  }
+  if (statusFilter) {
+    statusFilter.addEventListener('change', () => {
+      selectedStatus = statusFilter.value || 'all';
       renderRows();
     });
   }

@@ -1013,7 +1013,16 @@
           <h2 class="section-title">고객센터 관리</h2>
         </div>
       </div>
-      <div class="section-btn-row">
+      <div class="admin-toolbar support-inquiry-toolbar">
+        <div class="toolbar-filter-group">
+          <select id="supportInquiryStatusFilter" class="admin-select" aria-label="문의 상태 필터">
+            <option value="all">전체 상태</option>
+            <option value="접수완료">접수완료</option>
+            <option value="문의대기">문의대기</option>
+            <option value="진행중">진행중</option>
+            <option value="완료됨">완료됨</option>
+          </select>
+        </div>
         <span class="toolbar-count" id="supportInquiryCountLabel">로딩 중...</span>
       </div>
       <div class="admin-table-wrap support-inquiry-table-wrap">
@@ -1025,7 +1034,7 @@
               <th>접수일</th>
               <th>제목</th>
               <th>문의 내용</th>
-              <th>회신 이메일</th>
+              <th>관리자</th>
               <th>상태</th>
               <th class="col-actions">작업</th>
             </tr>
@@ -2355,7 +2364,6 @@
       <div class="support-inquiry-meta-grid">
         <div><span>문의자</span><strong id="supportInquiryModalRequester">—</strong></div>
         <div><span>접수일</span><strong id="supportInquiryModalDate">—</strong></div>
-        <div><span>회신 이메일</span><strong id="supportInquiryModalEmail">—</strong></div>
       </div>
       <div class="support-inquiry-modal-section">
         <label class="form-label">문의 내용</label>
@@ -2364,7 +2372,7 @@
       <div class="support-inquiry-modal-section" id="supportInquiryAnswerGroup" hidden>
         <label class="form-label" for="supportInquiryAnswer">답변</label>
         <textarea class="form-input support-inquiry-answer" id="supportInquiryAnswer" rows="8" maxlength="10000" placeholder="고객에게 전달할 답변을 입력하세요."></textarea>
-        <p class="support-inquiry-answer-note">답변 저장 후 배포된 알림 기능을 통해 사용자 알림함에 표시됩니다. 이메일은 자동 발송되지 않습니다.</p>
+        <p class="support-inquiry-answer-note">답변 저장 후 사용자 알림함에 표시됩니다.</p>
       </div>
     </div>
     <div class="modal-panel-footer">
