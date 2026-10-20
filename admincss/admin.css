@@ -5857,7 +5857,9 @@ html[data-theme="dark"] .admin-main .stat-card-status-primary { color: #a5b4fc !
 html[data-theme="dark"] .admin-main .stat-card-status-divider { background-color: #64748b; }
 html[data-theme="dark"] .admin-main .dashboard-visitor-axis-label { fill: var(--text-muted); }
 
-#section-support .support-inquiry-table { min-width: 1180px; }
+#section-support .support-inquiry-table { min-width: 1050px; }
+#section-support .support-inquiry-table th,
+#section-support .support-inquiry-table td { padding: 10px 8px; }
 #section-support .support-inquiry-toolbar { justify-content: space-between; }
 #section-support .support-inquiry-toolbar .admin-select { width: 140px; min-width: 140px; }
 #section-support .support-inquiry-toolbar .toolbar-actions {
@@ -5885,23 +5887,23 @@ html[data-theme="dark"] .admin-main .dashboard-visitor-axis-label { fill: var(--
 #section-support .support-inquiry-date,
 #section-support .support-inquiry-admin { white-space: nowrap; }
 #section-support .support-inquiry-title {
-  min-width: 150px;
-  max-width: 280px;
+  min-width: 115px;
+  max-width: 240px;
   overflow-wrap: anywhere;
 }
-#section-support .support-inquiry-action-cell { min-width: 205px; }
+#section-support .support-inquiry-action-cell { min-width: 140px; }
 .support-inquiry-actions {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 4px;
 }
 .support-inquiry-actions .btn-primary,
 .support-inquiry-actions .btn-secondary,
 .support-inquiry-view-btn {
-  min-height: 30px;
-  padding: 5px 10px;
+  min-height: 28px;
+  padding: 4px 8px;
   font-size: 12px;
 }
 .support-inquiry-actions .btn-primary { border-radius: 6px; }
@@ -5909,7 +5911,7 @@ html[data-theme="dark"] .admin-main .dashboard-visitor-axis-label { fill: var(--
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 9px;
+  padding: 3px 7px;
   border: 1px solid transparent;
   border-radius: 999px;
   font-size: 11px;

@@ -209,13 +209,13 @@
 
   function hydrateRequesterNicknames(version) {
     const missingUids = [...new Set(inquiries
-      .filter(inquiry => !inquiry.requester && inquiry.uid && !nicknameCache.has(inquiry.uid))
+      .filter(inquiry => inquiry.uid && !nicknameCache.has(inquiry.uid))
       .map(inquiry => inquiry.uid))];
     if (!missingUids.length) {
       let changed = false;
       inquiries.forEach(inquiry => {
         const nickname = inquiry.uid && nicknameCache.get(inquiry.uid);
-        if (!inquiry.requester && nickname) {
+        if (nickname && inquiry.requester !== nickname) {
           inquiry.requester = nickname;
           changed = true;
         }
@@ -228,7 +228,7 @@
       let changed = false;
       inquiries.forEach(inquiry => {
         const nickname = inquiry.uid && nicknameCache.get(inquiry.uid);
-        if (!inquiry.requester && nickname) {
+        if (nickname && inquiry.requester !== nickname) {
           inquiry.requester = nickname;
           changed = true;
         }
