@@ -1011,22 +1011,27 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">고객센터 관리</h2>
-          <p class="section-desc">웹사이트 문의를 실시간으로 확인합니다. 최근 접수 100건을 표시합니다.</p>
         </div>
       </div>
+      <div class="section-btn-row">
+        <span class="toolbar-count" id="supportInquiryCountLabel">로딩 중...</span>
+      </div>
       <div class="admin-table-wrap support-inquiry-table-wrap">
-        <table class="admin-table">
+        <table class="admin-table support-inquiry-table">
           <thead>
             <tr>
+              <th class="support-checkbox-column"><input type="checkbox" id="supportInquirySelectAll" aria-label="문의 전체 선택"></th>
+              <th>문의자</th>
               <th>접수일</th>
               <th>제목</th>
               <th>문의 내용</th>
-              <th>회신 연락처</th>
+              <th>회신 이메일</th>
               <th>상태</th>
+              <th class="col-actions">작업</th>
             </tr>
           </thead>
           <tbody id="supportInquiryTableBody">
-            <tr><td colspan="5" class="table-loading"><div class="spinner"></div><span>문의 내역 로딩 중...</span></td></tr>
+            <tr><td colspan="8" class="table-loading"><div class="spinner"></div><span>문의 내역 로딩 중...</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -2333,6 +2338,42 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- ===== CUSTOMER SUPPORT INQUIRY MODAL ===== -->
+<div class="modal-overlay support-inquiry-modal" id="supportInquiryModal" aria-hidden="true">
+  <section class="modal-panel modal-panel-wide" role="dialog" aria-modal="true" aria-labelledby="supportInquiryModalTitle">
+    <div class="modal-panel-header">
+      <h2 id="supportInquiryModalTitle">문의 내용</h2>
+      <button type="button" class="modal-close-btn" id="supportInquiryModalClose" aria-label="닫기">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-panel-body">
+      <div class="support-inquiry-meta-grid">
+        <div><span>문의자</span><strong id="supportInquiryModalRequester">—</strong></div>
+        <div><span>접수일</span><strong id="supportInquiryModalDate">—</strong></div>
+        <div><span>회신 이메일</span><strong id="supportInquiryModalEmail">—</strong></div>
+      </div>
+      <div class="support-inquiry-modal-section">
+        <label class="form-label">문의 내용</label>
+        <div class="support-inquiry-modal-content" id="supportInquiryModalContent"></div>
+      </div>
+      <div class="support-inquiry-modal-section" id="supportInquiryAnswerGroup" hidden>
+        <label class="form-label" for="supportInquiryAnswer">답변</label>
+        <textarea class="form-input support-inquiry-answer" id="supportInquiryAnswer" rows="8" maxlength="10000" placeholder="고객에게 전달할 답변을 입력하세요."></textarea>
+        <p class="support-inquiry-answer-note">답변은 문의 내역에 저장됩니다. 이메일은 자동 발송되지 않습니다.</p>
+      </div>
+    </div>
+    <div class="modal-panel-footer">
+      <div class="footer-actions">
+        <button type="button" class="btn-secondary" id="supportInquiryModalCancel">취소</button>
+        <button type="button" class="btn-primary" id="supportInquiryAnswerSubmit">답변완료</button>
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- ===== TOAST ===== -->
