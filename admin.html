@@ -1013,6 +1013,9 @@
           <h2 class="section-title">고객센터 관리</h2>
         </div>
       </div>
+      <div class="section-btn-row">
+        <span class="toolbar-count" id="supportInquiryCountLabel">로딩 중...</span>
+      </div>
       <div class="admin-toolbar support-inquiry-toolbar">
         <div class="toolbar-filter-group">
           <select id="supportInquiryStatusFilter" class="admin-select" aria-label="문의 상태 필터">
@@ -1023,7 +1026,22 @@
             <option value="완료됨">완료됨</option>
           </select>
         </div>
-        <span class="toolbar-count" id="supportInquiryCountLabel">로딩 중...</span>
+        <div class="toolbar-actions">
+          <button type="button" class="btn-toolbar-icon" id="supportInquiryRefresh" title="새로고침" aria-label="문의 목록 새로고침">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </button>
+          <div class="search-wrap">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="search" id="supportInquirySearch" class="admin-search" placeholder="제목, 문의자, 내용 검색...">
+          </div>
+          <select class="admin-select per-page-select" id="supportInquiryPerPage" aria-label="페이지당 문의 수">
+            <option value="10" selected>10개</option>
+            <option value="20">20개</option>
+            <option value="30">30개</option>
+            <option value="40">40개</option>
+            <option value="50">50개</option>
+          </select>
+        </div>
       </div>
       <div class="admin-table-wrap support-inquiry-table-wrap">
         <table class="admin-table support-inquiry-table">
@@ -1044,6 +1062,7 @@
           </tbody>
         </table>
       </div>
+      <div class="table-paginator" id="supportInquiryPaginator"></div>
     </section>
 
     <!-- ===== BACKUP / RESTORE SECTION ===== -->

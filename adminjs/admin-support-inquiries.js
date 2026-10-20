@@ -12,6 +12,9 @@
   const tableBody = document.getElementById('supportInquiryTableBody');
   const countLabel = document.getElementById('supportInquiryCountLabel');
   const statusFilter = document.getElementById('supportInquiryStatusFilter');
+  const searchInput = document.getElementById('supportInquirySearch');
+  const perPageSelect = document.getElementById('supportInquiryPerPage');
+  const refreshButton = document.getElementById('supportInquiryRefresh');
   const selectAllCheckbox = document.getElementById('supportInquirySelectAll');
   const modal = document.getElementById('supportInquiryModal');
   const modalTitle = document.getElementById('supportInquiryModalTitle');
@@ -32,6 +35,9 @@
   let modalMode = 'content';
   let savingReply = false;
   let selectedStatus = 'all';
+  let searchQuery = '';
+  let pageSize = 10;
+  let currentPage = 1;
   const selectedIds = new Set();
   const busyIds = new Set();
   const nicknameCache = new Map();
@@ -161,9 +167,26 @@
   }
 
   function visibleInquiries() {
-    return selectedStatus === 'all'
-      ? inquiries
-      : inquiries.filter(inquiry => inquiry.status === selectedStatus);
+    const query = searchQuery.trim().toLocaleLowerCase('ko-KR');
+    return inquiries.filter(inquiry => {
+      if (selectedStatus !== 'all' && inquiry.status !== selectedStatus) return false;
+      if (!query) return true;
+      return [
+        inquiry.requester,
+        inquiry.title,
+        inquiry.content,
+        inquiry.administrator,
+        inquiry.status
+      ].some(value => String(value || '').toLocaleLowerCase('ko-KR').includes(query));
+    });
+  }
+
+  function currentPageInquiries(filtered) {
+    const rows = filtered || visibleInquiries();
+    const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * pageSize;
+    return rows.slice(start, start + pageSize);
   }
 
   function fetchRequesterNickname(uid) {
@@ -224,7 +247,7 @@
 
   function updateSelectAllState(visible) {
     if (!selectAllCheckbox) return;
-    const rows = visible || visibleInquiries();
+    const rows = visible || currentPageInquiries();
     const selectedCount = rows.filter(inquiry => selectedIds.has(inquiry.id)).length;
     selectAllCheckbox.checked = rows.length > 0 && selectedCount === rows.length;
     selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < rows.length;
@@ -284,16 +307,24 @@
   function renderRows() {
     if (!tableBody) return;
     tableBody.replaceChildren();
-    const visible = visibleInquiries();
-    const countText = selectedStatus === 'all'
+    const filtered = visibleInquiries();
+    const visible = currentPageInquiries(filtered);
+    const countText = filtered.length === inquiries.length
       ? `총 ${inquiries.length}건`
-      : `${visible.length}건 / 전체 ${inquiries.length}건`;
+      : `총 ${inquiries.length}건 중 ${filtered.length}건`;
     setCount(countText);
     updateSelectAllState(visible);
+    if (typeof renderPaginator === 'function') {
+      renderPaginator('supportInquiryPaginator', filtered.length, pageSize, currentPage, page => {
+        currentPage = page;
+        renderRows();
+      });
+    }
 
     if (!visible.length) {
       showMessage(
-        inquiries.length ? '선택한 상태의 문의가 없습니다.' : '아직 접수된 문의가 없습니다.',
+        !inquiries.length ? '아직 접수된 문의가 없습니다.'
+          : searchQuery ? '검색 결과가 없습니다.' : '선택한 상태의 문의가 없습니다.',
         false,
         countText
       );
@@ -313,7 +344,7 @@
       checkbox.addEventListener('change', () => {
         if (checkbox.checked) selectedIds.add(inquiry.id);
         else selectedIds.delete(inquiry.id);
-        updateSelectAllState();
+        updateSelectAllState(currentPageInquiries());
       });
       checkboxCell.appendChild(checkbox);
       row.appendChild(checkboxCell);
@@ -457,7 +488,7 @@
 
   if (selectAllCheckbox) {
     selectAllCheckbox.addEventListener('change', () => {
-      visibleInquiries().forEach(inquiry => {
+      currentPageInquiries().forEach(inquiry => {
         if (selectAllCheckbox.checked) selectedIds.add(inquiry.id);
         else selectedIds.delete(inquiry.id);
       });
@@ -467,7 +498,39 @@
   if (statusFilter) {
     statusFilter.addEventListener('change', () => {
       selectedStatus = statusFilter.value || 'all';
+      currentPage = 1;
       renderRows();
+    });
+  }
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value || '';
+      currentPage = 1;
+      renderRows();
+    });
+  }
+  if (perPageSelect) {
+    perPageSelect.addEventListener('change', () => {
+      pageSize = Number(perPageSelect.value) || 10;
+      currentPage = 1;
+      renderRows();
+    });
+  }
+  if (refreshButton) {
+    refreshButton.addEventListener('click', () => {
+      if (statusFilter) statusFilter.value = 'all';
+      if (searchInput) searchInput.value = '';
+      if (perPageSelect) perPageSelect.value = '10';
+      selectedStatus = 'all';
+      searchQuery = '';
+      pageSize = 10;
+      currentPage = 1;
+      selectedIds.clear();
+      if (unsubscribe) {
+        unsubscribe();
+        unsubscribe = null;
+      }
+      startListener();
     });
   }
   if (modalCancel) modalCancel.addEventListener('click', closeModal);

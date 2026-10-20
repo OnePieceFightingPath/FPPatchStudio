@@ -5858,8 +5858,20 @@ html[data-theme="dark"] .admin-main .stat-card-status-divider { background-color
 html[data-theme="dark"] .admin-main .dashboard-visitor-axis-label { fill: var(--text-muted); }
 
 #section-support .support-inquiry-table { min-width: 1180px; }
-#section-support .support-inquiry-toolbar { justify-content: flex-start; }
+#section-support .support-inquiry-toolbar { justify-content: space-between; }
 #section-support .support-inquiry-toolbar .admin-select { width: 140px; min-width: 140px; }
+#section-support .support-inquiry-toolbar .toolbar-actions {
+  flex: 1;
+  justify-content: flex-end;
+}
+#section-support .support-inquiry-toolbar .search-wrap {
+  flex: 1;
+  max-width: 360px;
+}
+#section-support .support-inquiry-toolbar .per-page-select {
+  width: 78px;
+  min-width: 78px;
+}
 #section-support .support-checkbox-column { width: 44px; min-width: 44px; }
 #section-support .support-checkbox-column input {
   width: 15px;
