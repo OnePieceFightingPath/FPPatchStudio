@@ -33,6 +33,8 @@
   let savingReply = false;
   const selectedIds = new Set();
   const busyIds = new Set();
+  const nicknameCache = new Map();
+  const nicknameRequests = new Map();
 
   function setCount(text) {
     if (countLabel) countLabel.textContent = text;
@@ -127,7 +129,8 @@
         data.author,
         data.displayName,
         data.user && data.user.nickname
-      ], '닉네임 정보 없음'),
+      ], ''),
+      uid: firstValue([data.uid, data.userId], ''),
       title: firstValue([data.title, data.subject, data.inquiryTitle, data.questionTitle], '제목 없음'),
       content: firstValue([data.content, data.message, data.body, data.question], '내용 없음'),
       email,
@@ -136,6 +139,54 @@
       submittedAt,
       sortTime: submittedDate ? submittedDate.getTime() : 0
     };
+  }
+
+  function fetchRequesterNickname(uid) {
+    if (nicknameCache.has(uid)) return Promise.resolve(nicknameCache.get(uid));
+    if (nicknameRequests.has(uid)) return nicknameRequests.get(uid);
+    const request = db.collection('users').doc(uid).get()
+      .then(snapshot => {
+        const profile = snapshot.exists ? snapshot.data() || {} : {};
+        const nickname = firstValue([profile.nickname, profile.displayName], '');
+        nicknameCache.set(uid, nickname);
+        return nickname;
+      })
+      .catch(() => {
+        nicknameCache.set(uid, '');
+        return '';
+      });
+    nicknameRequests.set(uid, request);
+    return request;
+  }
+
+  function hydrateRequesterNicknames(version) {
+    const missingUids = [...new Set(inquiries
+      .filter(inquiry => !inquiry.requester && inquiry.uid && !nicknameCache.has(inquiry.uid))
+      .map(inquiry => inquiry.uid))];
+    if (!missingUids.length) {
+      let changed = false;
+      inquiries.forEach(inquiry => {
+        const nickname = inquiry.uid && nicknameCache.get(inquiry.uid);
+        if (!inquiry.requester && nickname) {
+          inquiry.requester = nickname;
+          changed = true;
+        }
+      });
+      if (changed) renderRows();
+      return;
+    }
+    Promise.all(missingUids.map(fetchRequesterNickname)).then(() => {
+      if (version !== listenerVersion) return;
+      let changed = false;
+      inquiries.forEach(inquiry => {
+        const nickname = inquiry.uid && nicknameCache.get(inquiry.uid);
+        if (!inquiry.requester && nickname) {
+          inquiry.requester = nickname;
+          changed = true;
+        }
+      });
+      if (changed) renderRows();
+    });
   }
 
   function addCell(row, value, className) {
@@ -217,13 +268,14 @@
 
     inquiries.forEach(inquiry => {
       const row = document.createElement('tr');
+      const requester = inquiry.requester || '닉네임 정보 없음';
       const checkboxCell = document.createElement('td');
       checkboxCell.className = 'support-checkbox-column';
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.className = 'support-inquiry-checkbox';
       checkbox.checked = selectedIds.has(inquiry.id);
-      checkbox.setAttribute('aria-label', `${inquiry.requester} 문의 선택`);
+      checkbox.setAttribute('aria-label', `${requester} 문의 선택`);
       checkbox.addEventListener('change', () => {
         if (checkbox.checked) selectedIds.add(inquiry.id);
         else selectedIds.delete(inquiry.id);
@@ -232,7 +284,7 @@
       checkboxCell.appendChild(checkbox);
       row.appendChild(checkboxCell);
 
-      addCell(row, inquiry.requester, 'support-inquiry-requester');
+      addCell(row, requester, 'support-inquiry-requester');
       addCell(row, formatDate(inquiry.submittedAt), 'support-inquiry-date');
       addCell(row, inquiry.title, 'support-inquiry-title');
 
@@ -405,6 +457,7 @@
             if (!inquiryIds.has(id)) selectedIds.delete(id);
           });
           renderRows();
+          hydrateRequesterNicknames(version);
         }, error => {
           if (version !== listenerVersion) return;
           console.warn('고객센터 문의 목록을 불러오지 못했습니다:', error);
