@@ -1011,21 +1011,24 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">고객센터 관리</h2>
-          <p class="section-desc">문의 접수와 고객센터 콘텐츠를 운영합니다.</p>
+          <p class="section-desc">웹사이트 문의를 실시간으로 확인합니다. 최근 접수 100건을 표시합니다.</p>
         </div>
       </div>
-      <div class="backup-block">
-        <div class="backup-block-header">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h5m7-2a8 8 0 11-16 0 8 8 0 0016 0z"/></svg>
-          <div>
-            <div class="backup-block-title">고객센터 운영</div>
-            <div class="backup-block-desc">문의 및 FAQ 관리 기능을 연결할 수 있는 운영 화면입니다.</div>
-          </div>
-        </div>
-        <div class="dashboard-admin-card">
-          <div class="dash-homepage-title">고객센터 관리 기능 준비 중</div>
-          <div class="dash-homepage-desc">고객 문의 데이터가 연결되면 접수·처리 상태와 답변을 이 화면에서 관리할 수 있습니다.</div>
-        </div>
+      <div class="admin-table-wrap support-inquiry-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>접수일</th>
+              <th>제목</th>
+              <th>문의 내용</th>
+              <th>회신 연락처</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody id="supportInquiryTableBody">
+            <tr><td colspan="5" class="table-loading"><div class="spinner"></div><span>문의 내역 로딩 중...</span></td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -2354,6 +2357,7 @@
         integrity="sha384-jrOgQzBlDeUNdmQn3rUt/PZD+pdcRBdWd/HWRqRo+n2OR2QtGyjSaJC0GiCeH+ir" crossorigin="anonymous"></script>
 
 <script src="adminjs/admin-core.js"></script>
+<script src="adminjs/admin-support-inquiries.js"></script>
 <script src="adminjs/admin-characters.js"></script>
 <script src="adminjs/admin-support-chars.js"></script>
 <script src="adminjs/admin-pvp.js"></script>

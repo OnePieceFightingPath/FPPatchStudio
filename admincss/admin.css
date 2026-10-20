@@ -5856,3 +5856,13 @@ html[data-theme="dark"] .admin-main .stat-card-status-warning {
 html[data-theme="dark"] .admin-main .stat-card-status-primary { color: #a5b4fc !important; }
 html[data-theme="dark"] .admin-main .stat-card-status-divider { background-color: #64748b; }
 html[data-theme="dark"] .admin-main .dashboard-visitor-axis-label { fill: var(--text-muted); }
+
+#section-support .support-inquiry-table-wrap { margin-top: 18px; }
+#section-support .support-inquiry-message {
+  min-width: 280px;
+  max-width: 520px;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
