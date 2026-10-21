@@ -57,8 +57,8 @@ function renderPvpTable(list) {
     return;
   }
 
-  const typeLabel = { buff: '▲ 버프', nerf: '▼ 너프', fix: '✦ 기능 수정' };
-  const typeClass  = { buff: 'buff', nerf: 'nerf', fix: 'fix' };
+  const typeLabel = { buff: '▲ 버프', nerf: '▼ 너프', fix: '✦ 기능 수정', upcoming: '◷ 출시 예정' };
+  const typeClass  = { buff: 'buff', nerf: 'nerf', fix: 'fix', upcoming: 'upcoming' };
 
   const rowsHtml = shown.map(p => {
     const d = (p.hasDraft && p.draftData) ? { ...p, ...p.draftData } : p;
@@ -558,6 +558,7 @@ function addPvpPatchRow(item = {}) {
         <option value="buff" ${type==='buff'?'selected':''}>▲ 버프</option>
         <option value="nerf" ${type==='nerf'?'selected':''}>▼ 너프</option>
         <option value="fix"  ${type==='fix' ?'selected':''}>✦ 기능 수정</option>
+        <option value="upcoming" ${type==='upcoming'?'selected':''}>◷ 출시 예정</option>
       </select>
       <input type="text" class="form-input pvp-patch-text" placeholder="패치 내용" value="${escHtml(text)}">
     </div>`;
@@ -582,6 +583,12 @@ document.getElementById('pvpFormSubmit')?.addEventListener('click', async () => 
 
   if (!charId && !supportCharId) { errEl.textContent = '캐릭터나 서포트 캐릭터 중 하나를 선택해주세요.'; errEl.style.display = 'block'; return; }
   if (!patches.length) { errEl.textContent = '패치 항목을 1개 이상 추가해주세요.'; errEl.style.display = 'block'; return; }
+  if (patches.some(p => !p.type)) { errEl.textContent = '각 패치 항목의 타입을 선택해주세요.'; errEl.style.display = 'block'; return; }
+  if (patches.some(p => p.type === 'upcoming') && !patchDate) {
+    errEl.textContent = '출시 예정 항목에는 출시 예정일을 입력해주세요.';
+    errEl.style.display = 'block';
+    return;
+  }
 
   const data = { charId, patches, patchDate, supportCharId, updatedBy: getCurrentUserLabel() };
 

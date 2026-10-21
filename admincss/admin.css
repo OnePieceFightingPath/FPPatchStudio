@@ -1381,6 +1381,7 @@ select.form-input { cursor: pointer; }
 .pvp-type-badge.buff { background: rgba(79,198,106,0.12); color: var(--buff); }
 .pvp-type-badge.nerf { background: rgba(248,81,73,0.12); color: var(--nerf); }
 .pvp-type-badge.fix  { background: rgba(210,166,121,0.12); color: var(--fix); }
+.pvp-type-badge.upcoming { background: rgba(210,166,121,0.12); color: #d2a679; }
 
 .patch-new-badge { font-size: 10px; font-weight: 700; background: var(--accent); color: #fff; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 6px; }
 
@@ -3631,6 +3632,7 @@ body {
 .pvp-type-badge.buff { color: #15803d; background: #f0fdf4; }
 .pvp-type-badge.nerf { color: #b91c1c; background: #fef2f2; }
 .pvp-type-badge.fix { color: #a16207; background: #fffbeb; }
+.pvp-type-badge.upcoming { color: #92400e; background: #fffbeb; }
 
 /* Dashboard */
 .dashboard-info-row { gap: 20px; margin-bottom: 28px; }

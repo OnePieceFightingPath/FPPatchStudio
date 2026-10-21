@@ -274,6 +274,55 @@ function getDashboardEventStatuses(events) {
   return { inProgress, ended };
 }
 
+async function loadDashboardSupportStats() {
+  const countElement = document.getElementById('statSupportCount');
+  const metricsElement = document.getElementById('statSupportSub');
+  if (!countElement || !metricsElement) return;
+
+  if (typeof db === 'undefined' || !db) {
+    countElement.textContent = '—';
+    renderStatCardMetrics('statSupportSub', [{ label: '문의', value: '연결 없음', tone: 'warning' }]);
+    return;
+  }
+
+  try {
+    const snapshot = await db.collection('inquiries').get();
+    const counts = { received: 0, waiting: 0, inProgress: 0, completed: 0 };
+    const aliases = {
+      '접수완료': 'received',
+      received: 'received',
+      new: 'received',
+      '문의대기': 'waiting',
+      waiting: 'waiting',
+      pending: 'waiting',
+      '진행중': 'inProgress',
+      in_progress: 'inProgress',
+      processing: 'inProgress',
+      '완료됨': 'completed',
+      completed: 'completed',
+      done: 'completed',
+    };
+
+    snapshot.forEach(doc => {
+      const status = String((doc.data() || {}).status || '').trim().toLowerCase();
+      const key = aliases[status] || 'received';
+      counts[key]++;
+    });
+
+    countElement.textContent = new Intl.NumberFormat('ko-KR').format(snapshot.size);
+    renderStatCardMetrics('statSupportSub', [
+      { label: '접수', value: counts.received, tone: 'primary' },
+      { label: '대기', value: counts.waiting, tone: 'warning' },
+      { label: '진행중', value: counts.inProgress, tone: 'success' },
+      { label: '완료', value: counts.completed, tone: 'primary' },
+    ]);
+  } catch (error) {
+    console.warn('고객센터 대시보드 통계를 불러오지 못했습니다.', error);
+    countElement.textContent = '—';
+    renderStatCardMetrics('statSupportSub', [{ label: '문의', value: '조회 실패', tone: 'danger' }]);
+  }
+}
+
 function loadDashboardStats() {
   loadDashboardVisitors();
 
@@ -346,9 +395,7 @@ function loadDashboardStats() {
   renderStatCardMetrics('statBoardSub', [
     { label: '게시판', value: '—', tone: 'primary' },
   ]);
-  renderStatCardMetrics('statSupportSub', [
-    { label: '문의', value: '—', tone: 'primary' },
-  ]);
+  loadDashboardSupportStats();
 
   if (currentUser) {
     const nickname = profileData?.nickname || currentUser.displayName || currentUser.email || '—';
