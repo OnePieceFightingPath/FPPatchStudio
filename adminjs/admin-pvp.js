@@ -57,7 +57,7 @@ function renderPvpTable(list) {
     return;
   }
 
-  const typeLabel = { buff: '▲ 버프', nerf: '▼ 너프', fix: '✦ 기능 수정', upcoming: '◷ 출시 예정' };
+  const typeLabel = { buff: '▲ 버프', nerf: '▼ 너프', fix: '✦ 기능 수정', upcoming: '출시예정' };
   const typeClass  = { buff: 'buff', nerf: 'nerf', fix: 'fix', upcoming: 'upcoming' };
 
   const rowsHtml = shown.map(p => {
@@ -558,7 +558,7 @@ function addPvpPatchRow(item = {}) {
         <option value="buff" ${type==='buff'?'selected':''}>▲ 버프</option>
         <option value="nerf" ${type==='nerf'?'selected':''}>▼ 너프</option>
         <option value="fix"  ${type==='fix' ?'selected':''}>✦ 기능 수정</option>
-        <option value="upcoming" ${type==='upcoming'?'selected':''}>◷ 출시 예정</option>
+        <option value="upcoming" ${type==='upcoming'?'selected':''}>출시예정</option>
       </select>
       <input type="text" class="form-input pvp-patch-text" placeholder="패치 내용" value="${escHtml(text)}">
     </div>`;
